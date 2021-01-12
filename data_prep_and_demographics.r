@@ -1,24 +1,17 @@
-setwd("C:/Users/reich/Documents/GitHub/FLO_replication/CScond_online/data")
+#setwd("C:/Users/reich/Documents/GitHub/FLO_replication/CScond_online/data")
+setwd("\\\\sn00.zdv.uni-tuebingen.de/siskr01/Documents/Github/CSCond_online/data")
+
 
 library(dplyr)
-#library(tidyverse)
-
-#Plot
+library(tidyverse)
 library(ggplot2)
-
-#Analysis
-library(afex)
-library(lme4)
-
-#Functions
-CI <- function(x) qnorm(0.975)*sd(x)/sqrt(length(x))
-se <- function(x) sd(x)/sqrt(length(x))
 
 filenames <- dir()
 dat <- data.frame()
 for (i in filenames){
   dat <- rbind(dat, read.table(i, header = TRUE, sep = ",", encoding = "UTF-8"))
 }
+unique(dat$subject)
 
 comments_one <- dat$responses[dat$trial_type == "survey-text" & dat$condition == "one_one"]
 #comments_one
@@ -123,6 +116,8 @@ for (factor in as_factor){
 direct$type_specific <- factor(direct$type_specific, levels = c('CS', 'GSold', 'GSnew', 'abstract', 'all'))
 direct$response <- as.numeric(direct$response)
 #str(direct)
+
+unique(direct$subject)
 
 #export files
 #setwd("\\\\sn00.zdv.uni-tuebingen.de/siskr01/Documents/Github/CSCond_analysis/CSCond_analysis/data")
