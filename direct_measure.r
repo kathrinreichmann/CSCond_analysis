@@ -108,7 +108,7 @@ t.test(CSGSsame.many$diff[CSGSsame.many$type_specific == "CS"], CSGSsame.one$dif
 t.test(CSGSsame.many$diff[CSGSsame.many$type_specific == "GS same"], CSGSsame.one$diff[CSGSsame.one$type_specific == "GS same"], paired = FALSE,  var.equal = FALSE)
 
 
-### lmer: type_specific as grouping variable
+### ?? lmer: type_specific as grouping variable
 
 #baseline model
 baseline <- lmer(diff ~ 1 + (type_specific|subject), CSGSsame)
@@ -143,6 +143,14 @@ aov_specific <- aov_car(diff ~ condition*type_specific + Error(subject/type_spec
 summary(aov_specific)
 #Departure from Sphericity, use Greenhouse-Geisser correction
 
+#??as linear model
+baseline <- lmer(diff ~ 1 + (type_specific|subject),  CSGSFeat, REML = FALSE)
+conditionM <- lmer(diff ~ condition + (type_specific|subject),  CSGSFeat, REML = FALSE)
+typeM <- lmer(diff ~ condition + type_specific + (type_specific|subject),  CSGSFeat, REML = FALSE)
+type_condition <- lmer(diff ~ condition*type_specific + (type_specific|subject),  CSGSFeat, REML = FALSE)
+anova(baseline, conditionM, typeM, type_condition)
+summary(typeM)
+
 #simple slopes
 #CS
 lm1 <- lm(diff ~ condition, dataDirect[dataDirect$type_specific == "CS",])
@@ -157,6 +165,7 @@ summary(lm3)
 lm4 <- lm(diff ~ condition, dataDirect[dataDirect$type_specific == "Feature",])
 summary(lm4)
 
+
 ################### CS Variability for "ALL" ratings
 Group <- dataDirect[dataDirect$type_specific == "Group",]
 t.test(Group$diff[Group$condition == "many_one"], Group$diff[Group$condition == "one_one"], paired = FALSE, var.equal = TRUE)
@@ -164,6 +173,71 @@ t.test(Group$diff[Group$condition == "many_one"], Group$diff[Group$condition == 
 #as linear model:
 lm5 <- lm(diff ~ condition, dataDirect[dataDirect$type_specific == "Group",])
 summary(lm5)
+
+
+################### randomly select 2 CSs in "many-to-one"
+
+new_one <- direct[direct$condition == "one_one",]
+new_many <- direct[direct$condition == "many_one",]
+new_many <- new_many[!new_many$type_specific == "CS",]
+new_direct <- rbind(new_one, new_many)
+
+for (subject in unique(direct$subject)){
+  if (direct$condition[direct$subject == subject] == "many_one"){
+    for (cat in 1:4){
+      temp <- direct[direct$subject == subject & direct$type_specific == "CS" & direct$category == cat,]
+      select <- temp[1:2,]
+      new_direct <- rbind(new_direct, select)
+    }
+  }
+  
+}
+
+#calculate difference scores
+dataDirect_new <- aggregate(response ~ subject + condition + measure + val + type_specific, new_direct, mean)
+dataDirect_new$nr_obs <- aggregate(response ~ subject + condition + measure + val + type_specific, new_direct, length)[[6]]
+
+#calculate differences between positive and negative valence, considering each type of measure
+for (name in unique(dataDirect_new$type_specific)){
+  temp <- dataDirect_new[dataDirect_new$type_specific == name,];
+  dataDirect_new$diff[dataDirect_new$type_specific == name] <- temp$response[temp$val == "pos"] - temp$response[temp$val == "neg"]
+}
+
+
+# Plot 
+direct.type_specific <- aggregate(diff ~ condition + type_specific, dataDirect_new, mean)
+direct.type_specific$se <- aggregate(diff ~ condition + type_specific, dataDirect_new, se)[[3]]
+#direct.type_specific
+
+barplotDiff <- ggplot(direct.type_specific, aes (x = type_specific, y = diff, fill = condition)) +
+  geom_bar(stat = 'identity', position = position_dodge(), show.legend = TRUE) +
+  geom_errorbar(aes(ymin= diff - se, ymax= diff + se), width=.2,
+                position=position_dodge(.9)) +
+  ggtitle("Difference Scores") + 
+  scale_fill_brewer(palette = "Paired") +
+  scale_x_discrete(name = "\nType") +
+  scale_y_continuous (name = "Rating [Pos] - Rating [Neg]\n", breaks = seq(0, 70, 10), limits = c(0, 70)) + 
+  theme_classic() +
+  labs(fill = "CS Variability") +
+  theme(plot.title = element_text (hjust = 0.5, face = "bold", size = 12))
+barplotDiff
+
+# inference statistics
+CSGSFeat_new <- dataDirect_new[!dataDirect_new$type_specific == "Group",]
+direct.type <- aggregate(diff ~ condition + type_specific + subject, CSGSFeat_new, mean)
+aov_specific <- aov_car(diff ~ condition*type_specific + Error(subject/type_specific), direct.type, anova_table = list("pes"))
+summary(aov_specific)
+#results don't change
+
+#Boxplots different conditions
+diffDirect <- ggplot(dataDirect_new, aes (x = type_specific, y = diff, fill = condition)) +
+  stat_boxplot(geom = "errorbar") +
+  geom_boxplot(show.legend = TRUE) +
+  ggtitle("Differences") + 
+  theme(plot.title = element_text (hjust = 0.5, face = "bold", size = 12)) +
+  scale_fill_brewer(palette = "Blues") +
+  scale_y_continuous (name = "Pos - Neg", breaks = seq(-100, 200, 25), limits = c(-50, 100))
+diffDirect
 
 
 ################## Additional plots
@@ -212,27 +286,54 @@ negativeDirect
 
 ################## (2) Variability x Type x Measure
 
-barplotMeasure <- aggregate(diff ~ type_specific + condition + measure, dataDirect[dataDirect$val == "pos",], mean)
-barplotMeasure$se <- aggregate(diff ~ type_specific + condition + measure, dataDirect[dataDirect$val == "pos",], se)[[4]]
+#plots 
+barplotMeasure <- aggregate(diff ~ type_specific + condition + measure, dataDirect, mean)
+barplotMeasure$se <- aggregate(diff ~ type_specific + condition + measure, dataDirect, se)[[4]]
 
 plotMeasure <- ggplot(barplotMeasure, aes (x = type_specific, y = diff, fill = condition)) +
   facet_grid(. ~ measure) +
   geom_bar(stat = 'identity', position = position_dodge(), show.legend = TRUE) +
   geom_errorbar(aes(ymin= diff - se, ymax= diff + se), width=.2,
                 position=position_dodge(.9)) +
-  ggtitle("Differences") + 
+  ggtitle("Direct Measure") + 
   theme(plot.title = element_text (hjust = 0.5, face = "bold", size = 12)) +
   scale_fill_brewer(palette = "Paired") +
   scale_y_continuous (name = "Pos - Neg", breaks = seq(-25, 125, 25), limits = c(-10, 100))
 plotMeasure
 
+boxplot <- ggplot(dataDirect, aes (x = type_specific, y = diff, fill = condition)) +
+  facet_grid(. ~ measure) +
+  stat_boxplot(geom = "errorbar") +
+  geom_boxplot(show.legend = TRUE) +
+  ggtitle("Direct Measure") + 
+  theme(plot.title = element_text (hjust = 0.5, face = "bold", size = 12)) +
+  scale_fill_brewer(palette = "Paired") +
+  scale_y_continuous (name = "Pos - Neg", breaks = seq(-25, 125, 25), limits = c(-10, 100))
+boxplot
+
+#mixed-model ANOVA variability x type (CS vs. GS same) vs measure  (direct first vs. indirect first)
+
+CSGSsame <- dataDirect[dataDirect$type_specific == "CS" | dataDirect$type_specific == "GS same",]
+
+#### mixed-model ANOVA with CS Variability x Type (CS vs. GS same)
+direct.type <- aggregate(diff ~ condition + type_specific + measure + subject, CSGSsame, mean)
+aov_specific <- aov_car(diff ~ condition*type_specific*measure + Error(subject/type_specific), direct.type, anova_table = list("pes"))
+aov_specific
 
 ################## (3) including category
 
-categoryDirect <- aggregate(response ~ subject + condition_code + condition + measure_code + val + type + type_specific + category, direct, mean)
-categoryDirect$nr_obs <- aggregate(response ~ subject + condition_code + condition + measure_code + val + type + type_specific + category, direct, length)[[8]]
+#calculate difference scores
+categories <- aggregate(response ~ subject + condition + category + val + type_specific, direct, mean)
+categories$nr_obs <- aggregate(response ~ subject + condition + measure + val + type_specific, direct, length)[[6]]
 
-categoryDirectPlot <- ggplot(categoryDirect, aes (x = category, y = response, fill = val)) +
+#calculate differences between positive and negative valence, considering each type of measure
+for (name in unique(categories$type_specific)){
+  temp <- categories[categories$type_specific == name,];
+  categories$diff[categories$type_specific == name] <- temp$response[temp$val == "pos"] - temp$response[temp$val == "neg"]
+}
+
+categoryDirectPlot <- ggplot(categories, aes (x = type_specific, y = diff, fill = condition)) +
+  facet_grid(. ~ category) +
   stat_boxplot(geom = "errorbar") +
   geom_boxplot(show.legend = TRUE) +
   ggtitle("Categories") + 
@@ -240,15 +341,18 @@ categoryDirectPlot <- ggplot(categoryDirect, aes (x = category, y = response, fi
   scale_fill_brewer(palette = "Blues") 
 categoryDirectPlot
 
-#category3/CS9.png especially positive
-
 
 ################## (4) individual CS exemplars
 
-csSelectedDirect <- aggregate(response ~ cs_selected + val, dat, mean)
+csSelectedDirect <- aggregate(response ~ cs_selected + val, direct, mean)
 csDirectPlot <- ggplot(csSelectedDirect, aes (x = cs_selected, y = response, col = val)) +
-  geom_point(show.legend = TRUE)
+  geom_point(show.legend = TRUE) +
   ggtitle("Single CSs") + 
   theme(plot.title = element_text (hjust = 0.5, face = "bold", size = 12)) +
   scale_fill_brewer(palette = "Blues") 
-#csDirectPlot
+csDirectPlot
+
+#potentially problematic:
+#1/GS1, 1/GS2, 1/GS3
+#4/GS2
+  
