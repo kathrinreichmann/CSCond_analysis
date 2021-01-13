@@ -1,3 +1,10 @@
+################### CS Variability: one-to-one vs. many-to-one
+### january, 2021
+### Kathrin Reichmann
+
+### Data preparation & demographics
+
+
 setwd("C:/Users/reich/Documents/GitHub/FLO_replication/CScond_online/data")
 #setwd("\\\\sn00.zdv.uni-tuebingen.de/siskr01/Documents/Github/CSCond_online/data")
 
