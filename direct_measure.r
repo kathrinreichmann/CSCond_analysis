@@ -13,13 +13,14 @@ library(ggplot2)
 #Analysis
 library(afex)
 library(lme4)
+library(effsize)
 
 #Functions
 CI <- function(x) qnorm(0.975)*sd(x)/sqrt(length(x))
 se <- function(x) sd(x)/sqrt(length(x))
 
-#setwd("\\\\sn00.zdv.uni-tuebingen.de/siskr01/Documents/Github/CSCond_analysis/CSCond_analysis/data")
-setwd("C:/Users/reich/Documents/GitHub/CSCond_analysis/data")
+setwd("\\\\sn00.zdv.uni-tuebingen.de/siskr01/Documents/Github/CSCond_analysis/CSCond_analysis/data")
+#setwd("C:/Users/reich/Documents/GitHub/CSCond_analysis/data")
 direct <- read.csv2('direct.csv', header = TRUE)
 str(direct)
 
@@ -31,7 +32,7 @@ for (factor in as_factor){
 
 direct$type_specific <- factor(direct$type_specific, levels = c("CS", "GS same", "GS different", "Feature", "Group"))
 
-# calculate difference scores ---------------------------------------------
+### calculate difference scores ---------------------------------------------
 
 #aggregate scores for each subject
 dataDirect <- aggregate(response ~ subject + condition + measure + val + type_specific, direct, mean)
@@ -44,6 +45,7 @@ for (name in unique(dataDirect$type_specific)){
 }
 
 head(dataDirect)
+
 
 ### Plot difference scores: CS Variability x Type
 
@@ -64,15 +66,38 @@ barplotDiff <- ggplot(direct.type_specific, aes (x = type_specific, y = diff, fi
   theme(plot.title = element_text (hjust = 0.5, face = "bold", size = 12))
 barplotDiff
 
+################### one-sample t-tests
+#H0: mu = 0
+#H1: mu not equal to 0 -> EC effect is significant
+
+#for GS different
+t.test(dataDirect$diff[dataDirect$condition == "one_one" & dataDirect$type_specific == "GS different"], mu = 0, alternative = "two.sided")
+t.test(dataDirect$diff[dataDirect$condition == "many_one" & dataDirect$type_specific == "GS different"], mu = 0, alternative = "two.sided")
+
+
 ################### CS Variability x Type (CS vs. GS same)
 
+#Hypothesis: interaction type x CS Variability
+
+CSGSsame <- dataDirect[dataDirect$type_specific == "CS" | dataDirect$type_specific == "GS same",]
+
 #### mixed-model ANOVA with CS Variability x Type (CS vs. GS same)
-direct.type <- aggregate(diff ~ condition + type_specific + subject, dataDirect[dataDirect$type_specific == "CS" | dataDirect$type_specific == "GS same",], mean)
+direct.type <- aggregate(diff ~ condition + type_specific + subject, CSGSsame, mean)
 aov_specific <- aov_car(diff ~ condition*type_specific + Error(subject/type_specific), direct.type, anova_table = list("pes"))
 aov_specific
 
+#analyze 2-way interaction
+CSGSsame.many <- CSGSsame[CSGSsame$condition == "many_one",]
+CSGSsame.one <- CSGSsame[CSGSsame$condition == "one_one",]
+
+#CS
+t.test(CSGSsame.many$diff[CSGSsame.many$type_specific == "CS"], CSGSsame.one$diff[CSGSsame.one$type_specific == "CS"], paired = FALSE,  var.equal = FALSE)
+
+#GS same
+t.test(CSGSsame.many$diff[CSGSsame.many$type_specific == "GS same"], CSGSsame.one$diff[CSGSsame.one$type_specific == "GS same"], paired = FALSE,  var.equal = FALSE)
+
+
 ### lmer: type_specific as grouping variable
-CSGSsame <- dataDirect[dataDirect$type_specific == "CS" | dataDirect$type_specific == "GS same",]
 
 #baseline model
 baseline <- lmer(diff ~ 1 + (type_specific|subject), CSGSsame)
@@ -97,76 +122,40 @@ summary(type_condition)
 
 ################### CS Variability x Type (CS vs. GS same vs. GS different vs. Feature)
 
+#Hypothesis: interaction type x CS Variability
+
+CSGSFeat <- dataDirect[!dataDirect$type_specific == "Group",]
+
+#### mixed-model ANOVA with CS Variability x Type (CS vs. GS same vs. GS different vs. Feature)
+direct.type <- aggregate(diff ~ condition + type_specific + subject, CSGSFeat, mean)
+aov_specific <- aov_car(diff ~ condition*type_specific + Error(subject/type_specific), direct.type, anova_table = list("pes"))
+summary(aov_specific)
+#Departure from Sphericity, use Greenhouse-Geisser correction
+
+#simple slopes
+#CS
+lm1 <- lm(diff ~ condition, dataDirect[dataDirect$type_specific == "CS",])
+summary(lm1)
+
+lm2 <- lm(diff ~ condition, dataDirect[dataDirect$type_specific == "GS same",])
+summary(lm2)
+
+lm3 <- lm(diff ~ condition, dataDirect[dataDirect$type_specific == "GS different",])
+summary(lm3)
+
+lm4 <- lm(diff ~ condition, dataDirect[dataDirect$type_specific == "Feature",])
+summary(lm4)
 
 ################### CS Variability for "ALL" ratings
+Group <- dataDirect[dataDirect$type_specific == "Group",]
+t.test(Group$diff[Group$condition == "many_one"], Group$diff[Group$condition == "one_one"], paired = FALSE, var.equal = TRUE)
+
+#as linear model:
+lm5 <- lm(diff ~ condition, dataDirect[dataDirect$type_specific == "Group",])
+summary(lm5)
 
 
-
-
-#including 
-direct.type <- aggregate(diff ~ condition + type_specific + subject, dataDirect[dataDirect$type_specific == "CS" | dataDirect$type_specific == "GSold",], mean)
-aov_specific <- aov_car(diff ~ condition*type_specific + Error(subject/type_specific), direct.type, anova_table = list("pes"))
-#summary(aov_specific)
-
-#main effect type
-#aggregate(diff ~ type_specific, direct.type, mean)
-
-#interaction effect
-#aggregate(diff ~ type_specific + condition, direct.type, mean)
-
-aov_specific2 <- aov_car(diff ~ condition*type_specific + Error(subject/type_specific), dataDirect,  anova_table = list("pes"))
-aov_specific2
-#summary(aov_specific2)
-
-#interaction effect & main effects
-aggregate(diff ~ condition + type_specific, dataDirect, mean)
-aggregate(diff ~ condition, dataDirect, mean)
-aggregate(diff ~ type_specific, dataDirect, mean)
-
-#difference CS
-#n.s.
-type1 <- lm(diff ~ condition, dataDirect[dataDirect$type_specific == "CS",] )
-#summary(type1)
-#anova(type1)
-
-#difference GSold
-#s.
-type2 <- lm(diff ~ condition, dataDirect[dataDirect$type_specific == "GSold",] )
-#summary(type1)
-#anova(type2)
-
-#difference GSnew
-#s.
-type3 <- lm(diff ~ condition, dataDirect[dataDirect$type_specific == "GSnew",] )
-#summary(type1)
-#anova(type3)
-
-#difference abstract
-#s.
-type4 <- lm(diff ~ condition, dataDirect[dataDirect$type_specific == "abstract",] )
-#summary(type1)
-#anova(type4)
-
-#difference all
-#s.
-type5 <- lm(diff ~ condition, dataDirect[dataDirect$type_specific == "all",] )
-#summary(type1)
-# anova(type5)
-
-lmDiff1 <- lm(diff ~ condition*type, dataDirect[dataDirect$type_specific == "CS" | dataDirect$type_specific == "GSold",])
-#summary(lmDiff1)
-#plot(lmDiff1)
-
-lmDiff2 <- lm(diff ~ condition*type_specific, dataDirect)
-#summary(lmDiff2)
-#plot(lmDiff2)
-
-aov_specific3 <- aov_car(diff ~ condition*type_specific*measure + Error(subject/type_specific), dataDirect, anova_table = list("pes"))
-#aov_specific3
-summary(aov_specific3)
-
-lmMeas1 <- lm(diff ~ condition*type*measure, dataDirect[dataDirect$type_specific == "CS" | dataDirect$type_specific == "GSold",])
-#summary(lmMeas1)
+################## Additional plots
 
 diffDirect <- ggplot(dataDirect, aes (x = type_specific, y = diff, fill = condition)) +
   stat_boxplot(geom = "errorbar") +
