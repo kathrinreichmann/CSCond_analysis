@@ -14,6 +14,9 @@
 ### import:
 #direct.csv
 
+### set working directory:
+setwd("\\\\sn00.zdv.uni-tuebingen.de/siskr01/Documents/Github/CSCond_analysis/CSCond_analysis/data")
+#setwd("C:/Users/reich/Documents/GitHub/CSCond_analysis/data")
 
 library(dplyr)
 library(tidyverse)
@@ -30,8 +33,7 @@ library(effsize)
 CI <- function(x) qnorm(0.975)*sd(x)/sqrt(length(x))
 se <- function(x) sd(x)/sqrt(length(x))
 
-setwd("\\\\sn00.zdv.uni-tuebingen.de/siskr01/Documents/Github/CSCond_analysis/CSCond_analysis/data")
-#setwd("C:/Users/reich/Documents/GitHub/CSCond_analysis/data")
+
 direct <- read.csv2('direct.csv', header = TRUE)
 str(direct)
 
