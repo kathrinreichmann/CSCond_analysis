@@ -300,7 +300,7 @@ plotMeasure <- ggplot(barplotMeasure, aes (x = type_specific, y = diff, fill = c
   ggtitle("Direct Measure") + 
   theme(plot.title = element_text (hjust = 0.5, face = "bold", size = 12)) +
   scale_fill_brewer(palette = "Paired") +
-  scale_y_continuous (name = "Pos - Neg", breaks = seq(-25, 125, 25), limits = c(-10, 100))
+  scale_y_continuous (name = "Rating[Pos] - Rating[Neg]", breaks = seq(-25, 125, 25), limits = c(-10, 100))
 plotMeasure
 
 boxplot <- ggplot(dataDirect, aes (x = type_specific, y = diff, fill = condition)) +

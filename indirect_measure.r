@@ -17,6 +17,7 @@
 # Reaction Times:
 # (1) Type x CS Variability
 # (2) Type x CS Variability x Measure
+# (3) including presentation order
 
 ### import:
 #indirect.csv
@@ -286,10 +287,11 @@ summary(aov_measure)
 
 ################## (3) including category
 
+#Plot
 categoryIndirect <- aggregate(response ~  condition  + val + type_specific + category, indirect, sum )
 categoryIndirect$nr_val <- aggregate(response ~ condition + val + type_specific + category, indirect, length)[[5]]
 categoryIndirect$prob <- (categoryIndirect$response/categoryIndirect$nr_val)
-#head(categoryIndirect)
+head(categoryIndirect)
 
 plot.categories <- ggplot(categoryIndirect, aes (x = category, y = prob, fill = val)) +
   stat_boxplot(geom = "errorbar") +
@@ -302,16 +304,31 @@ plot.categories
 
 ################## (4) including individual CSs
 
+#Plot
+CSselectedIndirect <- aggregate(response ~  val + cs_selected, indirect, sum )
+CSselectedIndirect$nr_val <- aggregate(response ~ val + cs_selected, indirect, length)[[3]]
+CSselectedIndirect$prob <- (CSselectedIndirect$response/CSselectedIndirect$nr_val)
+head(CSselectedIndirect)
+
+CsselectedPlot <- ggplot(CSselectedIndirect, aes (x = cs_selected, y = prob, col = val)) +
+  geom_point(show.legend = TRUE) +
+  ggtitle("Single CSs") + 
+  theme(plot.title = element_text (hjust = 0.5, face = "bold", size = 12)) +
+  scale_fill_brewer(palette = "Blues") 
+CsselectedPlot
+
+#4/GS2 
+#1/GS1, 1/GS2, 1/GS3 
+
 ################## (5) including targets
 
 
 targetsIndirect <- aggregate(response ~ target + val + condition + type_specific, indirect, sum)
 targetsIndirect$nr_val <- aggregate(response ~ target + val + condition + type_specific, indirect, length) [[5]]
 targetsIndirect$prob <- (targetsIndirect$response/targetsIndirect$nr_val)
-#targetsIndirect
+head(targetsIndirect)
 
 #generate variable diff
-#not all cells have data, yet!
 for (target in unique(targetsIndirect$target)){
   for (name in unique(targetsIndirect$type_specific)){
     temp <- targetsIndirect[targetsIndirect$target == target & targetsIndirect$type_specific == name,];
@@ -319,61 +336,125 @@ for (target in unique(targetsIndirect$target)){
   }
 }
 
-
 head(targetsIndirect)
 
+## ?? include target as grouping factor in analysis
 lmProbTargets <- lmer(diff ~ type_specific*condition*val + (type_specific|target), targetsIndirect)
-#summary(lmProbTargets)
+summary(lmProbTargets)
 
+#Plot
 plot.targets <- aggregate(prob ~ target + val, targetsIndirect, mean)
 plot.targets$target <- as.factor(plot.targets$target)
 
-for(target in unique(plot.targets$target)){
-  temp <- plot.targets[plot.targets$target == target,]
-  plot.targets$diff[plot.targets$target == target] <- temp$prob[temp$val == "pos"] - temp$prob[temp$val == "neg"]
-}
-plotTarget <- ggplot(plot.targets[plot.targets$val == "neg",], aes (x = target, y = diff)) +
+plotTarget <- ggplot(plot.targets, aes (x = target, y = prob, col = val)) +
   geom_point() +
   ggtitle("Targets on x-axis") + 
   theme(plot.title = element_text (hjust = 0.5, face = "bold", size = 12)) +
   scale_color_brewer(palette = "Set1") +
-  scale_y_continuous(name = "Difference (Prob. Angenehm | Pos) - (Prob Angenehm | Neg)")
-#plotTarget
+  scale_y_continuous(name = "Prob. 'angenehm'")
+plotTarget
 
-
-################## (6) including presentation order
-
-presOrder <- aggregate(response ~ nr_pres + val , indirect, sum)
-presOrder$nr_val <- aggregate(response ~ nr_pres + val, indirect, length) [[3]]
-presOrder$se <- aggregate(response ~ nr_pres + val, indirect, se) [[3]]
-presOrder$prob <- (presOrder$response/presOrder$nr_val)
-#head(presOrder)
-
-#aggregate(prob ~ val + type_specific, dataIndirect, mean)
-plot.presOrder <- ggplot(presOrder, aes (x = nr_pres, y = prob, col = val)) +
-  geom_point(show.legend = TRUE) +
-  geom_hline(yintercept = 0.5, color = "red") +
-  ggtitle("Positive and Negative Pairings") + 
-  theme(plot.title = element_text (hjust = 0.5, face = "bold", size = 12)) +
-  scale_color_brewer(palette = "Set1") +
-  scale_y_continuous(name = "Prob. of 'Angenehm'")
-#plot.presOrder
-
-presOrder <- aggregate(rt ~ condition + type_specific, indirect, mean)
-presOrder$se <- aggregate(rt ~ condition + type_specific, indirect, se) [[2]]
-
-#aggregate(prob ~ val + type_specific, dataIndirect, mean)
-plot.presOrder <- ggplot(presOrder, aes (x = type_specific, y = rt, col = condition)) +
-  geom_point(show.legend = TRUE) +
-  ggtitle("Reaction Times") + 
-  theme(plot.title = element_text (hjust = 0.5, face = "bold", size = 12)) +
-  scale_color_brewer(palette = "Set1") +
-  scale_y_continuous(name = "Presentation Order")
-plot.presOrder
-
+#Target 13 und 29 immer eher pos.
+#Target 42 eher neg.
 
 # reaction times ----------------------------------------------------------
 
 
+#generate data set with reaction times
+dataRT <- aggregate(rt ~ subject + condition_code + condition + measure + val + type + type_specific + nr_pres, indirect, mean )
+dataRT <- dataRT[!dataRT$rt > 5000,]
+head(dataRT)
+
+
+################## (1) CS variability x type_specific
+
+#Plot
+plot.RT <- aggregate(rt ~ condition + type_specific, dataRT, mean)
+plot.RT$se <- aggregate(rt ~ condition + type_specific, dataRT, se)[[3]]
+head(plot.RT)
+
+
+barplotRT <- ggplot(plot.RT, aes (x = type_specific, y = rt, fill = condition)) +
+  geom_bar(stat = 'identity', position = position_dodge(), show.legend = TRUE) +
+  geom_errorbar(aes(ymin= rt - se, ymax= rt + se), width=.2,
+                position=position_dodge(.9)) +
+  ggtitle("Indirect Measure") + 
+  scale_fill_brewer(palette = "Paired") +
+  theme_classic() +
+  theme(plot.title = element_text (hjust = 0.5, face = "bold", size = 12)) +
+  labs(fill = "CS Variability") +
+  scale_y_continuous (name = "Reaction Times")
+barplotRT
+
+#Plot for each valence separately
+plot.RT <- aggregate(rt ~ condition + type_specific + val, dataRT, mean)
+plot.RT$se <- aggregate(rt ~ condition + type_specific + val, dataRT, se)[[4]]
+head(plot.RT)
+
+
+barplotRT <- ggplot(plot.RT, aes (x = type_specific, y = rt, fill = condition)) +
+  facet_grid(. ~val) +
+  geom_bar(stat = 'identity', position = position_dodge(), show.legend = TRUE) +
+  geom_errorbar(aes(ymin= rt - se, ymax= rt + se), width=.2,
+                position=position_dodge(.9)) +
+  ggtitle("Indirect Measure") + 
+  scale_fill_brewer(palette = "Paired") +
+  theme_classic() +
+  theme(plot.title = element_text (hjust = 0.5, face = "bold", size = 12)) +
+  labs(fill = "CS Variability") +
+  scale_y_continuous (name = "Reaction Times")
+barplotRT
+
+#Boxplot
+barplotRT <- ggplot(dataRT, aes (x = type_specific, y = rt, fill = condition)) +
+  stat_boxplot(geom = "errorbar") +
+  geom_boxplot(show.legend = TRUE) +
+  ggtitle("Indirect Measure") + 
+  scale_fill_brewer(palette = "Paired") +
+  theme_classic() +
+  theme(plot.title = element_text (hjust = 0.5, face = "bold", size = 12)) +
+  labs(fill = "CS Variability") +
+  scale_y_continuous (name = "Reaction Times")
+barplotRT
+
+################## (2) CS variability x type_specific x measure
+
+#Plot
+plot.RT <- aggregate(rt ~ condition + type_specific + measure, dataRT, mean)
+plot.RT$se <- aggregate(rt ~ condition + type_specific + measure, dataRT, se)[[4]]
+head(plot.RT)
+
+
+barplotRT <- ggplot(plot.RT, aes (x = type_specific, y = rt, fill = condition)) +
+  facet_grid(. ~ measure) +
+  geom_bar(stat = 'identity', position = position_dodge(), show.legend = TRUE) +
+  geom_errorbar(aes(ymin= rt - se, ymax= rt + se), width=.2,
+                position=position_dodge(.9)) +
+  ggtitle("Indirect Measure") + 
+  scale_fill_brewer(palette = "Paired") +
+  theme_classic() +
+  theme(plot.title = element_text (hjust = 0.5, face = "bold", size = 12)) +
+  labs(fill = "CS Variability") +
+  scale_y_continuous (name = "Reaction Times")
+barplotRT
+
+
+################## (3) including presentation order
+
+#Plot
+plot.RT <- aggregate(rt ~ nr_pres, dataRT, mean)
+plot.RT$se <- aggregate(rt ~ nr_pres, dataRT, se)[[2]]
+head(plot.RT)
+
+
+#aggregate(prob ~ val + type_specific, dataIndirect, mean)
+plot.presOrder <- ggplot(plot.RT, aes (x = nr_pres, y = rt)) +
+  geom_point(show.legend = TRUE) +
+  ggtitle("Presentation order of trails") + 
+  theme(plot.title = element_text (hjust = 0.5, face = "bold", size = 12)) +
+  scale_color_brewer(palette = "Set1") +
+  scale_y_continuous(name = "Reaction Times") +
+  scale_x_continuous(name = "Presentation Order")
+plot.presOrder
 
 
