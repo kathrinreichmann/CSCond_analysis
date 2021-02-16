@@ -1,5 +1,10 @@
 ### Generalization of evaluative conditioning, Modeling CS Variability
 
+
+#packages
+library(ggplot2)
+
+
 #latent variables of participant
 learnRate <- 0.5
 
@@ -31,43 +36,64 @@ for(cat in 1:nCat){
 many <- 5
 one <- 1
 
-#storage location for valence values
-Expectation <- matrix(0, 1, nFeaturesPerCS)
 
 #### learning phase
 #sum up valence for each stimulus feature
 
 #one
+#storage location for valence values
+Expectation <- matrix(0, 1, nFeaturesPerCS)
+plot(as.data.frame(Expectation))
+
 category <- 1
-for (nrCS in 1:many){
-  Valence <- CatVal[category]
-  for (feat in 1:nFeaturesPerCS){
-    featureNR <- Stimuli[nrCS, feat]
-    if (featureNR %in% Expectation[,1]){
-      Expectation[Expectation[,1] == featureNR] <- c(featureNR, Expectation[Expectation[,1] == featureNR][[2]] + Valence)
-    } else {
-      NewExpectation <- c(featureNR, Valence)
-      Expectation <- rbind(Expectation, NewExpectation)
+nTrials <- 20
+
+for (round in 1:nTrials){
+  for (nrCS in 1:one){
+    Valence <- CatVal[category]
+    for (feat in 1:nFeaturesPerCS){
+      featureNR <- Stimuli[nrCS, feat]
+      if (featureNR %in% Expectation[,1]){
+        Expectation[Expectation[,1] == featureNR] <- c(featureNR, Expectation[Expectation[,1] == featureNR][[2]] + Valence)
+      } else {
+        NewExpectation <- c(featureNR, Valence)
+        Expectation <- rbind(Expectation, NewExpectation)
+      }
     }
+    Plot <- as.data.frame(Expectation)
+    names(Plot) <- c("Feature", "ValenceValue")
+    print(lines(Plot, col = "red"))
+    Sys.sleep(0.5)
+    
   }
 }
+ExpectationOne <- Expectation[-1,]
 
-ExpectationOne <- na.omit(Expectation)
 
 #many
-Expectation <- matrix(NA, 1, nFeaturesPerCS)
-
+Expectation <- matrix(0, 1, nFeaturesPerCS)
 category <- 1
-for (nrCS in 1:many){
-  Valence <- CatVal[category]
-  for (feat in 1:nFeaturesPerCS){
-    feat1 <- Stimuli[nrCS, feat]
-    NewExpectation <- c(feat1, Valence)
-    Expectation <- rbind(Expectation, NewExpectation)
+nTrails <- 4
+for (round in 1:nTrials){
+  for (nrCS in 1:many){
+    Valence <- CatVal[category]
+    for (feat in 1:nFeaturesPerCS){
+      featureNR <- Stimuli[nrCS, feat]
+      if (featureNR %in% Expectation[,1]){
+        Expectation[Expectation[,1] == featureNR] <- c(featureNR, Expectation[Expectation[,1] == featureNR][[2]] + Valence)
+      } else {
+        NewExpectation <- c(featureNR, Valence)
+        Expectation <- rbind(Expectation, NewExpectation)
+      }
+    }
+    Plot <- as.data.frame(Expectation)
+    names(Plot) <- c("Feature", "ValenceValue")
+    print(lines(Plot, col = "blue"))
+    Sys.sleep(0.5)
+    
   }
 }
-
-ExpectationMany <- Expectation
+ExpectationMany <- Expectation[-1,]
 
 uF <- unique(as.vector(Stimuli))
 Expectation <- rep(0, length(uF))
