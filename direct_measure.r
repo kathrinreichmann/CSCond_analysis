@@ -27,6 +27,7 @@ library(ggplot2)
 #Analysis
 library(afex)
 library(lme4)
+library(nlme)
 library(effsize)
 
 #Functions
@@ -79,6 +80,26 @@ barplotDiff <- ggplot(direct.type_specific, aes (x = type_specific, y = diff, fi
   theme(plot.title = element_text (hjust = 0.5, face = "bold", size = 12))
 barplotDiff
 
+### Plot difference scores: CS x GS
+
+direct.type_specific <- aggregate(diff ~ condition + type_specific, dataDirect, mean)
+direct.type_specific$se <- aggregate(diff ~ condition + type_specific, dataDirect, se)[[3]]
+#direct.type_specific
+
+barplotDiff <- ggplot(direct.type_specific, aes (x = type_specific, y = diff, fill = condition)) +
+  geom_bar(stat = 'identity', position = position_dodge(), show.legend = TRUE) +
+  geom_errorbar(aes(ymin= diff - se, ymax= diff + se), width=.2,
+                position=position_dodge(.9)) +
+  ggtitle("Difference Scores") + 
+  scale_fill_brewer(palette = "Paired") +
+  scale_x_discrete(name = "\nType") +
+  scale_y_continuous (name = "Rating [Pos] - Rating [Neg]\n", breaks = seq(0, 70, 10), limits = c(0, 70)) + 
+  theme_classic() +
+  labs(fill = "CS Variability") +
+  theme(plot.title = element_text (hjust = 0.5, face = "bold", size = 12))
+barplotDiff
+
+
 ################### one-sample t-tests
 #H0: mu = 0
 #H1: mu not equal to 0 -> EC effect is significant
@@ -98,6 +119,13 @@ CSGSsame <- dataDirect[dataDirect$type_specific == "CS" | dataDirect$type_specif
 direct.type <- aggregate(diff ~ condition + type_specific + subject, CSGSsame, mean)
 aov_specific <- aov_car(diff ~ condition*type_specific + Error(subject/type_specific), direct.type, anova_table = list("pes"))
 aov_specific
+
+baseline <- lme(diff ~ 1, random = ~ 1|subject/type_specific/condition, data = CSGSFeat, method = "ML")
+conditionM <- update(baseline, .~. + condition)
+typeM <- update(conditionM, .~. + type_specific)
+interaction <- update(typeM, .~. + condition:type_specific)
+anova(baseline, conditionM, typeM, interaction)
+
 
 #analyze 2-way interaction
 CSGSsame.many <- CSGSsame[CSGSsame$condition == "many_one",]
@@ -135,17 +163,54 @@ summary(type_condition)
 
 ################### CS Variability x Type (CS vs. GS same vs. GS different vs. Feature)
 
+#MANOVA
+manovaData <- subset(dataDirect, select = -c(subject, val, measure, response, nr_obs))
+manovaData <- manovaData[!manovaData$type_specific == "Group",]
+manovaData$CS <- dataDirect$diff[dataDirect$type_specific == "CS"]
+manovaData$GSsame <- dataDirect$diff[dataDirect$type_specific == "GS same"]
+manovaData$GSdifferent <- dataDirect$diff[dataDirect$type_specific == "GS different"]
+manovaData$Feature <- dataDirect$diff[dataDirect$type_specific == "Feature"]
+manovaData <- manovaData[1:400, ]
+manovaData$type_specific <- NULL
+manovaData$diff <- NULL
+
+#homogeneity of covariance matrices
+by(manovaData[,2:5], manovaData$condition, cov)
+
+#multivariate outliers
+library(mvoutlier)
+aq.plot(manovaData[,2:5])
+
+#put multiple outcomes in the model
+outcome <- cbind(manovaData$CS, manovaData$GSsame, manovaData$GSdifferent, manovaData$Feature)
+
+#calculate the model
+conditionModel <- manova(outcome ~ condition, data = manovaData)
+summary(conditionModel)
+summary(conditionModel, test = "Wilks")
+summary(conditionModel, test = "Hotelling")
+summary(conditionModel, test = "Roy")
+
 #Hypothesis: interaction type x CS Variability
 
-CSGSFeat <- dataDirect[!dataDirect$type_specific == "Group",]
+CSGSFeat <- dataDirect[!dataDirect$type_specific ==
+                         "Group",]
 
 #### mixed-model ANOVA with CS Variability x Type (CS vs. GS same vs. GS different vs. Feature)
 direct.type <- aggregate(diff ~ condition + type_specific + subject, CSGSFeat, mean)
 aov_specific <- aov_car(diff ~ condition*type_specific + Error(subject/type_specific), direct.type, anova_table = list("pes"))
 summary(aov_specific)
+aov_specific
 #Departure from Sphericity, use Greenhouse-Geisser correction
 
 #??as linear model
+baseline <- lme(diff ~ 1, random = ~ 1|subject/type_specific/condition, data = CSGSFeat, method = "ML")
+conditionM <- update(baseline, .~. + condition)
+typeM <- update(conditionM, .~. + type_specific)
+interaction <- update(typeM, .~. + condition:type_specific)
+anova(baseline, conditionM, typeM, interaction)
+summary(interaction)
+
 baseline <- lmer(diff ~ 1 + (type_specific|subject),  CSGSFeat, REML = FALSE)
 conditionM <- lmer(diff ~ condition + (type_specific|subject),  CSGSFeat, REML = FALSE)
 typeM <- lmer(diff ~ condition + type_specific + (type_specific|subject),  CSGSFeat, REML = FALSE)

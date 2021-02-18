@@ -122,6 +122,34 @@ aov_specific
 
 ################### CS Variability x Type (CS vs. GS same vs. GS different vs. Feature)
 
+#MANOVA
+manovaData <- subset(dataIndirect, select = -c(subject, condition_code, val, prob, measure, type, nr_val, an, un, response))
+manovaData$CS <- dataIndirect$diff[dataIndirect$type_specific == "CS"]
+manovaData$GSsame <- dataIndirect$diff[dataIndirect$type_specific == "GS same"]
+manovaData$GSdifferent <- dataIndirect$diff[dataIndirect$type_specific == "GS different"]
+manovaData$Feature <- dataIndirect$diff[dataIndirect$type_specific == "Feature"]
+manovaData <- manovaData[1:400, ]
+manovaData$type_specific <- NULL
+manovaData$diff <- NULL
+head(manovaData)
+
+#homogeneity of covariance matrices
+by(manovaData[,2:5], manovaData$condition, cov)
+
+#multivariate outliers
+library(mvoutlier)
+aq.plot(manovaData[,2:5])
+
+#put multiple outcomes in the model
+outcome <- cbind(manovaData$CS, manovaData$GSsame, manovaData$GSdifferent, manovaData$Feature)
+
+#calculate the model
+conditionModel <- manova(outcome ~ condition, data = manovaData)
+summary(conditionModel)
+summary(conditionModel, test = "Wilks")
+summary(conditionModel, test = "Hotelling")
+summary(conditionModel, test = "Roy")
+
 #### mixed-model ANOVA with CS Variability x Type (CS vs. GS same vs. GS different vs. Feature)
 indirect.type <- aggregate(diff ~ condition + type_specific + subject, dataIndirect, mean)
 aov_specific <- aov_car(diff ~ condition*type_specific + Error(subject/type_specific), indirect.type, anova_table = list("pes"))
