@@ -6,9 +6,9 @@ library(ggplot2)
 
 
 #latent variables of participant
-learnRate <- 0.8
-repRate <- 0.9
-decreaseFactorRepeat <- 0.95
+learnRate <- 0.8 #participants are not able to learn everything perfectly
+repRate <- 1
+decreaseFactorRepeat <- 0.95 #with every repeat, the laerning cure flattens
 
 #experimental variables
 nTrials <- 4
@@ -20,7 +20,7 @@ nFeaturesPerCS <- 2
 Stimuli <- matrix(NA, nExemplar, nFeaturesPerCS)
 
 for (CS in 1:nrow(Stimuli)){
-  Stimuli[CS, 1:2] <- c(1, CS+1)
+  Stimuli[CS, 1:nFeaturesPerCS] <- c(1, CS+1)
 }
 
 #stimuli in testing phase
