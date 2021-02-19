@@ -15,8 +15,8 @@
 #direct.csv
 
 ### set working directory:
-setwd("\\\\sn00.zdv.uni-tuebingen.de/siskr01/Documents/Github/CSCond_analysis/CSCond_analysis/data")
-#setwd("C:/Users/reich/Documents/GitHub/CSCond_analysis/data")
+#setwd("\\\\sn00.zdv.uni-tuebingen.de/siskr01/Documents/Github/CSCond_analysis/CSCond_analysis/data")
+setwd("C:/Users/reich/Documents/GitHub/CSCond_analysis/data")
 
 library(dplyr)
 library(tidyverse)

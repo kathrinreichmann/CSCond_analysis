@@ -7,6 +7,8 @@ library(ggplot2)
 
 #latent variables of participant
 learnRate <- 0.8
+repRate <- 0.9
+decreaseFactorRepeat <- 0.95
 
 #experimental variables
 nTrials <- 4
@@ -23,7 +25,8 @@ for (CS in 1:nrow(Stimuli)){
 
 #stimuli in testing phase
 FeatureStim <- unique(as.vector(Stimuli))
-GSStim <- c(1,nrow(Stimuli) + 1)
+CSStim <- Stimuli[1,]
+GSStim <- c(1,nExemplar*nFeaturesPerCS + 1)
 
 #valence for each category
 CatVal <- c()
@@ -52,21 +55,23 @@ for (round in 1:nTrials){
     for (feat in 1:nFeaturesPerCS){
       featureNR <- Stimuli[nrCS, feat]
       if (featureNR %in% Expectation[,1]){
-        Expectation[Expectation[,1] == featureNR] <- c(featureNR, Expectation[Expectation[,1] == featureNR][[2]] + Valence*learnRate)
+        Expectation[Expectation[,1] == featureNR] <- c(featureNR, Expectation[Expectation[,1] == featureNR][[2]] + Valence*learnRate*repRate)
       } else {
-        NewExpectation <- c(featureNR, Valence*learnRate)
+        NewExpectation <- c(featureNR, Valence*learnRate*repRate)
         Expectation <- rbind(Expectation, NewExpectation)
       }
     }
     Plot <- as.data.frame(Expectation)
     names(Plot) <- c("Feature", "ValenceValue")
+    Plot <- Plot[-1,]
     plot(Plot)
     print(lines(Plot, col = "blue"))
     Sys.sleep(1)
-    
   }
+  repRate <- repRate*decreaseFactorRepeat
 }
 ExpectationMany <- Expectation[-1,]
+ExpectationMany
 
 #one
 #storage location for valence values
@@ -81,89 +86,130 @@ for (round in 1:nTrials){
     for (feat in 1:nFeaturesPerCS){
       featureNR <- Stimuli[nrCS, feat]
       if (featureNR %in% Expectation[,1]){
-        Expectation[Expectation[,1] == featureNR] <- c(featureNR, Expectation[Expectation[,1] == featureNR][[2]] + Valence*learnRate)
+        Expectation[Expectation[,1] == featureNR] <- c(featureNR, Expectation[Expectation[,1] == featureNR][[2]] + Valence*learnRate*repRate)
       } else {
-        NewExpectation <- c(featureNR, Valence*learnRate)
+        NewExpectation <- c(featureNR, Valence*learnRate*repRate)
         Expectation <- rbind(Expectation, NewExpectation)
       }
     }
     Plot <- as.data.frame(Expectation)
+    Plot <- Plot[-1,]
     names(Plot) <- c("Feature", "ValenceValue")
     print(lines(Plot, col = "red"))
     Sys.sleep(1)
-    
   }
+  repRate <- repRate*decreaseFactorRepeat
 }
 ExpectationOne <- Expectation[-1,]
+ExpectationOne
 
 #### testing phase
 
-##different features
+# testing of features alone
+#one condition
+FeatureRatingOne <- matrix(0, 1, nFeaturesPerCS)
+for (feat in 1:length(FeatureStim)){
+  if (feat%in%ExpectationOne[,1]){
+    newFeature <- ExpectationOne[ExpectationOne[,1] == feat,]
+  } else {
+    newFeature <- c (feat, 0)
+  }
+  FeatureRatingOne <- rbind(FeatureRatingOne, newFeature)
+}
 
+FeatureRatingOne <- FeatureRatingOne[-1,]
+FeatureRatingOne
+plot(FeatureRatingOne, type = "l")
+
+#many condition
+FeatureRatingMany <- matrix(0, 1, nFeaturesPerCS)
+for (feat in 1:length(FeatureStim)){
+  if (feat%in%ExpectationMany[,1]){
+    newFeature <- ExpectationMany[ExpectationMany[,1] == feat,]
+  } else {
+    newFeature <- c (feat, 0)
+  }
+  FeatureRatingMany <- rbind(FeatureRatingMany, newFeature)
+}
+FeatureRatingMany <- FeatureRatingMany[-1,]
+FeatureRatingMany
+plot(FeatureRatingMany, type = "p")
+
+
+## testing of CS
+
+feat1 <- CSStim[1]
+feat2 <- CSStim[2]
+
+#formula: Rating = RatingFeature1 + RatingFeature2
+CSresultMany <- FeatureRatingMany[feat1,2] + FeatureRatingMany[feat2,2]
+CSresultMany
+
+CSresultOne <- FeatureRatingOne[feat1,2] + FeatureRatingOne[feat2,2]
+CSresultOne
+
+
+#testing of GSs
+
+feat1 <- GSStim[1]
+feat2 <- GSStim[2]
+
+#formula: Rating = RatingFeature1 + RatingFeature2
+#many
+if (feat1%in%FeatureRatingMany) {
+  GSresultMany <- FeatureRatingMany[feat1,2]
+} else {
+  GSresultMany <- FeatureRatingMany[feat2,2]
+}
+GSresultMany
+
+#one
+if (feat1%in%FeatureRatingOne) {
+  GSresultOne <- FeatureRatingOne[feat1,2]
+} else {
+  GSresultOne <- FeatureRatingOne[feat2,2]
+}
+GSresultOne
 
 
 ## using the differences between the features for generalization
 ## differences: distinguish between likely predictions and less likely predictions
 
-DiffExpectation
-
-#### learning phase - cue competition
-
-
-
-
-uF <- unique(as.vector(Stimuli))
-Expectation <- rep(0, length(uF))
-
-### Learning Phase
-condition <- 1
-if (condition == 1) {
-  for (trial in 1:nTrials) {
-    stim2present <- sample(1:nStim, size=1)
-    expect <- Expectation[uF%in%Stimuli[stim2present,]]
-    predError <- Valence[stim2present] - expect
-    Expectation[uF%in%Stimuli[stim2present,]] <- Expectation[uF%in%Stimuli[stim2present,]] + learnRate*predError
-  }
-}
-
-
-# keep this for condition 2, change later
-
-Expectation <- matrix(0, 2, nStim)
-
-condition <- 2
-if (condition == 2) {
-  for (trial in 1:nTrials) {
-    stim2present <- sample(1:nStim, size=1)
-    val2present <- Valence[stim2present]
-    if (val2present==1) valIndex <- 1
-    if (val2present==-1) valIndex <- 2
-    expect <- Expectation[valIndex, ]
-    #predError <- rep(-0.5, nStim)
-    predError <- rep(0, nStim)
-    predError[stim2present] <- predError[stim2present] + 1
-    Expectation[valIndex, ] <- Expectation[valIndex, ] + learnRate*predError
-  }
-}
-
-
-
-if (condition == 1) {     # CS before UCS
-  Valence <- list(matrix(NA, length(unique(Stimuli[,1])), 2), matrix(NA, length(unique(Stimuli[,2])), 2))
-  for (feature in 1:2) {
-    Valence[[feature]][,1] <- unique(Stimuli[,feature])
-    for (f in unique(Stimuli[, feature])) {
-      Valence[[feature]][Valence[[feature]][,1]==f, 2] <- sum(Stimuli[Stimuli[,feature]==f,3])
+#many
+DiffExpectation <- matrix(NA, dim(FeatureRatingMany)[1], dim(FeatureRatingMany)[1])
+  
+for(column in 1:dim(FeatureRatingMany)[1]){
+  for (row in 1:dim(FeatureRatingMany)[1]){
+    if (row == column){
+      DiffExpectation[row, column] <- 0
+    } else {
+      DiffExpectation[row, column] <- as.numeric(FeatureRatingMany[column, 2] - FeatureRatingMany[row, 2])
+    
     }
   }
-  
-  for (gen in 3:4) {
-    if (Stimuli[gen,1] == Stimuli[1,1]) {
-      Valence[1]
-    } 
+}
+
+DiffExpectationMany <- DiffExpectation
+DiffExpectationMany
+
+#one
+DiffExpectation <- matrix(NA, dim(FeatureRatingMany)[1], dim(FeatureRatingMany)[1])
+
+for(column in 1:dim(FeatureRatingOne)[1]){
+  for (row in 1:dim(FeatureRatingOne)[1]){
+    if (row == column){
+      DiffExpectation[row, column] <- 0
+    } else {
+      DiffExpectation[row, column] <- as.numeric(FeatureRatingOne[column, 2] - FeatureRatingOne[row, 2])
+      
+    }
   }
 }
-if (condition == 2) {     # CS after UCS
-  
-}
+
+DiffExpectationOne <- DiffExpectation
+DiffExpectationOne
+
+#sum of differences
+
+
 

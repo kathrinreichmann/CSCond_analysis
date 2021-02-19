@@ -23,8 +23,8 @@
 #indirect.csv
 
 ### set working directory:
-setwd("\\\\sn00.zdv.uni-tuebingen.de/siskr01/Documents/Github/CSCond_analysis/CSCond_analysis/data")
-#setwd("C:/Users/reich/Documents/GitHub/CSCond_analysis/data")
+#setwd("\\\\sn00.zdv.uni-tuebingen.de/siskr01/Documents/Github/CSCond_analysis/CSCond_analysis/data")
+setwd("C:/Users/reich/Documents/GitHub/CSCond_analysis/data")
 
 library(dplyr)
 #library(tidyverse)
@@ -39,9 +39,6 @@ library(lme4)
 #Functions
 CI <- function(x) qnorm(0.975)*sd(x)/sqrt(length(x))
 se <- function(x) sd(x)/sqrt(length(x))
-
-setwd("\\\\sn00.zdv.uni-tuebingen.de/siskr01/Documents/Github/CSCond_analysis/CSCond_analysis/data")
-#setwd("C:/Users/reich/Documents/GitHub/CSCond_analysis/data")
 
 
 #import data
