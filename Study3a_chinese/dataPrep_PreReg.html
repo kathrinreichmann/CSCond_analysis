@@ -198,26 +198,166 @@ summary {
 <div id="abstraction-mechanisms-predict-generalization-in-ec---study-1a-chinese-characters-data-preparation" class="section level2">
 <h2>Abstraction Mechanisms predict Generalization in EC - Study 1a (Chinese Characters), Data Preparation</h2>
 <p>Data preparation for analysis</p>
-<pre class="r"><code>filenames &lt;- dir()
-dat &lt;- data.frame()
-for (i in filenames){
-  dat &lt;- rbind(dat, read.table(i, header = TRUE, sep = &quot;,&quot;, encoding = &quot;UTF-8&quot;))
-}
-rm (filenames, i)
-unique(dat$subject)</code></pre>
-<pre><code>##  [1] &quot;08guyhju09&quot; &quot;1er3pb2c9f&quot; &quot;1udy37qvdh&quot; &quot;230ypa8vhf&quot; &quot;2maobvb2kf&quot;
-##  [6] &quot;3s4ehdljbo&quot; &quot;3ydj849xqo&quot; &quot;46od33hjwb&quot; &quot;4fw5ps7kpp&quot; &quot;4jytxmncyg&quot;
-## [11] &quot;4p8v0yf7wk&quot; &quot;4wn7ob94sy&quot; &quot;508wmv2roy&quot; &quot;5ff83wwpw5&quot; &quot;6pzartsauw&quot;
-## [16] &quot;9752junjhl&quot; &quot;bdo9qujmkb&quot; &quot;bmn0tyzef2&quot; &quot;bx1n6f7v29&quot; &quot;byep0at443&quot;
-## [21] &quot;c3vdbdcgob&quot; &quot;goa5xb993y&quot; &quot;ha76c9uznm&quot; &quot;hem66jjbdg&quot; &quot;l37lnnhwa5&quot;
-## [26] &quot;l8504tsezc&quot; &quot;mjdyg2lgka&quot; &quot;mk54186wco&quot; &quot;mz8ckl62hl&quot; &quot;ndaxo5c4uh&quot;
-## [31] &quot;opehl4k9op&quot; &quot;oqpth3331g&quot; &quot;q8u024al42&quot; &quot;rg4e8ddc57&quot; &quot;rjyveqyjlq&quot;
-## [36] &quot;t534n560cd&quot; &quot;ua2vg57o79&quot; &quot;uebu1eampj&quot; &quot;uvwxyp6tl5&quot; &quot;w6tl5wxxfo&quot;
-## [41] &quot;whmxhf3yb6&quot; &quot;wjujvd90k9&quot; &quot;xmz7cn2d79&quot; &quot;y4uzcdnwnk&quot; &quot;ye4qmyzvta&quot;
-## [46] &quot;zokm9vz8ou&quot; &quot;zzq9fap066&quot;</code></pre>
+<pre class="r"><code>#prep
+dat$subject &lt;- factor(dat$subject)
+dat$response &lt;- as.numeric(dat$response)
+
+#condition
+get_tables &lt;- aggregate(response ~ subject + condition, dat, mean)
+table(get_tables$condition)</code></pre>
+<pre><code>## 
+## many_one  one_one 
+##      121      117</code></pre>
 </div>
 <div id="data-exclusion" class="section level2">
 <h2>Data Exclusion</h2>
+<pre><code>## [1] 238</code></pre>
+<pre><code>## 
+##   0   1   2 
+##  24 211   3</code></pre>
+<pre><code>## 
+##   0   1 
+## 210   1</code></pre>
+<pre><code>## 
+##   0   1 
+##   8 199</code></pre>
+<pre><code>## 
+##   0 
+## 199</code></pre>
+<pre><code>## [1] 200</code></pre>
+</div>
+<div id="demgraphics" class="section level2">
+<h2>Demgraphics</h2>
+<pre><code>## 
+##   1   2   4 
+## 188  10   1</code></pre>
+<pre><code>## 
+##   0   1   2   3 
+## 148  48   1   2</code></pre>
+<pre><code>##    Min. 1st Qu.  Median    Mean 3rd Qu.    Max. 
+##   18.00   21.00   23.00   24.17   25.00   69.00</code></pre>
+<pre class="r"><code>#delete unnessessary columns
+#data.frame(colnames(dat))
+dat[,1:5] &lt;- NULL
+dat$codeword &lt;- NULL
+dat$url &lt;- NULL
+
+#as factor
+as_factor &lt;- c(&quot;subject&quot;, &quot;val&quot;, &quot;condition_code&quot;, &quot;condition&quot;, &quot;measure&quot;, &quot;measure_code&quot;, &quot;type&quot;, &quot;type_specific&quot;, &quot;category&quot;, &quot;cs_selected&quot;)
+
+#rename stimulus names
+as.factor(gsub(&quot;.png$&quot;, &quot;&quot;, dat$target))-&gt; dat$target
+as.factor(gsub(&quot;targets/&quot;, &quot;&quot;, dat$target))-&gt; dat$target
+as.factor(gsub(&quot;.png$&quot;, &quot;&quot;, dat$cs_selected))-&gt; dat$cs_selected
+as.factor(gsub(&quot;category&quot;, &quot;&quot;, dat$cs_selected))-&gt; dat$cs_selected</code></pre>
+</div>
+<div id="direct-measure" class="section level2">
+<h2>Direct Measure</h2>
+<p><strong>export data file for direct measure </strong></p>
+<pre class="r"><code>#extract relevant columns
+direct &lt;- dat[dat$task == &quot;direct&quot; | dat$task == &quot;all&quot;,] 
+direct &lt;- direct[c(&#39;response&#39;, &#39;subject&#39;, &#39;condition&#39;, &#39;condition_code&#39;, &#39;measure&#39;, &#39;measure_code&#39;, &#39;val&#39;, &#39;type&#39;, &#39;type_specific&#39;, &#39;category&#39;, &#39;cs_selected&#39;)]
+
+for (factor in as_factor){
+  direct[, factor] &lt;- as.factor(direct[,factor])
+}
+
+direct$type_specific &lt;- factor(direct$type_specific, levels = c(&#39;CS&#39;, &#39;GSold&#39;, &#39;GSnew&#39;, &#39;abstract&#39;, &#39;all&#39;), labels = c(&#39;CS&#39;, &#39;GS same&#39;, &#39;GS different&#39;, &quot;Feature&quot;, &quot;Group&quot;))
+direct$response &lt;- as.numeric(direct$response)
+str(direct)</code></pre>
+<pre><code>## &#39;data.frame&#39;:    9685 obs. of  11 variables:
+##  $ response      : num  21 -51 40 -79 -86 -70 -100 25 -37 -58 ...
+##  $ subject       : Factor w/ 238 levels &quot;02a80kdxm7&quot;,&quot;03rysffm8e&quot;,..: 1 1 1 1 1 1 1 1 1 1 ...
+##  $ condition     : Factor w/ 2 levels &quot;many_one&quot;,&quot;one_one&quot;: 1 1 1 1 1 1 1 1 1 1 ...
+##  $ condition_code: Factor w/ 2 levels &quot;0&quot;,&quot;1&quot;: 1 1 1 1 1 1 1 1 1 1 ...
+##  $ measure       : Factor w/ 2 levels &quot;direct_first&quot;,..: 2 2 2 2 2 2 2 2 2 2 ...
+##  $ measure_code  : Factor w/ 2 levels &quot;0&quot;,&quot;1&quot;: 1 1 1 1 1 1 1 1 1 1 ...
+##  $ val           : Factor w/ 2 levels &quot;neg&quot;,&quot;pos&quot;: 2 2 1 2 1 1 1 2 1 1 ...
+##  $ type          : Factor w/ 3 levels &quot;All&quot;,&quot;CS&quot;,&quot;GS&quot;: 3 3 2 3 2 3 2 2 3 3 ...
+##  $ type_specific : Factor w/ 5 levels &quot;CS&quot;,&quot;GS same&quot;,..: 2 2 1 2 1 4 1 1 3 2 ...
+##  $ category      : Factor w/ 4 levels &quot;1&quot;,&quot;2&quot;,&quot;3&quot;,&quot;4&quot;: 4 3 1 3 1 2 2 4 2 2 ...
+##  $ cs_selected   : Factor w/ 61 levels &quot;&quot;,&quot;1/CS1&quot;,&quot;1/CS10&quot;,..: 54 34 3 33 8 30 22 56 27 23 ...</code></pre>
+<pre class="r"><code>unique(direct$subject)</code></pre>
+<pre><code>##   [1] 02a80kdxm7 03rysffm8e 05j2327rvx 0l6bvae9bs 0m0jrs2srj 0x60m0jfpm
+##   [7] 0xo6h201o3 10evoqdku4 12gexjlo94 18qvs185np 1px6htx436 1z04sepqyo
+##  [13] 1zw137onrg 26btee9n2n 2aj9uo7pfl 2mqu8k2r76 2olm6np2cg 2tvgx5ewo4
+##  [19] 2utcay5yvz 2zrj3x0l29 30ff3wxhcw 3knv5n39nn 3uzo9du3nx 3vfjglht24
+##  [25] 47b8s69lm4 48wr3g197w 4d661end2v 4dg21jcf26 4ep2ondcw3 4f19fjp626
+##  [31] 4jkz6xklgk &lt;NA&gt;       4l4yq4n0oe 4omusvdetz 4ycy6vchka 50jv2vtstw
+##  [37] 56k89e4p6w 573oppzqcz 5a9e9r3ws2 5m1wbc1kns 5slebo5zxa 5zuvk4gozr
+##  [43] 659u5pb0vr 661rb2wdn4 68jqpf555d 6a9y2qhjwk 6jsxxs2gq0 6q8ehgwt7z
+##  [49] 6xb5aupvc2 7ljncbzlhh 80v1177e8v 93ut7vddfs 9fgt8h1wkv 9k0gvb7jbz
+##  [55] 9k8axbesz8 9lu5hgyd1p 9nay5s46ya 9oyt0u1h1a a2lvo6ypua aplzn2l594
+##  [61] b1exvcf50o b887zhcn25 b9msj7882x bgz1uj2y37 bo98z23204 bvoueq1d6z
+##  [67] byh3nmyv68 c2fhk8suto c8fl74pyef c8gntmmyut cfmxozsyrn ch9zvf20wz
+##  [73] cy52us1pbu czl1ztupjr dekgjrbh10 dga6wrnqb5 dxq9vxa50z e1t3l4glta
+##  [79] e53autkf21 en3mrxlu2g ezzhv9e7tp f01atolwpw f9hes9jnq2 fqm7se37by
+##  [85] fr2l4n7yqq g4s7kxam7q gc1kgz4c05 gcbg94pk6w gnjsswxs94 gog79rk46k
+##  [91] gqu9j3c27l gy7bbd1bvj gyujd0ok02 h085msm1gk h7vjpp5p2h h8e0vbwe0z
+##  [97] j2p3llg9ob j7f9s7u49s jf18mbay4y jj140azzth jrpn3cwjpf juwlz4ru1d
+## [103] k2j77sq8d0 k9vu2hykn8 kczkhhpz7h kdcueo0qoe kk8bumaocj kqgyocaz4y
+## [109] kqo3uey7hs l7n9aszzdf ljswwjm989 lkssm3m63f llyz70t28f lqup64oma9
+## [115] m3doycl30t m6y3257hb6 maa8axscqt mhwuacmfnr mjw6wchufp mkfk8l3zcd
+## [121] n52fub90as n5le7pcbkl n9og5lt5ya nbt2h46sx2 nks3bwqtk8 nofyny1e4o
+## [127] nvmpn601oq nxaxm2lljf nxdly59zjf o48wdkw8c2 o89gqnsgzz o90va6hemg
+## [133] o96sk283ux o9vyrz7fr9 oa2sems4m5 osq0w7gol0 p1hk1efaj6 pasy3nj0f2
+## [139] pne715w5jm ptkozk10jy q028wq3tja q555ewzrgz qblt0wlpof qn0rom26n0
+## [145] qojb7hpk86 qqn3sh6fd4 qvcu1wacak qyfvgxycjb qyw4d75s75 r0rjyglh94
+## [151] r88wjnjll7 r9aeuuag1e ru82zmccpt rx4ofmsh6m s05vde9xst s4nba9xh7n
+## [157] sd69585ngp sg33rsrnhp sokpp702rx sxg0rmlh1f szemrlvd8k t5jlt0xu6m
+## [163] t6ev74okbf t8rz6ww85w t9a1lfnukq tlqe0hbqpl tpq63n8df6 ttfw248xer
+## [169] uf2353fobs uwam7d8uuc v9yb3nf2px vfs2r4l8qp vhqac8chyp vrpt424exj
+## [175] vthrokdv3a vxn9hs7gxn w8o67hhk08 wc7uzqkrsp wf3cnq6kaz wpybw232ar
+## [181] wtqerrutwo wv2933l494 wzdkk0pc1n xkqsx2orfx xqkkl6heqo xygobjvobv
+## [187] ybbwtrgqb1 yk130xwl82 yyg0o2ft7f yzbdb1jnlr yzekf20wzp z1gj6a3qrv
+## [193] z4qlfzhz4b z79mzj78u9 zdpryje57p zduy660dv5 zjfkyrqalf zplwc7odzv
+## [199] zszt1vu065 ztzyh6dda9
+## 238 Levels: 02a80kdxm7 03rysffm8e 05j2327rvx 0l6bvae9bs ... ztzyh6dda9</code></pre>
+<pre class="r"><code>#export files
+#setwd(&quot;\\\\sn00.zdv.uni-tuebingen.de/siskr01/Documents/Github/CSCond_analysis/CSCond_analysis/data&quot;)
+setwd(&quot;C:/Users/reich/Documents/GitHub/CSCond_analysis/Study3a_chinese/data_preprocessed&quot;)
+write.csv2(direct, file = &#39;direct.csv&#39;)</code></pre>
+</div>
+<div id="indirect-measure" class="section level2">
+<h2>Indirect Measure</h2>
+<pre class="r"><code>#extract relevant columns
+indirect &lt;- dat[dat$task == &quot;indirect&quot;,]
+indirect &lt;- indirect[c(&#39;indirect&#39;, &#39;rt&#39;, &#39;subject&#39;, &#39;condition&#39;, &#39;condition_code&#39;, &#39;measure&#39;, &#39;measure_code&#39;, &#39;val&#39;, &#39;type&#39;, &#39;type_specific&#39;, &#39;category&#39;, &#39;cs_selected&#39;, &#39;target&#39;, &#39;nr_pres&#39;)]
+
+as_factor &lt;- append(as_factor, &quot;target&quot;)
+for (factor in as_factor){
+  indirect[, factor] &lt;- as.factor(indirect[,factor])
+}
+
+indirect$response &lt;- as.numeric(indirect$indirect)
+indirect$indirect &lt;- NULL
+indirect$nr_pres &lt;- as.numeric(indirect$nr_pres)
+indirect$rt &lt;- as.numeric(indirect$rt)
+str(indirect)</code></pre>
+<pre><code>## &#39;data.frame&#39;:    8889 obs. of  14 variables:
+##  $ rt            : num  4341 5014 1898 1259 1339 ...
+##  $ subject       : Factor w/ 238 levels &quot;02a80kdxm7&quot;,&quot;03rysffm8e&quot;,..: 1 1 1 1 1 1 1 1 1 1 ...
+##  $ condition     : Factor w/ 2 levels &quot;many_one&quot;,&quot;one_one&quot;: 1 1 1 1 1 1 1 1 1 1 ...
+##  $ condition_code: Factor w/ 2 levels &quot;0&quot;,&quot;1&quot;: 1 1 1 1 1 1 1 1 1 1 ...
+##  $ measure       : Factor w/ 2 levels &quot;direct_first&quot;,..: 2 2 2 2 2 2 2 2 2 2 ...
+##  $ measure_code  : Factor w/ 2 levels &quot;0&quot;,&quot;1&quot;: 1 1 1 1 1 1 1 1 1 1 ...
+##  $ val           : Factor w/ 2 levels &quot;neg&quot;,&quot;pos&quot;: 2 2 2 2 2 1 1 2 2 1 ...
+##  $ type          : Factor w/ 2 levels &quot;CS&quot;,&quot;GS&quot;: 1 1 1 1 2 1 1 1 1 2 ...
+##  $ type_specific : Factor w/ 4 levels &quot;abstract&quot;,&quot;CS&quot;,..: 2 2 2 2 4 2 2 2 2 4 ...
+##  $ category      : Factor w/ 4 levels &quot;1&quot;,&quot;2&quot;,&quot;3&quot;,&quot;4&quot;: 3 4 4 3 3 2 1 4 4 2 ...
+##  $ cs_selected   : Factor w/ 61 levels &quot;&quot;,&quot;1/CS1&quot;,&quot;1/CS10&quot;,..: 35 47 51 41 34 17 8 56 53 24 ...
+##  $ target        : Factor w/ 49 levels &quot;&quot;,&quot;1&quot;,&quot;10&quot;,&quot;11&quot;,..: 41 32 17 23 16 10 38 43 31 4 ...
+##  $ nr_pres       : num  0 1 2 3 4 5 6 7 8 9 ...
+##  $ response      : num  0 1 0 1 1 0 1 1 1 1 ...</code></pre>
+<pre class="r"><code>indirect$type_specific &lt;- factor(indirect$type_specific, levels = c(&#39;CS&#39;, &#39;GSold&#39;, &#39;GSnew&#39;, &#39;abstract&#39;), labels = c(&#39;CS&#39;, &#39;GS same&#39;, &#39;GS different&#39;, &quot;Feature&quot;))
+
+#export files
+#setwd(&quot;\\\\sn00.zdv.uni-tuebingen.de/siskr01/Documents/Github/CSCond_analysis/CSCond_analysis/data&quot;)
+setwd(&quot;C:/Users/reich/Documents/GitHub/CSCond_analysis/Study3a_chinese/data&quot;)
+write.csv2(indirect, file = &#39;indirect.csv&#39;)</code></pre>
+</div>
+<div id="drm" class="section level2">
+<h2>DRM</h2>
 </div>
 
 
