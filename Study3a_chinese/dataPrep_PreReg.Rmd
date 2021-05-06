@@ -1,0 +1,49 @@
+---
+title: "data_prep_PreReg"
+author: "Kathrin Reichmann"
+date: "6 5 2021"
+input: data of experiment 1a
+output:
+  html_document: default
+  pdf_document: default
+  csv:   direct.csv, indirect.csv, drm.csv
+---
+
+```{r setup, include=FALSE}
+knitr::opts_chunk$set(echo = TRUE)
+```
+
+## Abstraction Mechanisms predict Generalization in EC - Study 1a (Chinese Characters), Data Preparation
+
+Data preparation for analysis
+
+
+```{r load libraries and clean the environment, echo=FALSE, include=FALSE}
+library(dplyr)
+library(tidyverse)
+rm(list = ls())
+
+```
+
+```{r set local directory, echo=FALSE, include=FALSE}
+
+#setwd("\\\\sn00.zdv.uni-tuebingen.de/siskr01/Documents/Github/CSCond_analysis/CSCond_analysis/data")
+knitr::opts_knit$set(root.dir = "C:/Users/reich/Documents/GitHub/CSCond_analysis/Study3a_chinese/data")
+
+```
+
+```{r read files, echo = TRUE}
+
+filenames <- dir()
+dat <- data.frame()
+for (i in filenames){
+  dat <- rbind(dat, read.table(i, header = TRUE, sep = ",", encoding = "UTF-8"))
+}
+rm (filenames, i)
+unique(dat$subject)
+
+```
+
+## Data Exclusion
+
+
