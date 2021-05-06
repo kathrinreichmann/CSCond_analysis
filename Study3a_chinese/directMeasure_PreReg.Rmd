@@ -1,0 +1,78 @@
+---
+title: "EvaluativeRating_PreReg"
+author: "Kathrin Reichmann"
+date: "23 4 2021"
+output: html_document
+---
+
+```{r setup, include=FALSE}
+knitr::opts_chunk$set(echo = TRUE)
+```
+
+## CS Variability and Generalization
+
+The experiment includes direct measures and indirect evaluative measures of the stimuli included in the learning phase (CSs), and stimuli not included in the learning phase but belonging to the same category (GS).
+
+
+```{r load libraries and clean the environment, echo=FALSE, include=FALSE}
+library(dplyr)
+library(tidyverse)
+
+library(ggplot2)
+
+library(afex)
+library(lme4)
+library(nlme)
+library(effsize)
+
+rm(list = ls())
+
+```
+
+```{r set local directory, echo=FALSE, include=FALSE}
+
+#setwd("\\\\sn00.zdv.uni-tuebingen.de/siskr01/Documents/Github/CSCond_analysis/CSCond_analysis/data")
+knitr::opts_knit$set(root.dir = "C:/Users/reich/Documents/GitHub/CSCond_analysis/data")
+
+```
+
+```{r required functions, echo=FALSE, include=FALSE}
+CI <- function(x) qnorm(0.975)*sd(x)/sqrt(length(x))
+se <- function(x) sd(x)/sqrt(length(x))
+
+```
+
+```{r, import data of direct measure, include=FALSE}
+
+direct <- read.csv2('direct.csv', header = TRUE)
+str(direct)
+
+
+as_factor <- c("subject", "val", "condition_code", "condition", "measure", "measure_code", "type", "type_specific", "category", "cs_selected")
+
+for (factor in as_factor){
+  direct[, factor] <- as.factor(direct[,factor])
+}
+
+direct$type_specific <- factor(direct$type_specific, levels = c("CS", "GS same", "GS different", "Feature", "Group"))
+
+```
+
+```{r, import data of indirect measure, include = FALSE}
+
+indirect <- read.csv2('indirect.csv', header = TRUE)
+str(indirect)
+
+
+as_factor <- c("subject", "val", "condition_code", "condition", "measure", "measure_code", "type", "type_specific", "category", "cs_selected")
+
+for (factor in as_factor){
+  indirect[, factor] <- as.factor(indirect[,factor])
+}
+
+indirect$type_specific <- factor(indirect$type_specific, levels = c("CS", "GS same", "GS different", "Feature"))
+str(indirect)
+
+```
+
+

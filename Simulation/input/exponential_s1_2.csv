@@ -1,0 +1,17 @@
+Cues,Outcomes,Frequency
+blue_d1_i1,ge,2049
+blue_d1_i2,ge,1025
+blue_d1_i3,ge,513
+blue_d1_i4,ge,257
+blue_d1_i5,ge,129
+blue_d1_i6,ge,65
+red_d2_j1,ge,33
+red_d2_j2,ge,17
+red_d3_k1,ma,2049
+red_d3_k2,ma,1025
+red_d3_k3,ma,513
+red_d3_k4,ma,257
+red_d3_k5,ma,129
+red_d3_k6,ma,65
+blue_d4_l1,ma,33
+blue_d4_l2,ma,17

@@ -1,0 +1,13 @@
+Cues,Outcomes,Frequency
+blue_d1_d1_d2_d3,dep,250
+blue_d1_d3_d2_d2,dep,250
+blue_d2_d1_d2_d3,dep,250
+red_d3_d2_d1_d3,dep,250
+purple_d1_d1_d2_d3,bim,250
+purple_d1_d3_d2_d2,bim,250
+purple_d2_d1_d2_d3,bim,250
+blue_d3_d2_d1_d3,bim,250
+red_d1_d1_d2_d3,tob,250
+red_d1_d3_d2_d2,tob,250
+red_d2_d1_d2_d3,tob,250
+purple_d3_d2_d1_d3,tob,250
