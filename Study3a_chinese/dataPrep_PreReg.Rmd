@@ -27,11 +27,7 @@ rm(list = ls())
 
 ```{r set local directory, echo=FALSE, include=FALSE}
 
-#setwd("\\\\sn00.zdv.uni-tuebingen.de/siskr01/Documents/Github/CSCond_analysis/CSCond_analysis/data")
-knitr::opts_knit$set(root.dir = "C:/Users/reich/Documents/GitHub/CSCond_analysis/Study3a_chinese/data")
-
 localGitDir <- "C:/Users/reich/Documents/GitHub/CSCond_analysis/Study3a_chinese"
-
 
 ```
 

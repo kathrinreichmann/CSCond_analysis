@@ -16,7 +16,7 @@
 
 ### set working directory:
 #setwd("\\\\sn00.zdv.uni-tuebingen.de/siskr01/Documents/Github/CSCond_analysis/CSCond_analysis/data")
-setwd("C:/Users/reich/Documents/GitHub/CSCond_analysis/data")
+setwd("C:/Users/reich/Documents/GitHub/CSCond_analysis/Study1_EC/data")
 
 library(dplyr)
 library(tidyverse)
@@ -65,19 +65,17 @@ multiLevel$type_specific <- NULL
 head(multiLevel)
 multiLevel[multiLevel$subject == "02a80kdxm7",] #check
 
-#(3) plot the three different levels involved in the analysis
+#(3) plot the two different levels involved in the analysis
 
 dotplot <- ggplot(multiLevel, aes (x = CS, y = GS, color = category)) +
   facet_grid(. ~ condition) +
   geom_point(show.legend = TRUE) +
-  geom_smooth(method = 'lm')
-
-  ggtitle("Difference Scores") + 
-  scale_fill_brewer(palette = "Paired") +
-  scale_x_discrete(name = "\nType") +
-  scale_y_continuous (name = "Rating [Pos] - Rating [Neg]\n", breaks = seq(0, 70, 10), limits = c(0, 70)) + 
+  geom_smooth(method = 'lm') +
+  scale_color_brewer(palette = "Paired") +
+  scale_x_continuous(name = "\nCS Ratings") +
+  scale_y_continuous (name = "GS (new) Ratings\n") + 
   theme_classic() +
-  labs(fill = "CS Variability") +
+  labs(fill = "Categories") +
   theme(plot.title = element_text (hjust = 0.5, face = "bold", size = 12))
 dotplot
 
@@ -87,7 +85,7 @@ lme1 <- gls(GS ~ 1, data = multiLevel, method = "ML")
 
 #add random intercept for category
 lme2 <- lme(GS ~ 1, data = multiLevel, random = ~ 1|category, method = "ML")
-summary(lmeBaseline)
+summary(lme2)
 anova(lme1, lme2)
 
 #add CSs as predictor
@@ -248,6 +246,7 @@ outcome <- cbind(manovaData$CS, manovaData$GSsame, manovaData$GSdifferent, manov
 
 #calculate the model
 conditionModel <- manova(outcome ~ condition, data = manovaData)
+conditionModel
 summary(conditionModel)
 summary(conditionModel, test = "Wilks")
 summary(conditionModel, test = "Hotelling")
