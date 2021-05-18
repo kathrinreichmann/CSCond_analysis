@@ -174,10 +174,9 @@ table(memory1$condition1)
 
 #total numbers (total number of observations: 680)
 total1 <- aggregate(memoryResp ~ condition1 + type, memory1, sum)
-total1$percent <- total1$memoryResp/680
-
-table(memory1$memoryResp[memory1$type == "CS"])
-table(memory1$memoryResp[memory1$type == "CS"])
+total1$length <- aggregate(memoryResp ~ condition1 + type, memory1, length)[[3]]
+total1$percent <- total1$memoryResp/total1$length
+total1
 
 ### (1) calculate proportions of "old" responses
 # correct recognition of studied items (CSs) -> true recognition
@@ -352,7 +351,7 @@ trueRec1 <- memory1Prop[memory1Prop$type == "CS",]
 falseRec1 <- memory1Prop[memory1Prop$type == "GS",]
 
 
-##### singal detection analysis: adjust  false alarm rates of 0 and hit rates of 1 MacMillan & Creelman (1991) 1/2n correction -> see Gunter et al., 2007; Huff & Bodner, 2013
+##### for calculatig odds: adjust  false alarm rates of 0 and hit rates of 1 MacMillan & Creelman (1991) 1/2n correction -> see Gunter et al., 2007; Huff & Bodner, 2013
 #1/2n if hit rate = 1, n is the number of targets (here: 4); if false alarm rate = 0, n is the number of GSs (here: 4)
 memory1Prop$propAdj <- memory1Prop$prop
 nItems <- 4
@@ -365,18 +364,25 @@ for(line in 1:dim(memory1Prop)[1]){
   }
 }
 
-#logistic regression
+###### logistic regression
+
+memory1$condition1 <- factor(memory1$condition1, levels = c("many_one", "many_fill", "one_one"))
 
 #calculate log odds
 memory1Prop$odds <- round(memory1Prop$propAdj/(1-memory1Prop$propAdj), 4)
 memory1Prop$logodds <- round(log(memory1Prop$odds), 4)
-memory1Prop$logodds <- round(log(memory1Prop$odds), 4)
-#
 
 glm1 <- glm(memoryResp ~ condition1, memory1[memory1$type == "CS",], family = 'binomial')
 summary(glm1)
-exp(0.1134) #odds
-exp(0.1134)/(1+exp(0.1134)) #probabilities
+exp(1.5629)/(1+exp(1.5629)) #many_one
+exp(-0.1134)/(1+exp(-0.1134)) #many_fill
+exp(1.2344)/(1+exp(1.2344))#one_one
+
+glm2 <- glm(memoryResp ~ condition1, memory1[memory1$type == "GSold",], family = 'binomial')
+summary(glm2)
+exp(-0.09607)/(1+exp(-0.09607)) #many_one
+exp(-0.33737)/(1+exp(-0.33737)) #many_fill
+exp(-1.37723)/(1+exp(-1.37723))#one_one
 
 
 #z-standardization of scores
@@ -442,6 +448,28 @@ memory1Lambda$distr <- 1 - memory1Lambda$propAdj
 memory1Lambda$lambda <- scale(memory1Lambda$distr, center = TRUE, scale = TRUE)
 memory1Lambda
 
+#### (4) Reaction Times
+
+#for type and condition
+memory1$rt <- as.numeric(memory1$rt)
+
+violin1RT <- ggplot(memory1, aes (x = type, y = rt, col = condition1)) +
+  geom_violin (draw_quantiles = c(0.25, 0.5, 0.75)) +
+  ggtitle("DRM - Chinese Characters") + 
+  scale_color_brewer(palette = "Dark2") +
+  theme(plot.title = element_text (hjust = 0.5, face = "bold", size = 12)) +
+  labs(fill = "Condition") +
+  scale_y_continuous (name = "Reaction Times\n") +
+  theme_classic() 
+violin1RT
+
+plot1NrPres <- ggplot(memory1, aes (x = nr_pres, y = rt)) +
+  geom_boxplot() + 
+  ggtitle("DRM - Chinese Characters") +
+  scale_y_continuous (name = "Reaction Times\n") +
+  theme_classic() 
+plot1NrPres
+
 
 # memory2 task ------------------------------------------------------------
 #exclude timeouts
@@ -456,6 +484,14 @@ memory2$memoryResp <- as.numeric(memory2$memoryResp)
 #check condition assignment
 table(memory2$condition2)
 
+#total numbers (total number of observations: 680)
+total2 <- aggregate(memoryResp ~ condition2 + type, memory2, sum)
+total2$length <- aggregate(memoryResp ~ condition2 + type, memory2, length)[[3]]
+total2$percent <- total2$memoryResp/total2$length
+total2
+
+table(memory2$cs_selected[memory2$type == "GSold"])
+
 ### (1) calculate proportions of "old" responses
 # correct recognition of studied items (CSs) -> true recognition
 # incorrect response "old" to critical lures (GSs) -> false recognition
@@ -467,14 +503,11 @@ memory2Prop$nr <- aggregate(memoryResp ~ subject + condition2 + type, memory2, l
 memory2Prop$prop <- (memory2Prop$memoryResp/memory2Prop$nr)
 head(memory2Prop)
 
-memory2Prop$se <- aggregate(prop ~ subject + condition2 + type, memory2Prop, se)[[4]]
 
 #plot proportion of "old" responses - boxplot
-aggregate(prop ~ condition2 + type, memory2Prop, mean)
-aggregate(prop ~ condition2 + type, memory2Prop, se)
-
 barplotData <- aggregate(prop ~ condition2 + type, memory2Prop, mean)
 barplotData$se <- aggregate(prop ~ condition2 + type, memory2Prop, se)[[3]]
+str(barplotData)
 
 #plot proportion of "old" responses - barplot
 plotmemory2PropOld <- ggplot(barplotData, aes (x = type, y = prop, fill = condition2)) +
@@ -488,6 +521,185 @@ plotmemory2PropOld <- ggplot(barplotData, aes (x = type, y = prop, fill = condit
   scale_y_continuous (name = "Proportion of 'old' responses\n") +
   theme_classic() 
 plotmemory2PropOld
+
+
+#Violin plot: generalization stimuli
+
+violin1PropOld <- ggplot(memory2Prop, aes (x = type, y = prop, color = condition2)) +
+  geom_violin (draw_quantiles = c(0.25, 0.5, 0.75)) +
+  ggtitle("DRM - Food items") + 
+  scale_color_brewer(palette = "Dark2") +
+  theme(plot.title = element_text (hjust = 0.5, face = "bold", size = 12)) +
+  labs(fill = "Condition") +
+  scale_y_continuous (name = "Proportion of 'old' responses\n") +
+  theme_classic() 
+violin1PropOld
+
+
+# (2) plot proportion of "old" responses - barplot for every category
+
+memory4Prop <- aggregate(memoryResp ~ subject + condition2 + type + category, memory2, sum)
+memory4Prop$nr <- aggregate(memoryResp ~ subject + condition2 + type + category, memory2, length)[[5]]
+memory4Prop$prop <- (memory4Prop$memoryResp/memory4Prop$nr)
+
+
+barplotCat <- aggregate(prop ~ condition2 + type + category, memory4Prop, mean)
+barplotCat$se <- aggregate(prop ~ condition2 + type + category, memory4Prop, se)[[4]]
+head(barplotCat)
+
+plotmemory2Cat<- ggplot(barplotCat, aes (x = type, y = prop, fill = condition2)) +
+  facet_grid(.~ category) +
+  geom_bar (stat = "identity", position = position_dodge()) +
+  geom_errorbar(aes(ymin= prop - se, ymax= prop + se), width=.2,
+                position=position_dodge(.9)) +
+  ggtitle("DRM - Chinese Characters") + 
+  scale_fill_brewer(palette = "Dark2") +
+  theme(plot.title = element_text (hjust = 0.5, face = "bold", size = 12)) +
+  labs(fill = "Condition") +
+  scale_y_continuous (name = "Proportion of 'old' responses\n") +
+  theme_classic() 
+plotmemory2Cat
+
+
+### (3) test for significance: type of stimulus * condition
+
+# (3.1) condition x Type (CS vs. GS same vs. GS different vs. distractor)
+
+#MANOVA
+manovaData <- subset(memory2Prop, select = -c(memoryResp, nr))
+manovaData$CS <- memory2Prop$prop[memory2Prop$type == "CS"]
+manovaData$GSold <- memory2Prop$prop[memory2Prop$type == "GSold"]
+manovaData$distractor <- memory2Prop$prop[memory2Prop$type == "distractor"]
+manovaData <- manovaData[1:length(unique(manovaData$subject)), ]
+manovaData$type <- NULL
+manovaData$prop <- NULL
+manovaData$subject <- NULL
+head(manovaData)
+
+
+#homogeneity of covariance matrices
+by(manovaData[,2:4], manovaData$condition2, cov)
+
+#multivariate outliers
+library(mvoutlier)
+aq.plot(manovaData[,2:4])
+
+#put multiple outcomes in the model
+outcome <- cbind(manovaData$CS, manovaData$GSold, manovaData$distractor)
+
+#calculate the model
+conditionModel <- manova(outcome ~ condition2, data = manovaData)
+summary(conditionModel)
+summary(conditionModel, test = "Wilks")
+summary(conditionModel, test = "Hotelling")
+summary(conditionModel, test = "Roy")
+
+#simple slopes for every type
+
+#CS
+lm1 <- lm(prop ~ condition2, memory2Prop[memory2Prop$type == "CS",])
+summary(lm1)
+
+lm2 <- lm(prop ~ condition2, memory2Prop[memory2Prop$type == "GSold",])
+summary(lm2)
+
+lm3 <- lm(prop ~ condition2, memory2Prop[memory2Prop$type == "distractor",])
+summary(lm3)
+
+
+##### for calculatig odds: adjust  false alarm rates of 0 and hit rates of 1 MacMillan & Creelman (1991) 1/2n correction -> see Gunter et al., 2007; Huff & Bodner, 2013
+#1/2n if hit rate = 1, n is the number of targets (here: 4); if false alarm rate = 0, n is the number of GSs (here: 4)
+memory2Prop$propAdj <- memory2Prop$prop
+nItems <- 4
+
+for(line in 1:dim(memory2Prop)[1]){
+  if (memory2Prop$prop[line] == 0){
+    memory2Prop$propAdj[line] <- 1/(2*nItems) 
+  } else if (memory2Prop$prop[line] == 1){
+    memory2Prop$propAdj[line] <- 1 - (1/(2*nItems)) 
+  }
+}
+
+###### logistic regression
+
+#calculate log odds
+memory2Prop$odds <- round(memory2Prop$propAdj/(1-memory2Prop$propAdj), 4)
+memory2Prop$logodds <- round(log(memory2Prop$odds), 4)
+memory2Prop
+
+glm1 <- glm(memoryResp ~ condition2, memory2[memory2$type == "CS",], family = 'binomial')
+summary(glm1)
+exp(-2.5350 )/(1+exp(-2.5350)) #many_one
+exp(0.1867)/(1+exp(0.1867)) #one_one
+
+glm2 <- glm(memoryResp ~ condition2, memory2[memory2$type == "GSold",], family = 'binomial')
+summary(glm2)
+exp(-1.24350)/(1+exp(-1.24350)) #many_one
+exp(-1.0262)/(1+exp(-1.0262))#one_one
+
+glm3 <- glm(memoryResp ~ condition2, memory2[memory2$type == "distractor",], family = 'binomial')
+summary(glm3)
+exp(-4.1805)/(1+exp(-4.1805)) #many_one
+exp(0.5429)/(1+exp(0.5429))#one_one
+
+
+
+#### (4) Reaction Times
+
+#for type and condition
+memory2$rt <- as.numeric(memory2$rt)
+
+violin2RT <- ggplot(memory2, aes (x = type, y = rt, col = condition2)) +
+  geom_violin (draw_quantiles = c(0.25, 0.5, 0.75)) +
+  ggtitle("DRM - Food items") + 
+  scale_color_brewer(palette = "Dark2") +
+  theme(plot.title = element_text (hjust = 0.5, face = "bold", size = 12)) +
+  labs(fill = "Condition") +
+  scale_y_continuous (name = "Reaction Times\n") +
+  theme_classic() 
+violin2RT
+
+plot2NrPres <- ggplot(memory2, aes (x = nr_pres, y = rt)) +
+  geom_boxplot() + 
+  ggtitle("DRM - Food items") +
+  scale_y_continuous (name = "Reaction Times\n") +
+  theme_classic() 
+plot2NrPres
+
+# combine both experiments in within-subjects design ----------------------
+
+### data prep
+#look only at memory1 and memory2 task
+memory3 <- dat[dat$task == "memory1" | dat$task == "memory2" ,]
+table(memory3$task)
+
+#look only at CS, GSold and distractor
+memory3 <- memory3[memory3$type == "CS" | memory3$type == "GSold" | memory3$type == "distractor",]
+table(memory3$type)
+
+#look only at one_one and many_one
+memory3 <- memory3[!memory3$condition1 == "many_fill",]
+
+#delete irrelevant columns
+task1data <- memory3[memory3$task == "memory1",]
+task1data <- task1data[c("task", "subject", "condition1", "type", "category", "rt", "timeout", "memoryResp", "nr_pres")]
+task1data$condition <- task1data$condition1
+task1data$condition1 <- NULL
+head(task1data)
+
+task2data <- memory3[memory3$task == "memory2",]
+task2data <- task2data[c("task", "subject", "condition2", "type", "category", "rt", "timeout", "memoryResp", "nr_pres")]
+task2data$condition <- task2data$condition2
+task2data$condition2 <- NULL
+head(task2data)
+
+bothTasks <- rbind(task1data, task2data)
+head(bothTasks)
+
+#look at condition * type interaction for both tasks
+
+
+
 
 
 
