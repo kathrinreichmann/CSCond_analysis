@@ -46,6 +46,64 @@ for (factor in as_factor){
 
 direct$type_specific <- factor(direct$type_specific, levels = c("CS", "GS same", "GS different", "Feature", "Group"))
 
+# hierarchical model (Vanbrabant et al., 2015) ----------------------------
+
+## randomly select 1 CSs for many_one:
+new_one <- direct[direct$condition == "one_one",]
+new_many <- direct[direct$condition == "many_one",]
+new_many <- new_many[!new_many$type_specific == "CS",]
+new_direct <- rbind(new_one, new_many)
+
+for (subject in unique(direct$subject)){
+  if (direct$condition[direct$subject == subject] == "many_one"){
+    for (cat in 1:4){
+      temp <- direct[direct$subject == subject & direct$type_specific == "CS" & direct$category == cat,]
+      select <- temp[1,]
+      new_direct <- rbind(new_direct, select)
+    }
+  }
+}
+
+## like new experiment: no all; two instead of four categories
+new_direct$type <- NULL
+new_direct <- new_direct[!new_direct$type_specific == "Group",]
+new_direct <- new_direct[!new_direct$type_specific == "Feature",]
+
+##aggregate over targets and category
+
+#with targets
+HLMtarget <- aggregate(response ~ subject + condition + val + type_specific + category + cs_selected, new_direct, mean)
+HLMtarget$nr_obs <- aggregate(response ~ subject + condition + val + type_specific + category + cs_selected, new_direct, length)[[7]]
+
+#right now: do not take different targets into account (participants are nested within targets)
+temp <- aggregate(response ~ subject + condition + val + type_specific, new_direct, mean)
+temp$nr_obs <- aggregate(response ~ subject + condition + val + type_specific, new_direct, length)[[5]]
+temp$nr_obs
+
+## order data
+temp <- temp[order(temp$subject, temp$val, temp$type_specific),]
+
+## cbind positive and negative scores
+HLMpos <- temp[temp$val == "pos",]
+HLMpos$pos <- HLMpos$response
+HLMpos$response <- NULL
+
+HLMneg <- temp[temp$val == "neg",]
+HLMneg$neg <- HLMneg$response
+HLM <- cbind(HLMpos, HLMneg$neg)
+
+HLM$val <- NULL
+HLM$neg <- HLM$`HLMneg$neg`
+HLM$`HLMneg$neg` <- NULL
+
+## calculate difference scores
+HLM$diff <- HLM$pos - HLM$neg
+
+
+
+
+
+
 
 # multilevel model --------------------------------------------------------
 str(direct)
