@@ -27,7 +27,6 @@ library(ggplot2)
 #Analysis
 library(afex)
 library(lme4)
-library(nlme)
 library(effsize)
 
 #Functions
@@ -45,6 +44,9 @@ for (factor in as_factor){
 }
 
 direct$type_specific <- factor(direct$type_specific, levels = c("CS", "GS same", "GS different", "Feature", "Group"))
+
+
+
 
 # hierarchical model (Vanbrabant et al., 2015) ----------------------------
 
@@ -76,8 +78,8 @@ HLMtarget <- aggregate(response ~ subject + condition + val + type_specific + ca
 HLMtarget$nr_obs <- aggregate(response ~ subject + condition + val + type_specific + category + cs_selected, new_direct, length)[[7]]
 
 #right now: do not take different targets into account (participants are nested within targets)
-temp <- aggregate(response ~ subject + condition + val + type_specific, new_direct, mean)
-temp$nr_obs <- aggregate(response ~ subject + condition + val + type_specific, new_direct, length)[[5]]
+temp <- aggregate(response ~ subject + condition + val + type_specific + category, new_direct, mean)
+temp$nr_obs <- aggregate(response ~ subject + condition + val + type_specific + category, new_direct, length)[[6]]
 temp$nr_obs
 
 ## order data
@@ -90,7 +92,7 @@ HLMpos$response <- NULL
 
 HLMneg <- temp[temp$val == "neg",]
 HLMneg$neg <- HLMneg$response
-HLM <- cbind(HLMpos, HLMneg$neg)
+HLM <- cbind(HLMpos, HLMneg$neg, HLMneg$category)
 
 HLM$val <- NULL
 HLM$neg <- HLM$`HLMneg$neg`
@@ -99,10 +101,156 @@ HLM$`HLMneg$neg` <- NULL
 ## calculate difference scores
 HLM$diff <- HLM$pos - HLM$neg
 
+## ? use type as a continuous predictor
+HLM$type_continuous <- factor(HLM$type_specific, labels = c("0", "1", "2"), levels = c("CS", "GS same", "GS different"))
+HLM$type_continuous <- as.numeric(HLM$type_continuous)
+
+## rename many_one to many and one_one to one
+HLM$condition <- factor(HLM$condition, labels = c("many", "one"), levels = c("many_one", "one_one"))
+
+##plot individual difference scores for condition and type
+
+HLMdotplot <- aggregate(diff ~ subject + type_discrete + condition, HLM, mean)
+means <- aggregate(diff ~ type_continuous + condition, HLM, mean)
+
+dotplot <- ggplot(HLMdotplot, aes (x = type_discrete, y = diff, group = subject, color = condition, shape = condition)) +
+  geom_line() +
+  geom_point(show.legend = TRUE, alpha = .4) +
+  geom_point(data = means, size = 4) +
+  scale_color_brewer(palette = "Paired") +
+  scale_x_discrete(name = "\nDimension subject i target j") +
+  scale_y_continuous (name = "difference scores subject i target j\n") + 
+  theme_classic() +
+  ggtitle("Raw Data") +
+  labs(fill = "condition\n subject i") +
+  theme(plot.title = element_text (hjust = 0.5, face = "bold", size = 12))
+dotplot
+
+means <- aggregate(diff ~ type_continuous + condition, HLM, mean)
+dotplot <- ggplot(HLM, aes (x = type_continuous, y = diff, group = subject, color = condition, shape = condition)) +
+  facet_grid( . ~ condition) +
+  geom_line() +
+  geom_point(show.legend = TRUE, alpha = .4) +
+  geom_point(data = means, size = 4) +
+  scale_color_brewer(palette = "Paired") +
+  scale_x_continuous(name = "\nDimension subject i target j") +
+  scale_y_continuous (name = "difference scores subject i target j\n") + 
+  theme_classic() +
+  ggtitle("Raw Data") +
+  labs(fill = "condition\n subject i") +
+  theme(plot.title = element_text (hjust = 0.5, face = "bold", size = 12))
+dotplot
+
+##set up models: generalization as continous
+
+#random intercept model with fixed effect of stimulus dimension
+model1 <- lmer(diff ~ type_continuous + (1|subject), data = HLM, REML = FALSE)
+
+intercepts1 <- coef(model1)$subject[,1]
+slopes1 <- coef(model1)$subject[,2]
+intercept1Fix <- summary(model1)$coef[1, "Estimate"]
+slope1Fix <- summary(model1)$coef[2, "Estimate"]
+
+plotModel1 <- ggplot(HLM, aes (x = type_continuous, y = diff, group = subject, color = condition, shape = condition)) +
+  geom_abline(slope = slopes1, intercept = intercepts1) +  
+  geom_abline(slope = slope1Fix, intercept = intercept1Fix, color = "red", size = 1) +
+  geom_point(show.legend = TRUE, alpha = .4) +
+  scale_color_brewer(palette = "Paired") +
+  scale_x_continuous(name = "\nDimension subject i target j") +
+  scale_y_continuous (name = "difference scores subject i target j\n") + 
+  theme_classic() +
+  ggtitle("Data fitted under Model 1") +
+  labs(fill = "condition\n subject i") +
+  theme(plot.title = element_text (hjust = 0.5, face = "bold", size = 12))
+plotModel1
+
+#+ random slope
+model2 <- lmer(diff ~ type_continuous + (type_continuous|subject), data = HLM, REML = FALSE)
+
+intercepts2 <- coef(model2)$subject[,1]
+slopes2 <- coef(model2)$subject[,2]
+summary(model2)$coef[, "Estimate"]
+
+plotModel2 <- ggplot(HLM, aes (x = type_continuous, y = diff, group = subject, color = condition, shape = condition)) +
+  geom_abline(slope = slopes2, intercept = intercepts2) +  
+  
+  geom_point(show.legend = TRUE, alpha = .4) 
+plotModel2
+
+#+difference variable
+model3 <- lmer(diff ~ type_continuous*condition + (type_continuous|subject), data = HLM, REML = FALSE)
+
+intercepts <- coef(model3)$subject[,1]
+slopes <- coef(model3)$subject[,2]
+summary(model3)$coef[, "Estimate"]
+
+plotModel3 <- ggplot(HLM, aes (x = type_continuous, y = diff, group = subject, color = condition, shape = condition)) +
+  geom_abline(slope = slopes, intercept = intercepts) +  
+  geom_abline(slope = )
+  geom_point(show.legend = TRUE, alpha = .4) 
+plotModel3
+
+
+#model comparison
+anova(model1, model2, model3)
+#model 3 with best fit
+
+#parameter interpretation
+plot(model3)
+summary(model3)
+
+#plot model 3 result
 
 
 
+#+ quadratic effect of stimulus dimension
+model4 <- lmer(diff ~ type_continuous + I(type_continuous^2) + (type_continuous|subject), data = HLM, REML = FALSE)
+anova(model2, model4)
 
+#+quadratic random effect
+model5 <- lmer(diff ~ type_continuous + I(type_continuous^2)*condition + (1+ type_continuous|subject), data = HLM, REML = FALSE)
+anova(model4, model5)
+
+#+individual difference variable
+model6 <- lmer(diff ~ type_continuous*condition + I(type_continuous^2) + (type_continuous|subject), data = HLM, REML = FALSE)
+anova(model1, model2, model3, model4, model5, model6)
+
+model7 <- lmer(diff ~ type_continuous*condition + I(type_continuous^2)*condition + (type_continuous + I(type_continuous^2)|subject), data = HLM, REML = FALSE)
+anova(model1, model2, model3, model4, model5, model6, model7)
+
+
+
+##set up models: generalization as discrete
+
+HLM$type_discrete <- factor(HLM$type_specific, labels = c("CS", "GS1", "GS2"), levels = c("CS", "GS same", "GS different"))
+
+
+#random intercept model with fixed effect of stimulus dimension
+model1 <- lmer(diff ~ type_discrete + (1|subject), data = HLM, REML = FALSE)
+
+#+ random slope
+model2 <- lmer(diff ~ type_discrete + (type_discrete|subject), data = HLM, REML = FALSE)
+
+#+difference variable
+model3 <- lmer(diff ~ type_discrete*condition + (type_discrete|subject), data = HLM, REML = FALSE)
+
+intercepts <- coef(model3)$subject[,1]
+slopes <- coef(model3)$subject[,2]
+summary(model3)$coef[, "Estimate"]
+
+plotModel3 <- ggplot(HLM, aes (x = type_continuous, y = diff, group = subject, color = condition, shape = condition)) +
+  geom_abline(slope = slopes, intercept = intercepts, color = "blue") +  
+  geom_point(show.legend = TRUE, alpha = .4) 
+plotModel3
+
+
+#model comparison
+anova(model1, model2, model3)
+#model 3 with best fit
+
+#parameter interpretation
+plot(model3)
+summary(model3)
 
 
 # multilevel model --------------------------------------------------------
