@@ -101,6 +101,10 @@ HLM$`HLMneg$neg` <- NULL
 ## calculate difference scores
 HLM$diff <- HLM$pos - HLM$neg
 
+
+# continuous variable for generalization ----------------------------------
+
+
 ## ? use type as a continuous predictor
 HLM$type_continuous <- factor(HLM$type_specific, labels = c("0", "1", "2"), levels = c("CS", "GS same", "GS different"))
 HLM$type_continuous <- as.numeric(HLM$type_continuous)
@@ -111,9 +115,9 @@ HLM$condition <- factor(HLM$condition, labels = c("many", "one"), levels = c("ma
 ##plot individual difference scores for condition and type
 
 HLMdotplot <- aggregate(diff ~ subject + type_discrete + condition, HLM, mean)
-means <- aggregate(diff ~ type_continuous + condition, HLM, mean)
+means <- aggregate(diff ~ type_discrete + condition, HLM, mean)
 
-dotplot <- ggplot(HLMdotplot, aes (x = type_discrete, y = diff, group = subject, color = condition, shape = condition)) +
+dotplot <- ggplot(HLMdotplot, aes (x = type_continuous, y = diff, group = subject, color = condition, shape = condition)) +
   geom_line() +
   geom_point(show.legend = TRUE, alpha = .4) +
   geom_point(data = means, size = 4) +
@@ -149,14 +153,14 @@ model1 <- lmer(diff ~ type_continuous + (1|subject), data = HLM, REML = FALSE)
 intercepts1 <- coef(model1)$subject[,1]
 slopes1 <- coef(model1)$subject[,2]
 intercept1Fix <- summary(model1)$coef[1, "Estimate"]
-slope1Fix <- summary(model1)$coef[2, "Estimate"]
+slope1Fix1 <- summary(model1)$coef[2, "Estimate"]
 
 plotModel1 <- ggplot(HLM, aes (x = type_continuous, y = diff, group = subject, color = condition, shape = condition)) +
   geom_abline(slope = slopes1, intercept = intercepts1) +  
   geom_abline(slope = slope1Fix, intercept = intercept1Fix, color = "red", size = 1) +
   geom_point(show.legend = TRUE, alpha = .4) +
   scale_color_brewer(palette = "Paired") +
-  scale_x_continuous(name = "\nDimension subject i target j") +
+  scale_x_continuous (name = "\nDimension subject i target j") +
   scale_y_continuous (name = "difference scores subject i target j\n") + 
   theme_classic() +
   ggtitle("Data fitted under Model 1") +
@@ -220,13 +224,53 @@ anova(model1, model2, model3, model4, model5, model6, model7)
 
 
 
-##set up models: generalization as discrete
+# categorical variable for generaliztation --------------------------------
+
+##categorical variable: generalization as discrete
 
 HLM$type_discrete <- factor(HLM$type_specific, labels = c("CS", "GS1", "GS2"), levels = c("CS", "GS same", "GS different"))
 
 
-#random intercept model with fixed effect of stimulus dimension
+### plot raw data
+
+HLMdotplot <- aggregate(diff ~ subject + type_discrete + condition, HLM, mean)
+means <- aggregate(diff ~ type_discrete + condition, HLM, mean)
+
+dotplot <- ggplot(HLMdotplot, aes (x = type_discrete, y = diff, group = subject, color = condition, shape = condition)) +
+  geom_line() +
+  geom_point(show.legend = TRUE, alpha = .4) +
+  geom_point(data = means, size = 4) +
+  scale_color_brewer(palette = "Paired") +
+  scale_x_discrete(name = "\nDimension subject i target j") +
+  scale_y_continuous (name = "difference scores subject i target j\n") + 
+  theme_classic() +
+  ggtitle("Raw Data") +
+  labs(fill = "condition\n subject i") +
+  theme(plot.title = element_text (hjust = 0.5, face = "bold", size = 12))
+dotplot
+
+
+##### random intercept model with fixed effect of stimulus type
 model1 <- lmer(diff ~ type_discrete + (1|subject), data = HLM, REML = FALSE)
+summary(model1)
+
+intercepts1 <- coef(model1)$subject[,1]
+slopes1 <- coef(model1)$subject[,2]
+intercept1Fix <- summary(model1)$coef[1, "Estimate"]
+slope1Fix1 <- summary(model1)$coef[2, "Estimate"]
+
+plotModel1 <- ggplot(HLM, aes (x = type_discrete, y = diff, group = subject, color = condition, shape = condition)) +
+  geom_abline(slope = slopes1, intercept = intercepts1) +  
+  geom_abline(slope = slope1Fix, intercept = intercept1Fix, color = "red", size = 1) +
+  geom_point(show.legend = TRUE, alpha = .4) +
+  scale_color_brewer(palette = "Paired") +
+  scale_x_continuous (name = "\nDimension subject i target j") +
+  scale_y_continuous (name = "difference scores subject i target j\n") + 
+  theme_classic() +
+  ggtitle("Data fitted under Model 1") +
+  labs(fill = "condition\n subject i") +
+  theme(plot.title = element_text (hjust = 0.5, face = "bold", size = 12))
+plotModel1
 
 #+ random slope
 model2 <- lmer(diff ~ type_discrete + (type_discrete|subject), data = HLM, REML = FALSE)
