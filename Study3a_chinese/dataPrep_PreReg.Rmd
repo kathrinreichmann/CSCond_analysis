@@ -2,11 +2,11 @@
 title: "data_prep_PreReg"
 author: "Kathrin Reichmann"
 date: "6 5 2021"
-input: data of experiment 1a
+input: "data of experiment 1a"
 output:
   html_document: default
   pdf_document: default
-  csv:   direct.csv, indirect.csv, drm.csv
+  csv:   "direct.csv, indirect.csv, drm.csv"
 ---
 
 ```{r setup, include=FALSE}
