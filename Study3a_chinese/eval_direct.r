@@ -464,7 +464,7 @@ plotModel1 <- ggplot(random1, aes (x = as.factor(type_discrete), y = diff, group
   geom_line(color = "grey") +
   geom_point(color = "grey") +
   geom_line(data = fix1, mapping = aes(y = diff, x = type_discrete, group = 1), color = "red", size = 1) +
-  #geom_point(data = HLMdotplot, mapping = aes(y = diff, x = type_discrete, group = subject, color = condition, shape = condition), alpha = .4) +
+  geom_point(data = fix1, mapping = aes(y = diff, x = type_discrete, group = 1), color = "red", size = 1.5) +
   scale_color_brewer(palette = "Paired") +
   scale_x_discrete (name = "\nStimulus Type", limits=c("CS","GS")) +
   scale_y_continuous (name = "Difference Scores for subjects i and stimulus j\n", breaks = seq(-100, 200, 50), limits = c(-100, 200)) + 
@@ -491,8 +491,9 @@ fix2
 
 plotModel2 <- ggplot(random2, aes (x = as.factor(type_discrete), y = diff, group = as.factor(subject))) +
   geom_line(color = "grey") +
+  geom_point(color = "grey") +
   geom_line(data = fix2, mapping = aes(y = diff, x = type_discrete, group = 1), color = "red", size = 1) +
-  geom_point(data = HLMdotplot, mapping = aes(y = diff, x = type_discrete, group = subject, color = condition, shape = condition), alpha = .4) +
+  geom_point(data = fix2, mapping = aes(y = diff, x = type_discrete, group = 1), color = "red", size = 1.5) +
   scale_color_brewer(palette = "Paired") +
   scale_x_discrete (name = "\nStimulus Type", limits=c("CS","GS")) +
   scale_y_continuous (name = "Difference Scores for subjects i and stimulus j\n", breaks = seq(-100, 200, 50), limits = c(-100, 200)) + 
@@ -524,22 +525,26 @@ fix3GSMany <- data.frame(diff = summary(model3)$coef[1, "Estimate"] + summary(mo
 fix3Many <- rbind(fix3CSMany, fix3GSMany)
 fix3Many
 
-fix3CSOne <- data.frame(diff = summary(model3)$coef[1, "Estimate"], type_discrete = "CS")
-fix3GSMany <- data.frame(diff = summary(model3)$coef[1, "Estimate"] + summary(model3)$coef[2, "Estimate"], type_discrete = "GS")
-fix3Many <- rbind(fix3CSMany, fix3GSMany)
-fix3Many
+fix3CSOne <- data.frame(diff = summary(model3)$coef[1, "Estimate"] + summary(model3)$coef[3, "Estimate"], type_discrete = "CS")
+fix3GSOne <- data.frame(diff = (summary(model3)$coef[1, "Estimate"] + summary(model3)$coef[3, "Estimate"]) + (summary(model3)$coef[2, "Estimate"] + summary(model3)$coef[4, "Estimate"]), type_discrete = "GS")
+fix3One <- rbind(fix3CSOne, fix3GSOne)
+fix3One
 
 
 plotModel3 <- ggplot(random3, aes (x = as.factor(type_discrete), y = diff, group = as.factor(subject), color = condition)) +
-  geom_line(alpha = .4) +
-  geom_line(data = fix3Many, mapping = aes(y = diff, x = type_discrete, group = 1), color = "steelblue", size = 1) +
-  geom_point(data = HLMdotplot, mapping = aes(y = diff, x = type_discrete, group = subject, color = condition, shape = condition), alpha = .6) +
+  geom_line(alpha = .6) +
+  geom_point(alpha = .4) +
+  geom_line(data = fix3Many, mapping = aes(y = diff, x = type_discrete, group = 1), color = "red", size = 1) +
+  geom_point(data = fix3Many, mapping = aes(y = diff, x = type_discrete, group = 1), color = "red", size = 1.5) +
+  geom_text(data = fix3Many, mapping = aes(y = diff, x = type_discrete, group = 1), label = "many", color = "red", vjust = -1) +
+  geom_line(data = fix3One, mapping = aes(y = diff, x = type_discrete, group = 1), color = "darkred", size = 1) +
+  geom_point(data = fix3One, mapping = aes(y = diff, x = type_discrete, group = 1), color = "darkred", size = 1.5) +
+  geom_text(data = fix3One, mapping = aes(y = diff, x = type_discrete, group = 1), label = "one", color = "darkred", vjust = 1) +
   scale_color_brewer(palette = "Paired") +
   scale_x_discrete (name = "\nStimulus Type", limits=c("CS","GS")) +
   scale_y_continuous (name = "Difference Scores for subjects i and stimulus j\n", breaks = seq(-100, 200, 50), limits = c(-100, 200)) + 
   theme_classic() +
-  ggtitle("Data fitted under Model 2") +
-  labs(fill = "condition\n subject i") +
+  ggtitle("Data fitted under Model 3") +
   theme(plot.title = element_text (hjust = 0.5, face = "bold", size = 12))
 plotModel3 
 
