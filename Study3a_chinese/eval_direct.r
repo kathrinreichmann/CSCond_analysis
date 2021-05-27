@@ -460,12 +460,11 @@ fix1GS <- data.frame(diff = summary(model1)$coef[1, "Estimate"] + summary(model1
 fix1 <- rbind(fix1CS, fix1GS)
 fix1
 
-dfSlopes1 <- data.frame(x1 = 1, x2 = 2, y1 = intercept1Fix, y2 = intercept1Fix + slope1Fix)
-
 plotModel1 <- ggplot(random1, aes (x = as.factor(type_discrete), y = diff, group = as.factor(subject))) +
   geom_line(color = "grey") +
+  geom_point(color = "grey") +
   geom_line(data = fix1, mapping = aes(y = diff, x = type_discrete, group = 1), color = "red", size = 1) +
-  geom_point(data = HLMdotplot, mapping = aes(y = diff, x = type_discrete, group = subject, color = condition, shape = condition), alpha = .4) +
+  #geom_point(data = HLMdotplot, mapping = aes(y = diff, x = type_discrete, group = subject, color = condition, shape = condition), alpha = .4) +
   scale_color_brewer(palette = "Paired") +
   scale_x_discrete (name = "\nStimulus Type", limits=c("CS","GS")) +
   scale_y_continuous (name = "Difference Scores for subjects i and stimulus j\n", breaks = seq(-100, 200, 50), limits = c(-100, 200)) + 
@@ -475,47 +474,75 @@ plotModel1 <- ggplot(random1, aes (x = as.factor(type_discrete), y = diff, group
   theme(plot.title = element_text (hjust = 0.5, face = "bold", size = 12))
 plotModel1  
 
-
-plotModel1 <- ggplot(HLM, aes (x = type_discrete, y = diff, group = subject, color = condition, shape = condition)) +
-  #geom_abline(slope = slopes1, intercept = intercepts1, alpha = .2) +  
-  geom_line(data = random1, aes(x = as.factor(type_discrete), y = diff, group = 1, color = condition), color = "grey") +
-  geom_point(show.legend = TRUE, alpha = .4) +
-  geom_point(data = means, size = 4) +
-  scale_color_brewer(palette = "Paired") +
-  scale_x_discrete (name = "\nStimulus Type", limits=c("CS","GS")) +
-  scale_y_continuous (name = "difference scores subject i target j\n") + 
-  theme_classic() +
-  ggtitle("Data fitted under Model 1") +
-  labs(fill = "condition\n subject i") +
-  theme(plot.title = element_text (hjust = 0.5, face = "bold", size = 12))
-plotModel1
-
-#+ random slope
+##### + random slope
 model2 <- lmer(diff ~ type_discrete + (type_discrete|subject), data = HLM, REML = FALSE)
 summary(model2)
 
-intercepts2 <- coef(model2)$subject[,1]
-slopes2 <- coef(model2)$subject[,2]
-intercept2Fix <- summary(model2)$coef[1, "Estimate"]
-slope2Fix1 <- summary(model2)$coef[2, "Estimate"]
+#create data frame for plotting random effects
+random2CS <- data.frame(diff = coef(model2)$subject[,1], type_discrete = "CS", subject = rownames(coef(model2)$subject))
+random2GS <- data.frame(diff = coef(model2)$subject[,1] + coef(model2)$subject[,2], type_discrete = "GS", subject = rownames(coef(model2)$subject))
+random2 <- rbind(random2CS, random2GS)
 
-plotModel2 <- ggplot(HLM, aes (x = type_discrete, y = diff, group = subject, color = condition, shape = condition)) +
-  geom_abline(slope = slopes2, intercept = intercepts2, alpha = .2) +  
-  geom_abline(slope = slope2Fix1, intercept = intercept2Fix, color = "red", size = 1) +
-  geom_point(data = means, size = 4) +
-  geom_point(show.legend = TRUE, alpha = .4) +
+#fixed effect
+fix2CS <- data.frame(diff = summary(model2)$coef[1, "Estimate"], type_discrete = "CS")
+fix2GS <- data.frame(diff = summary(model2)$coef[1, "Estimate"] + summary(model2)$coef[2, "Estimate"], type_discrete = "GS")
+fix2 <- rbind(fix2CS, fix2GS)
+fix2
+
+plotModel2 <- ggplot(random2, aes (x = as.factor(type_discrete), y = diff, group = as.factor(subject))) +
+  geom_line(color = "grey") +
+  geom_line(data = fix2, mapping = aes(y = diff, x = type_discrete, group = 1), color = "red", size = 1) +
+  geom_point(data = HLMdotplot, mapping = aes(y = diff, x = type_discrete, group = subject, color = condition, shape = condition), alpha = .4) +
   scale_color_brewer(palette = "Paired") +
-  scale_x_discrete (name = "\nStimulus Type") +
-  scale_y_continuous (name = "difference scores subject i target j\n") + 
+  scale_x_discrete (name = "\nStimulus Type", limits=c("CS","GS")) +
+  scale_y_continuous (name = "Difference Scores for subjects i and stimulus j\n", breaks = seq(-100, 200, 50), limits = c(-100, 200)) + 
   theme_classic() +
   ggtitle("Data fitted under Model 2") +
   labs(fill = "condition\n subject i") +
   theme(plot.title = element_text (hjust = 0.5, face = "bold", size = 12))
-plotModel2
+plotModel2 
 
-#+difference variable
+
+##### +difference variable
 model3 <- lmer(diff ~ type_discrete*condition + (type_discrete|subject), data = HLM, REML = FALSE)
 summary(model3)
+
+#create data frame for plotting random effects
+subjcond <- HLM[!duplicated(HLM$subject),c("subject", "condition")] ##add condition
+
+random3CS <- data.frame(diff = coef(model3)$subject[,1], type_discrete = "CS", subject = rownames(coef(model3)$subject))
+random3CS <- merge(random3CS, subjcond, by.y = "subject")
+
+random3GS <- data.frame(diff = coef(model3)$subject[,1] + coef(model3)$subject[,2], type_discrete = "GS", subject = rownames(coef(model3)$subject))
+random3GS <- merge(random3GS, subjcond, by.y = "subject")
+
+random3 <- rbind(random3CS, random3GS)
+
+#fixed effect
+fix3CSMany <- data.frame(diff = summary(model3)$coef[1, "Estimate"], type_discrete = "CS")
+fix3GSMany <- data.frame(diff = summary(model3)$coef[1, "Estimate"] + summary(model3)$coef[2, "Estimate"], type_discrete = "GS")
+fix3Many <- rbind(fix3CSMany, fix3GSMany)
+fix3Many
+
+fix3CSOne <- data.frame(diff = summary(model3)$coef[1, "Estimate"], type_discrete = "CS")
+fix3GSMany <- data.frame(diff = summary(model3)$coef[1, "Estimate"] + summary(model3)$coef[2, "Estimate"], type_discrete = "GS")
+fix3Many <- rbind(fix3CSMany, fix3GSMany)
+fix3Many
+
+
+plotModel3 <- ggplot(random3, aes (x = as.factor(type_discrete), y = diff, group = as.factor(subject), color = condition)) +
+  geom_line(alpha = .4) +
+  geom_line(data = fix3Many, mapping = aes(y = diff, x = type_discrete, group = 1), color = "steelblue", size = 1) +
+  geom_point(data = HLMdotplot, mapping = aes(y = diff, x = type_discrete, group = subject, color = condition, shape = condition), alpha = .6) +
+  scale_color_brewer(palette = "Paired") +
+  scale_x_discrete (name = "\nStimulus Type", limits=c("CS","GS")) +
+  scale_y_continuous (name = "Difference Scores for subjects i and stimulus j\n", breaks = seq(-100, 200, 50), limits = c(-100, 200)) + 
+  theme_classic() +
+  ggtitle("Data fitted under Model 2") +
+  labs(fill = "condition\n subject i") +
+  theme(plot.title = element_text (hjust = 0.5, face = "bold", size = 12))
+plotModel3 
+
 
 #random slopes, random intercepts
 intercepts3 <- coef(model3)$subject[,1]
