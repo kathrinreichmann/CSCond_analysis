@@ -23,6 +23,8 @@ library(tidyverse)
 
 #Plot
 library(ggplot2)
+library(sjPlot)
+library(sjmisc)
 
 #Analysis
 library(afex)
@@ -102,7 +104,26 @@ HLM$`HLMneg$neg` <- NULL
 HLM$diff <- HLM$pos - HLM$neg
 
 
-# continuous variable for generalization ----------------------------------
+##TEST: with 6 difference scores for GSs
+## cbind positive and negative scores
+HLMtarget <- HLMtarget[order(HLMtarget$subject, HLMtarget$val, HLMtarget$type_specific),]
+
+HLMpos <- HLMtarget[HLMtarget$val == "pos",]
+HLMpos$pos <- HLMpos$response
+HLMpos$response <- NULL
+head(HLMpos)
+
+HLMneg <- HLMtarget[HLMtarget$val == "neg",]
+HLMneg$neg <- HLMneg$response
+HLM <- cbind(HLMpos, HLMneg$neg, HLMneg$category)
+head(HLM)
+
+HLM$val <- NULL
+HLM$neg <- HLM$`HLMneg$neg`
+HLM$`HLMneg$neg` <- NULL
+dim(HLM)
+
+HLM$diff <- HLM$pos - HLM$neg
 
 
 ## ? use type as a continuous predictor
@@ -111,6 +132,13 @@ HLM$type_continuous <- as.numeric(HLM$type_continuous)
 
 ## rename many_one to many and one_one to one
 HLM$condition <- factor(HLM$condition, labels = c("many", "one"), levels = c("many_one", "one_one"))
+
+##categorical variable: generalization as discrete
+HLM$type_discrete <- factor(HLM$type_specific, labels = c("CS", "GS1", "GS2"), levels = c("CS", "GS same", "GS different"))
+
+
+
+# continuous variable for generalization ----------------------------------
 
 ##plot individual difference scores for condition and type
 
@@ -200,6 +228,15 @@ plotModel3 <- ggplot(HLM, aes (x = type_continuous, y = diff, group = subject, c
   theme(plot.title = element_text (hjust = 0.5, face = "bold", size = 12))
 plotModel3
 
+
+m3ind <- coef(model3)$subject
+m3ind <-m3ind[order(m3ind$type_continuous),]
+m3ind$subject <- rownames(m3ind)
+subjcond <- HLM[!duplicated(HLM$subject),c("subject", "condition")]
+m3ind <- merge(m3ind, subjcond, by.y = "subject")
+head(m3ind)
+
+indMOdel3
 
 #model comparison
 anova(model1, model2, model3)
@@ -363,10 +400,14 @@ anova(model1, model2, model3, model4, model5, model6, model7)
 
 # categorical variable for generaliztation --------------------------------
 
-##categorical variable: generalization as discrete
-
-HLM$type_discrete <- factor(HLM$type_specific, labels = c("CS", "GS1", "GS2"), levels = c("CS", "GS same", "GS different"))
-
+#plot individual slopes
+indPlotData <- HLM[1:120,]
+indPlotData <- indPlotData[order(indPlotData$subject),]
+indPlot3 <- ggplot(indPlotData, aes(x = type_continuous, y = diff, group = subject, color = condition, shape = condition)) +
+  facet_wrap(.~ subject, nrow = 5) +
+  geom_point(show.legend = TRUE, alpha = .4) +
+  geom_smooth(method = "lm", alpha = .4, se = FALSE)
+indPlot3
 
 ### plot raw data
 
