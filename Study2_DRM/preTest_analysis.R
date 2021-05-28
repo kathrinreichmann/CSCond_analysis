@@ -230,9 +230,9 @@ violin1PropOld
 barplotData2 <- barplotData[!barplotData$type == "GSnew",]
 barplotData2 <- barplotData2[!barplotData2$type == "GSold",]
 barplotData2 <- barplotData2[!barplotData2$type == "distractor",]
+barplotData2 <- barplotData2[!barplotData2$type == "CS",]
 
-
-plotmemory1PropOld <- ggplot(barplotData2, aes (x = type, y = prop, fill = condition1)) +
+plotmemory1PropOld <- ggplot(barplotData2, aes (x = condition1, y = prop, fill = type)) +
   geom_bar (stat = "identity", position = position_dodge()) +
   geom_errorbar(aes(ymin= prop - se, ymax= prop + se), width=.2,
                 position=position_dodge(.9)) +
