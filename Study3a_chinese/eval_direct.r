@@ -4,13 +4,6 @@
 
 ### Direct Measure
 
-### content:
-# (1) Type x CS Variability
-# (2) Type x CS Variability x Measure
-# (3) CS Category
-# (4) individual CS exemplars
-
-
 ### import:
 #direct.csv
 
@@ -398,7 +391,7 @@ anova(model1, model2, model3, model4, model5, model6, model7)
 
 
 
-# categorical variable for generalization --------------------------------
+# categorical variable for generalization (Dummy Coding) --------------------------------
 
 #plot individual slopes
 indPlotData <- HLM[1:280,]
@@ -549,32 +542,6 @@ plotModel3 <- ggplot(random3, aes (x = as.factor(type_discrete), y = diff, group
 plotModel3 
 
 
-#random slopes, random intercepts
-intercepts3 <- coef(model3)$subject[,1]
-slopes3 <- coef(model3)$subject[,2]
-
-#slope for many condition
-intercept3Many <- summary(model3)$coef[1, "Estimate"]
-slope3Many <- summary(model3)$coef[2, "Estimate"]
-
-#slope for one condition
-intercept3One <- summary(model3)$coef[1, "Estimate"] + summary(model3)$coef[3, "Estimate"]
-slope3One <- summary(model3)$coef[2, "Estimate"] + summary(model3)$coef[4, "Estimate"]
-
-plotModel3 <- ggplot(HLM, aes (x = type_discrete, y = diff, group = subject, color = condition, shape = condition)) +
-  geom_abline(slope = slopes3, intercept = intercepts3, alpha = .2) +  
-  geom_abline(slope = slope3Many, intercept = intercept3Many, color = "lightblue", size = 1) +
-  geom_abline(slope = slope3One, intercept = intercept3One, color = "steelblue", size = 1) +
-  geom_point(data = means, size = 4) +
-  geom_point(show.legend = TRUE, alpha = .4) +
-  scale_color_brewer(palette = "Paired") +
-  scale_x_discrete (name = "\nStimulus Type") +
-  scale_y_continuous (name = "difference scores subject i target j\n") + 
-  theme_classic() +
-  ggtitle("Data fitted under Model 2") +
-  labs(fill = "condition\n subject i") +
-  theme(plot.title = element_text (hjust = 0.5, face = "bold", size = 12))
-plotModel3
 
 #? - random slope
 model4 <- lmer(diff ~ type_discrete*condition + (1|subject), data = HLM, REML = FALSE)
@@ -590,6 +557,108 @@ anova(model3, model4)
 plot(model3)
 summary(model3)
 
+
+# HLM (effect coded) ------------------------------------------------------
+
+#effect code variables
+
+#stimulus type
+HLM$type_effect <- 0
+for (line in 1:dim(HLM)[1]){
+  if (HLM$type_discrete[line] == "CS"){
+    HLM$type_effect[line] <- -0.5
+  } else {
+    HLM$type_effect[line] <- 0.5
+  }
+}
+HLM$type_effect
+
+#condition
+HLM$condition_effect <- 0
+for (line in 1:dim(HLM)[1]){
+  if (HLM$condition[line] == "many"){
+    HLM$condition_effect[line] <- -0.5
+  } else {
+    HLM$condition_effect[line] <- 0.5
+  }
+}
+HLM$condition_effect
+
+
+#plot individual slopes
+indPlotData <- HLM[1:280,]
+indPlotData <- indPlotData[order(indPlotData$subject),]
+indPlot3 <- ggplot(indPlotData[!indPlotData$condition == "one",], aes(x = type_discrete, y = diff, group = subject, color = condition, shape = condition)) +
+  facet_wrap(.~ subject, nrow = 5) +
+  geom_point(show.legend = TRUE, alpha = .6) +
+  geom_smooth(method = "lm", alpha = .6, se = FALSE) +  
+  scale_color_brewer(palette = "Paired") 
+indPlot3
+
+### plot raw data
+
+HLMdotplot <- aggregate(diff ~ subject + type_effect + condition_effect, HLM, mean)
+means <- aggregate(diff ~ type_effect + condition_effect, HLM, mean)
+means$se <- aggregate(diff ~ type_effect + condition_effect, HLM, se)[[3]]
+means
+
+dotplot1 <- ggplot(HLMdotplot, aes (x = type_effect, y = diff, group = subject, color = condition_effect)) +
+  geom_line() +
+  geom_point(show.legend = TRUE, alpha = .4) +
+  geom_point(data = means, size = 3, alpha = .9) +
+  geom_line(data = means, mapping = aes(group = condition_effect), color = "red", size = 1) +
+  #scale_color_brewer(palette = "Paired") +
+  scale_x_continuous(name = "\nStimulus Type") +
+  scale_y_continuous (name = "Difference Scores for subjects i and stimulus j\n", breaks = seq(-100, 200, 50), limits = c(-100, 200)) + 
+  theme_classic() +
+  ggtitle("Raw Data") +
+  #labs(fill = "Condition") +
+  theme(plot.title = element_text (hjust = 0.5, face = "bold", size = 12))
+dotplot1
+
+##### random intercept model with fixed effect of stimulus type
+model1 <- lmer(diff ~ type_effect + (1|subject), data = HLM, REML = FALSE)
+summary(model1)
+
+##### + random slope
+model2 <- lmer(diff ~ type_effect + (type_effect|subject), data = HLM, REML = FALSE)
+summary(model2)
+
+##### +difference variable
+model3 <- lmer(diff ~ type_effect*condition_effect + (type_effect|subject), data = HLM, REML = FALSE)
+summary(model3)
+
+#set CS to zero
+slope3_1 <- lmer(diff ~ type_effect*condition_effect + (type_effect|subject), data = HLM, REML = FALSE)
+summary(slope3_1)
+
+#set GS to zero
+slope3_2 <- lmer(diff ~ condition + (1|subject), data = HLM[HLM$type_discrete == "CS",], REML = FALSE)
+summary(slope3_2)
+
+#create data frame for plotting random effects
+
+intercepts3 <- coef(model3)$subject[,1]
+slopes3 <- coef(model3)$subject[,2]
+intercept3FixMany <- summary(model3)$coef[1, "Estimate"]
+intercept3FixOne <- summary(model3)$coef[1, "Estimate"] + summary(model3)$coef[3, "Estimate"]
+slope3FixMany <- summary(model3)$coef[2, "Estimate"]
+slope3FixOne <- summary(model3)$coef[2, "Estimate"] + summary(model3)$coef[4, "Estimate"]
+
+plotModel3 <- ggplot(HLM, aes (x = type_effect, y = diff, group = subject)) +
+  geom_abline(slope = slopes3, intercept = intercepts3, alpha = .2) + 
+  #geom_abline(slope = slope3FixMany, intercept = intercept3FixMany, color = "lightblue", size = 1.5) +
+  #geom_abline(slope = slope3FixOne, intercept = intercept3FixOne, color = "steelblue", size = 1.5) +
+  #geom_point(show.legend = TRUE, alpha = .4) +
+  #geom_point(data = means, size = 4) +
+  #scale_color_brewer(palette = "Paired") +
+  scale_x_continuous (name = "\nDimension subject i target j") +
+  scale_y_continuous (name = "difference scores subject i target j\n") + 
+  theme_classic() +
+  ggtitle("Data fitted under Model 3") +
+  labs(fill = "condition\n subject i") +
+  theme(plot.title = element_text (hjust = 0.5, face = "bold", size = 12))
+plotModel3
 
 # multilevel model --------------------------------------------------------
 str(direct)
