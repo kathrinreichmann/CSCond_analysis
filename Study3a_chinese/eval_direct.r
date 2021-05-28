@@ -41,10 +41,6 @@ for (factor in as_factor){
 direct$type_specific <- factor(direct$type_specific, levels = c("CS", "GS same", "GS different", "Feature", "Group"))
 
 
-
-
-# hierarchical model (Vanbrabant et al., 2015) ----------------------------
-
 ## randomly select 1 CSs for many_one:
 new_one <- direct[direct$condition == "one_one",]
 new_many <- direct[direct$condition == "many_one",]
@@ -60,6 +56,8 @@ for (subject in unique(direct$subject)){
     }
   }
 }
+
+# hierarchical model (Vanbrabant et al., 2015) ----------------------------
 
 ## like new experiment: no all; two instead of four categories
 new_direct$type <- NULL
@@ -1097,3 +1095,79 @@ csDirectPlot
 #1/GS1, 1/GS2, 1/GS3
 #4/GS2
   
+
+
+# components --------------------------------------------------------------
+
+## like new experiment: no all; two instead of four categories
+new_direct$type <- NULL
+new_direct <- new_direct[!new_direct$type_specific == "Group",]
+new_direct <- new_direct[!new_direct$type_specific == "GS different",]
+new_direct <- new_direct[!new_direct$type_specific == "GS same",]
+new_direct <- new_direct[!new_direct$type_specific == "CS",]
+
+##aggregate over targets and category
+
+#with targets
+HLMtarget <- aggregate(response ~ subject + condition + val + type_specific + category + cs_selected, new_direct, mean)
+HLMtarget$nr_obs <- aggregate(response ~ subject + condition + val + type_specific + category + cs_selected, new_direct, length)[[7]]
+
+#right now: do not take different targets into account (participants are nested within targets)
+temp <- aggregate(response ~ subject + condition + val + type_specific + category, new_direct, mean)
+temp$nr_obs <- aggregate(response ~ subject + condition + val + type_specific + category, new_direct, length)[[6]]
+temp$nr_obs
+
+## order data
+temp <- temp[order(temp$subject, temp$val, temp$type_specific),]
+
+## cbind positive and negative scores
+HLMpos <- temp[temp$val == "pos",]
+HLMpos$pos <- HLMpos$response
+HLMpos$response <- NULL
+
+HLMneg <- temp[temp$val == "neg",]
+HLMneg$neg <- HLMneg$response
+HLM <- cbind(HLMpos, HLMneg$neg, HLMneg$category)
+
+HLM$val <- NULL
+HLM$neg <- HLM$`HLMneg$neg`
+HLM$`HLMneg$neg` <- NULL
+
+## calculate difference scores
+HLM$diff <- HLM$pos - HLM$neg
+
+## rename many_one to many and one_one to one
+HLM$condition <- factor(HLM$condition, labels = c("many", "one"), levels = c("many_one", "one_one"))
+
+##categorical variable: generalization as discrete
+HLM$type_discrete <- factor(HLM$type_specific, labels = c("defining"), levels = c("Feature"))
+
+
+means <- aggregate(diff ~ type_discrete + condition, HLM, mean)
+means$se <- aggregate(diff ~ type_discrete + condition, HLM, se)[[3]]
+means
+
+##add hypothetical data
+means$type_discrete <- as.character(means$type_discrete)
+hypoMany <- c("non-defining", "many", 22, 0)
+hypoOne <- c("non-defining", "one", 22, 0)
+means <- rbind(means, hypoMany, hypoOne)
+means$type_discrete <- as.factor(means$type_discrete)
+means$diff <- as.numeric(means$diff)
+means$se <- as.numeric(means$se)
+means
+
+#barplot with standard errors
+barplotDiff <- ggplot(means, aes (x = condition, y = diff, fill = type_discrete)) +
+  geom_bar(stat = 'identity', position = position_dodge(), show.legend = TRUE) +
+  geom_errorbar(aes(ymin= diff - se, ymax= diff + se), width=.2,
+                position=position_dodge(.9)) +
+  ggtitle("!! Non-defining hypothetical result !!") + 
+  scale_fill_brewer(palette = "Paired") +
+  scale_x_discrete(name = "\nCondition") +
+  scale_y_continuous (name = "Mean Difference Scores\n", breaks = seq(0, 100, 10), limits = c(0, 100)) + 
+  theme_classic() +
+  labs(fill = "Component") +
+  theme(plot.title = element_text (hjust = 0.5, face = "bold", size = 12))
+barplotDiff
+
