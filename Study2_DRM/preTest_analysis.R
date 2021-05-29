@@ -160,6 +160,8 @@ plotDirect
 
 
 # memory1 task ------------------------------------------------------------
+
+
 #exclude timeouts
 table(memory1$timeout)
 memory1 <- memory1[memory1$timeout == "false",]
@@ -196,6 +198,24 @@ barplotData$sd <- aggregate(prop ~ condition1 + type, memory1Prop, sd)[[3]]
 barplotData
 
 ##Plot generalization stimuli
+barplotData1 <- barplotData[!barplotData$type == "CSpred",]
+barplotData1 <- barplotData1[!barplotData1$type == "CSnonpred",]
+
+plotmemory1PropOld <- ggplot(barplotData1, aes (x = type, y = prop, fill = condition1)) +
+  geom_bar (stat = "identity", position = position_dodge()) +
+  geom_errorbar(aes(ymin= prop - se, ymax= prop + se), width=.2,
+                position=position_dodge(.9)) +
+  ggtitle("DRM - Chinese Characters") + 
+  scale_fill_brewer(palette = "Dark2") +
+  theme(plot.title = element_text (hjust = 0.5, face = "bold", size = 12)) +
+  labs(fill = "Condition") +
+  scale_y_continuous (name = "Proportion of 'old' responses\n") +
+  theme_classic() 
+plotmemory1PropOld
+
+#für Debriefing
+##Plot generalization stimuli
+
 barplotData1 <- barplotData[!barplotData$type == "CSpred",]
 barplotData1 <- barplotData1[!barplotData1$type == "CSnonpred",]
 
