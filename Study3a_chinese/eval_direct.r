@@ -16,13 +16,9 @@ library(tidyverse)
 
 #Plot
 library(ggplot2)
-library(sjPlot)
-library(sjmisc)
 
 #Analysis
-library(afex)
 library(lme4)
-library(effsize)
 
 #Functions
 CI <- function(x) qnorm(0.975)*sd(x)/sqrt(length(x))
@@ -404,8 +400,8 @@ indPlot3
 ### plot raw data
 
 HLMdotplot <- aggregate(diff ~ subject + type_discrete + condition, HLM, mean)
-means <- aggregate(diff ~ type_discrete + condition, HLM, mean)
-means$se <- aggregate(diff ~ type_discrete + condition, HLM, se)[[3]]
+means <- aggregate(diff ~ condition + type_discrete, HLM, mean)
+means$se <- aggregate(diff ~ condition + type_discrete, HLM, se)[[3]]
 means
 
 dotplot1 <- ggplot(HLMdotplot, aes (x = type_discrete, y = diff, group = subject, color = condition, shape = condition)) +
@@ -432,7 +428,7 @@ barplotDiff <- ggplot(means, aes (x = type_discrete, y = diff, fill = condition)
   scale_x_discrete(name = "\nType") +
   scale_y_continuous (name = "Mean Difference Scores\n", breaks = seq(0, 100, 10), limits = c(0, 100)) + 
   theme_classic() +
-  labs(fill = "CS Variability") +
+  labs(fill = "Condition") +
   theme(plot.title = element_text (hjust = 0.5, face = "bold", size = 12))
 barplotDiff
 
