@@ -20,7 +20,6 @@ Category size of categories is varied between-subjects (one: one exemplar per ca
 
 ```{r prep, echo = FALSE, include = FALSE}
 #set directory
-#setwd("\\\\sn00.zdv.uni-tuebingen.de/siskr01/Documents/Github/CSCond_analysis/CSCond_analysis/data")
 knitr::opts_knit$set(root.dir = "C:/Users/reich/Documents/GitHub/CSCond_analysis/Study1_EC/data")
 
 #load packages
@@ -36,6 +35,8 @@ se <- function(x) sd(x)/sqrt(length(x))
 ```
 
 ```{r prepare data for generalization analysis, echo = FALSE, include = FALSE}
+
+setwd("C:/Users/reich/Documents/GitHub/CSCond_analysis/Study1_EC/data")
 
 #read table
 direct <- read.csv2('direct.csv', header = TRUE)
@@ -130,8 +131,15 @@ Dummy Coded Stimulus Type (0 - CS, 1 - GS) and Condition (0 - Many, 1 - One)
 ```{r plot raw data, include = TRUE, echo = FALSE}
 
 #plot some individual slopes for condition "one"
+
+
 indPlotData <- HLM[1:280,]
 indPlotData <- indPlotData[order(indPlotData$subject),]
+
+library(lattice)
+xyplot(diff ~ condition | subject, type = c("g", "r"),indPlotData, ylab = "Gewicht", xlab = "Zeit (Woche)")
+
+
 indPlot3 <- ggplot(indPlotData[!indPlotData$condition == "one",], aes(x = type_discrete, y = diff, group = subject, color = condition, shape = condition)) +
   facet_wrap(.~ subject, nrow = 5) +
   geom_point(show.legend = TRUE, alpha = .6) +
@@ -193,7 +201,7 @@ barplotDiff
 ```{r model 1, echo = TRUE, include = TRUE}
 ##### random intercept model with fixed effect of stimulus type
 model1 <- lmer(diff ~ type_discrete + (1|subject), data = HLM, REML = FALSE)
-summary(model1, correlation = FALSE)
+summary(model1)
 
 ```
 ```{r plot model1, echo = FALSE, include = TRUE}
@@ -231,7 +239,7 @@ plotModel1
 ```{r model 2}
 ##### + random slope
 model2 <- lmer(diff ~ type_discrete + (type_discrete|subject), data = HLM, REML = FALSE)
-summary(model2, correlation = FALSE)
+summary(model2)
 
 ```
 
@@ -359,7 +367,7 @@ plotModel3
 ```
 
 
-## (1) Testing H2: CS Components
+## (2) Testing H2: CS Components
 
 ### Hypothesis 2: 
 (2) Evaluative ratings differ between predictive and non-predictive components for "many" condition. No difference between the components in the "one" condition.
