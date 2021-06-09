@@ -1,5 +1,5 @@
 ---
-title: 'Pre-Registration Experiment 1a: Direct evalautive ratings'
+title: 'R-Script for Pre-Registration Experiment 1a: Direct evalautive ratings'
 author: "Kathrin Reichmann"
 date: "26 5 2021"
 input: "direct.csv"
@@ -14,13 +14,17 @@ knitr::opts_chunk$set(echo = TRUE)
 
 The second task participants will do in the experiment is a direct evaluative rating task of CSs, GSs (stimuli from the same categories) -> "type_specific" . CSs stem from one of four different categories. Categories were either paired with positive USs, or with negative USs. CSs consisted of chinese characters with two components: one component defined the category-membership (predictive component), the other varied between exemplars (non-predictive component).
 
-Direct Evaluative Ratings are conducted on a -100 to 100 scale. Difference scores are calculated by subtracting e.g. category1 [US+] - category2 [US-] for every participant and measure.
+Direct Evaluative Ratings are conducted on a -100 to 100 scale. Difference scores are calculated by subtracting e.g. category1 [US+] - category2 [US-] for every participant and stimulus type.
 
-Category size of categories ("condition") is varied between-subjects (one: one exemplar per category vs. many: five exemplars per category).
+Category size ("condition") is varied between-subjects (**one**: one exemplar per category vs. **many**: five exemplars per category).
 
-Stimulus type ("type_discrete") is a within-subjects variable (CS vs. GS. vs. distractor?) for generalization and (predictive vs. non-predictive) for components
+Stimulus type ("type_discrete") is a within-subjects variable: consists of (**CS vs. GS**) for generalization and (**predictive vs. non-predictive**) for components
 
-Here: N = 200, nr. obs "CS" = 2, nr.obs."GS" = 6, nr. observations "predictive component" = 2
+Here: 
++ Total number of participants: N = 200, 
+  + nr. obs "CS" = 2 per participant, total: 400
+  + nr.obs."GS" = 6, total: 1200 *-> because participants rated 3 GSs for every category. Reduce this to 1 GS?*
+  + nr. observations "predictive component" = 2, total: 400
 
 ```{r prep, echo = FALSE, include = FALSE}
 #set directory
@@ -84,6 +88,7 @@ new_direct$condition <- factor(new_direct$condition, labels = c("many", "one"), 
 Generalization towards novel stimuli is wider in the "many" condition than in the "one" condition.
 
 Dummy Coded: Stimulus Type (0 - CS, 1 - GS) and Condition (0 - One, 1 - Many)
+Subjects N = 200, nr. of total observations: 1600 (400 for CSs, 1200 for GSs)
 
 (1a)
 *non-significant fixed effect of condition*
@@ -146,9 +151,10 @@ HLM$condition <- factor(HLM$condition, labels = c("one", "many"), levels = c("on
 #plot some individual slopes for condition "one"
 
 
-indPlotData <- HLM[1:280,]
+indPlotData <- HLM[1:200,]
 indPlotData <- indPlotData[order(indPlotData$subject),]
 
+#plot some individual slopes for condition "many"
 indPlot3 <- ggplot(indPlotData[!indPlotData$condition == "one",], aes(x = type_discrete, y = diff, group = subject, color = condition, shape = condition)) +
   facet_wrap(.~ subject, nrow = 5) +
   geom_point(show.legend = TRUE, alpha = .6) +
@@ -156,7 +162,7 @@ indPlot3 <- ggplot(indPlotData[!indPlotData$condition == "one",], aes(x = type_d
   scale_color_brewer(palette = "Paired") 
 indPlot3
 
-#plot some individual slopes for condition "many"
+#plot some individual slopes for condition "one"
 indPlotData <- HLM[1:280,]
 indPlotData <- indPlotData[order(indPlotData$subject),]
 indPlot3 <- ggplot(indPlotData[!indPlotData$condition == "many",], aes(x = type_discrete, y = diff, group = subject, color = condition, shape = condition)) +
@@ -181,7 +187,7 @@ dotplot1 <- ggplot(HLMdotplot, aes (x = type_discrete, y = diff, group = subject
   geom_line(data = means, mapping = aes(group = condition), color = "red", size = 1) +
   scale_color_brewer(palette = "Paired") +
   scale_x_discrete(name = "\nStimulus Type") +
-  scale_y_continuous (name = "Difference Scores for subjects i and stimulus j\n", breaks = seq(-100, 200, 50), limits = c(-100, 200)) + 
+  scale_y_continuous (name = "Difference Scores for subjects i\n", breaks = seq(-100, 200, 50), limits = c(-100, 200)) + 
   theme_classic() +
   ggtitle("Raw Data") +
   labs(fill = "Condition") +
@@ -233,7 +239,7 @@ plotModel1 <- ggplot(random1, aes (x = as.factor(type_discrete), y = diff, group
   geom_point(data = fix1, mapping = aes(y = diff, x = type_discrete, group = 1), color = "red", size = 1.5) +
   scale_color_brewer(palette = "Paired") +
   scale_x_discrete (name = "\nStimulus Type", limits=c("CS","GS")) +
-  scale_y_continuous (name = "Difference Scores for subjects i and stimulus j\n", breaks = seq(-100, 200, 50), limits = c(-100, 200)) + 
+  scale_y_continuous (name = "Difference Scores for subjects i\n", breaks = seq(-100, 200, 50), limits = c(-100, 200)) + 
   theme_classic() +
   ggtitle("Data fitted under Model 1") +
   labs(fill = "condition\n subject i") +
@@ -272,7 +278,7 @@ plotModel2 <- ggplot(random2, aes (x = as.factor(type_discrete), y = diff, group
   geom_point(data = fix2, mapping = aes(y = diff, x = type_discrete, group = 1), color = "red", size = 1.5) +
   scale_color_brewer(palette = "Paired") +
   scale_x_discrete (name = "\nStimulus Type", limits=c("CS","GS")) +
-  scale_y_continuous (name = "Difference Scores for subjects i and stimulus j\n", breaks = seq(-100, 200, 50), limits = c(-100, 200)) + 
+  scale_y_continuous (name = "Difference Scores for subjects i\n", breaks = seq(-100, 200, 50), limits = c(-100, 200)) + 
   theme_classic() +
   ggtitle("Data fitted under Model 2") +
   labs(fill = "condition\n subject i") +
@@ -303,7 +309,7 @@ Interpretation:
 
 + The difference in deviance between Model 1 and Model 2 is not significant X²(2, 1594) = 2.48, p = .288. This indicates that including a random slope effect does not contribute to a better fitting model than a mere random intercept effect.
 
-+ The difference in deviance between Model 2 and Model 3 is significant X²(2, 1592) = 20.97, p < .001. The inclusion of „condition“ as a cross-level interaction with stimulus type significantly contributes to the fit of the model, meaning that „condition“ explains variability in the intercept and slope. *(nimmt jedoch von model 2 auf model 3 zu) *
++ The difference in deviance between Model 2 and Model 3 is significant X²(2, 1592) = 20.97, p < .001. The inclusion of „condition“ as a cross-level interaction with stimulus type significantly contributes to the fit of the model, meaning that „condition“ explains variability in the intercept and slope. *(Varianz der zufälligen Effekte nimmt jedoch von model 2 auf model 3 zu) *
 
 + *For final model, omit random slope effect?*
 
@@ -321,18 +327,19 @@ Interpretation:
 
 + **intercept estimate:** mean difference score for „CS“ is 64.91 in the „one“ condition.
 
-+ **ConditionMany [Gruppeneffekt]:**  On average, the difference score is reduced by -0.75 points for CSs in the „many“ condition in comparison to CSs in the „one“ condition. **H1a: non-significant**
++ **ConditionMany [Gruppeneffekt]:**  On average, the difference score is reduced by -0.75 points for CSs in the „many“ condition in comparison to CSs in the „one“ condition. **confirmation of H1a: predicts non-significant result**
 
 + **Type_discreteGS [Generalisierung]:** In the „one“ condition, the mean difference score is reduced by -40.30 points for GSs, in comparison to CSs. -> not interesting
 
-+ **Type_discreteGS:conditionMany:** In "many" condition, the average difference score for GSs is 22.91 higher than the average difference scores for GSs in the "one" condition -> higher diff scores indicate wider generalization **H2b: significant -> use for power analysis?**
++ **Type_discreteGS:conditionMany:** In "many" condition, the average difference score for GSs is 22.91 higher than the average difference scores for GSs in the "one" condition -> higher diff scores indicate wider generalization **confirmation of H2b: predicts significant result -> use for power analysis?**
 
-+ **Random intercept [45.72]:** variation of intercept across subjects: variation goes beyond the fixed effect of stimulus type [-17.39]
++ **Random intercept [45.72]:** variation of intercept across subjects: variation goes beyond the fixed effect of stimulus type [-40.4]
 
-+ **Random slopes [8.22]:** variation of slopes across subjects: individual differences in the degree of generalization -> individuals differ beyond the individual differences explained by the „condition“ variable
++ **Random slopes [8.22]:** variation of slopes across subjects: individual differences in the degree of generalization (here: in their "GS" ratings) -> individuals differ beyond the individual differences explained by the „condition“ variable
 
+###Predicted values by model: 
 
-```{r plot model 3, include = TRUE, echo = FALSE}
+```{r plot model 3, include = FALSE, echo = FALSE}
 #create data frame for plotting random effects
 subjcond <- HLM[!duplicated(HLM$subject),c("subject", "condition")] ##add condition
 
@@ -344,16 +351,41 @@ random3GS <- merge(random3GS, subjcond, by.y = "subject")
 
 random3 <- rbind(random3CS, random3GS)
 
+```
+
+Predictions for "one" condition:
+
+```{r prediced fix "one", echo = FALSE, include = TRUE}
 #fixed effect
 fix3CSOne <- data.frame(diff = summary(model3)$coef[1, "Estimate"], type_discrete = "CS")
 fix3GSOne <- data.frame(diff = summary(model3)$coef[1, "Estimate"] + summary(model3)$coef[2, "Estimate"], type_discrete = "GS")
 fix3One <- rbind(fix3CSOne, fix3GSOne)
 fix3One
 
+```
+
+Predictions for "many" condition:
+
+```{r prediced fix effect "many", echo  = FALSE, include = TRUE}
+
+
 fix3CSMany <- data.frame(diff = summary(model3)$coef[1, "Estimate"] + summary(model3)$coef[3, "Estimate"], type_discrete = "CS")
 fix3GSMany <- data.frame(diff = (summary(model3)$coef[1, "Estimate"] + summary(model3)$coef[3, "Estimate"]) + (summary(model3)$coef[2, "Estimate"] + summary(model3)$coef[4, "Estimate"]), type_discrete = "GS")
 fix3Many <- rbind(fix3CSMany, fix3GSMany)
 fix3Many
+
+```
+
+Observed Results:
+
+```{r, include = TRUE, echo = FALSE}
+
+means
+
+```
+
+
+```{r plot data, include = TRUE, echo = FALSE}
 
 
 plotModel3 <- ggplot(random3, aes (x = as.factor(type_discrete), y = diff, group = as.factor(subject), color = condition)) +
@@ -372,6 +404,7 @@ plotModel3 <- ggplot(random3, aes (x = as.factor(type_discrete), y = diff, group
   ggtitle("Data fitted under Model 3") +
   theme(plot.title = element_text (hjust = 0.5, face = "bold", size = 12))
 plotModel3 
+
 ```
 
 ```{r simple slopes to investigate hypotheses directly, include = TRUE, echo = TRUE}
@@ -403,7 +436,8 @@ Interpretation:
 ## (2) Testing H2: CS Components
 
 ### Hypothesis 2: 
-Evaluative ratings differ between predictive and non-predictive components for "many" condition. No difference between the components in the "one" condition.
+Evaluative ratings differ between predictive and non-predictive components for "many" condition. 
+No difference between the components in the "one" condition.
 
 Explanation: In the „many“ condition, the EC effect gets attached to the category-defining feature, while in the „one“ condition, the EC effect gets attached to the whole stimulus
 
@@ -411,17 +445,19 @@ Explanation: In the „many“ condition, the EC effect gets attached to the cat
 Dummy Coded: Stimulus Component (0 - Non-Predictive , 1 - Predictive) and Condition (0 - One, 1 - Many)
 
 (2a)
-* non-significant fixed effect for stimulus component, when ref. category is "one"*
-  + no difference between components in **"one" condition**
+*non-significant fixed effect of stimulus component, when ref. category is "one"*
+
+-> no difference between components in **"one" condition**
   
 (2b)
-* significant fixed effect for the cross-level interaction stimulus component x condition, when ref. category is "one".*
-  + difference between components in **many condition** goes beyond difference in components in "one" condition
-  -> simple slope:
-  + significant difference between components in the **many condition** : significant decrease in difference scores for the "predictive" component than the "non-predictive" component
+*significant fixed effect for the cross-level interaction stimulus component x condition, and fixed effect of condition, when ref. category is "one". *
+
+-> difference between components in **many condition** goes beyond difference in components in "one" condition *-> confirms the hypothesis only indirectly...*
+
+-> simple slope: significant difference between components in the **many condition** : significant decrease in difference scores for the "predictive" component in comparison to the "non-predictive" component
 
 
-### Plot raw data [predtivie, non-predictive is hypothetical]: 
+### Plot raw data [predictive, non-predictive is hypothetical]: 
 
 ```{r prep data for component analysis, echo = FALSE, include = FALSE}
 
@@ -499,7 +535,7 @@ barplotDiff
 
 ### model for data analysis:
 
-```{r multilevel model, echo = TRUE, include = FALSE}
+```{r multilevel model, echo = TRUE, include = TRUE}
 
 #hypothetical second level of factor type_discrete
 HLM2 <- HLM
@@ -520,6 +556,8 @@ summary(model2)
 
 ##### + between-subjects factor condition
 model3 <- lmer(diff ~ type_discrete*condition + (type_discrete|subject), data = HLM, REML = FALSE)
+
+#### here: results are made up and thus make no sense
 summary(model3)
 
 ```
@@ -530,11 +568,11 @@ Interpretation: (what we would predict)
 
 + **intercept estimate:** mean difference score for „non-predictive“ is XX in the „one“ condition.
 
-+ **ConditionMany [Gruppeneffekt]:**  On average, the difference score is reduced by XX points for non-predictive in the „many“ condition in comparison to non-predictive in the „one“ condition. -> **hypothesis 2b: significant**
++ **ConditionMany [Gruppeneffekt]:**  On average, the difference score is reduced by XX points for non-predictive in the „many“ condition in comparison to non-predictive in the „one“ condition. -> **hypothesis 2b: should be significant & negative**
 
-+ **Type_discretePredictive [Component]:** In the „one“ condition, the mean difference score increases by XX points for predictive components, in comparison to non-predictive components -> **hypothesis 2a: not significant**
++ **Type_discretePredictive [Component]:** In the „one“ condition, the mean difference score increases by XX points for predictive components, in comparison to non-predictive components -> **hypothesis 2a: should not be significant**
 
-+ **Type_discretePredictive:conditionMany:** In the "many" condition, the average difference score for "predictive" components is XX higher than the average difference score for "predictive" Components in the "one" condition -> **hypothesis 2b: significant**
++ **Type_discretePredictive:conditionMany:** In the "many" condition, the average difference score for "predictive" components is XX higher than the average difference score for "predictive" Components in the "one" condition -> **hypothesis 2b: should be significant & positive**
 
 + **Random intercept [XX]:** variation of intercept across subjects: variation goes beyond the fixed effect of stimulus type [XX]
 
@@ -564,10 +602,10 @@ Generalization towards novel stimuli is wider in the "many" condition than in th
 CS ratings as the continuous predictor. GS as the outcome variable. Both z-standardized.
 Condition as the between-subjects variable.
 
-(1)
+H1a:
 *significant interaction CS and condition*
 -> predictive value of CS to predict GS ratings depends on the different conditions
--> slope is steeper for "one" than for "many"
+-> slope is steeper for "many" than for "one"
 
 ### plot prediction of "GS" with "CS", controlling for categories
 
@@ -577,7 +615,6 @@ Condition as the between-subjects variable.
 #(1) mean scores for every category and participant
 centerDirect <- aggregate(response ~ subject + condition + category + type_specific + val, new_direct, mean)
 #condition_code: 0 =  many
-centerDirect[centerDirect$subject == "02a80kdxm7",] #check
 
 
 #(2) use CS as predictor for GS same
@@ -608,28 +645,29 @@ dotplot
 
 ```
 
-```{r models, include = TRUE, echo = TRUE}
+```{r models, include = FALSE, echo = FALSE}
 
 
 #(4) build up the models
+#-> work on this a bit more
 
 #add random intercept for category
-lmer1 <- lmer(GS ~ 1 + (1| subject), data = multiLevel, REML = FALSE)
+lmer1 <- lmer(GS ~ 1 + (1| category), data = multiLevel, REML = FALSE)
 
 #add CSs as predictor
-lmer2 <- lmer(GS ~ CS + (1 | subject), data = multiLevel, REML = FALSE)
+lmer2 <- lmer(GS ~ CS + (1 | category), data = multiLevel, REML = FALSE)
 
 #add random slopes
-lmer3 <- lmer(GS ~ CS + (CS | subject), data = multiLevel, REML = FALSE )
+lmer3 <- lmer(GS ~ CS + (CS | category), data = multiLevel, REML = FALSE )
 
 #add interaction with condition
-lmer4 <- lmer(GS ~ CS*condition + (CS | subject), data = multiLevel, REML = FALSE )
+lmer4 <- lmer(GS ~ CS*condition + (CS| category), data = multiLevel, REML = FALSE )
 
 #(5) pick best model
 anova(lmer1, lmer2, lmer3, lmer4)
 
 #(6) results
-sjPlot::tab_model(lmer1, lmer2, lmer3, lmer4, dv.labels = c("Null Model", "Model 1"))
+summary(lmer4)
 
 ```
 
