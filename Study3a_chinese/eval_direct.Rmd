@@ -87,10 +87,12 @@ Dummy Coded: Stimulus Type (0 - CS, 1 - GS) and Condition (0 - One, 1 - Many)
 
 (1a)
 *non-significant fixed effect of condition*
+
 -> no effect of condition on difference scores for **CSs**
 
 (1b)
 *Significant fixed effect for cross-level interaction stimulus type x condition.*
+
 -> effect of condition on difference scores for **GSs** : higher difference scores in the "many" condition than in the "one" condition
 
 ### Plot raw data: 
@@ -205,7 +207,7 @@ barplotDiff
 
 ### Model 1: random intercept, fixed effect of stimulus type
 
-```{r model 1, echo = TRUE, include = FALSE}
+```{r model 1, echo = TRUE, include = TRUE}
 ##### random intercept model with fixed effect of stimulus type
 model1 <- lmer(diff ~ type_discrete + (1|subject), data = HLM, REML = FALSE)
 summary(model1)
@@ -243,7 +245,7 @@ plotModel1
 
 ### Model 2: + random slope
 
-```{r model 2m echo = TRUE, include = FALSE}
+```{r model 2, echo = TRUE, include = FALSE}
 ##### + random slope
 model2 <- lmer(diff ~ type_discrete + (type_discrete|subject), data = HLM, REML = FALSE)
 summary(model2)
@@ -323,7 +325,7 @@ Interpretation:
 
 + **Type_discreteGS [Generalisierung]:** In the „one“ condition, the mean difference score is reduced by -40.30 points for GSs, in comparison to CSs. -> not interesting
 
-+ **Type_discreteGS:conditionMany:** In "many" condition, the average difference score for GSs is 22.91 higher than the average difference scores for GSs in the "one" condition -> higher diff scores mean wider generalization **H2b: significant -> use for power analysis?**
++ **Type_discreteGS:conditionMany:** In "many" condition, the average difference score for GSs is 22.91 higher than the average difference scores for GSs in the "one" condition -> higher diff scores indicate wider generalization **H2b: significant -> use for power analysis?**
 
 + **Random intercept [45.72]:** variation of intercept across subjects: variation goes beyond the fixed effect of stimulus type [-17.39]
 
@@ -343,15 +345,15 @@ random3GS <- merge(random3GS, subjcond, by.y = "subject")
 random3 <- rbind(random3CS, random3GS)
 
 #fixed effect
-fix3CSMany <- data.frame(diff = summary(model3)$coef[1, "Estimate"], type_discrete = "CS")
-fix3GSMany <- data.frame(diff = summary(model3)$coef[1, "Estimate"] + summary(model3)$coef[2, "Estimate"], type_discrete = "GS")
-fix3Many <- rbind(fix3CSMany, fix3GSMany)
-fix3Many
-
-fix3CSOne <- data.frame(diff = summary(model3)$coef[1, "Estimate"] + summary(model3)$coef[3, "Estimate"], type_discrete = "CS")
-fix3GSOne <- data.frame(diff = (summary(model3)$coef[1, "Estimate"] + summary(model3)$coef[3, "Estimate"]) + (summary(model3)$coef[2, "Estimate"] + summary(model3)$coef[4, "Estimate"]), type_discrete = "GS")
+fix3CSOne <- data.frame(diff = summary(model3)$coef[1, "Estimate"], type_discrete = "CS")
+fix3GSOne <- data.frame(diff = summary(model3)$coef[1, "Estimate"] + summary(model3)$coef[2, "Estimate"], type_discrete = "GS")
 fix3One <- rbind(fix3CSOne, fix3GSOne)
 fix3One
+
+fix3CSMany <- data.frame(diff = summary(model3)$coef[1, "Estimate"] + summary(model3)$coef[3, "Estimate"], type_discrete = "CS")
+fix3GSMany <- data.frame(diff = (summary(model3)$coef[1, "Estimate"] + summary(model3)$coef[3, "Estimate"]) + (summary(model3)$coef[2, "Estimate"] + summary(model3)$coef[4, "Estimate"]), type_discrete = "GS")
+fix3Many <- rbind(fix3CSMany, fix3GSMany)
+fix3Many
 
 
 plotModel3 <- ggplot(random3, aes (x = as.factor(type_discrete), y = diff, group = as.factor(subject), color = condition)) +
@@ -519,8 +521,6 @@ summary(model2)
 ##### + between-subjects factor condition
 model3 <- lmer(diff ~ type_discrete*condition + (type_discrete|subject), data = HLM, REML = FALSE)
 summary(model3)
-
-sjPlot::tab_model(model1, model2, model3, dv.labels = c("Model 1", "Model 2", "Model 3"))
 
 ```
 
