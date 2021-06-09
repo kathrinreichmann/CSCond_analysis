@@ -13,8 +13,8 @@ ex1.fake <- function(J, K){
   #set up predictors (use mean and variance )
   obs <- rep (seq (1, K, length = K), J) #K measurements per person
   person <- rep (1:J, each = K) #J person IDs
-  type <- rnorm (J*K, 0, 1) #type_discrete (within)
-  cond <- rnorm (J*K, 0, 1) # condition (between)
+  type <- rbinom (J*K,1, .5) #type_discrete (within)
+  cond <- rbinom (J*K,1, .5) # condition (between)
  
   #fixed effects (values from previous model)
   b0 <- 64.16   #true intercept value
@@ -43,7 +43,7 @@ ex1.fake <- function(J, K){
 }
 
 #generate example dataset with 68 people and 21 measurement time points (Observations per participant)
-data <- ex1.fake(J = 200, K = 8) 
+data <- ex1.fake(J = 180, K = 8) 
 #8 observations per person
 # 200 participants
 
@@ -57,7 +57,7 @@ ex1.power <- function (J, K, n.sims = 1000){
   signif <- rep (NA, n.sims) #vector that will record if the effect of interest is significant
   for (s in 1:n.sims){
     fake <- ex1.fake(J, K)  #generate fake data set in every simulation round
-    lme.power <- lmer(diff ~ cond*type + (type | person), data = data)
+    lme.power <- lmer(diff ~ cond*type + (type | person), data = fake)
     est <- fixef (lme.power)["cond:type"] #save parameter estimate (parameter relevant for hypothesis)
     se <- se.fixef(lme.power)["cond:type"] #save standard error
     signif[s] <- (abs(est)-2*se) > 0 #calculate significance: returns TRUE/FALSE
@@ -67,4 +67,8 @@ ex1.power <- function (J, K, n.sims = 1000){
 }
 
 #power analysis
-ex1.power(J = 200, K = 8, n.sims = 1000)
+ex1.power(J = 180, K = 8, n.sims = 1000)
+
+#sequential analysis
+
+

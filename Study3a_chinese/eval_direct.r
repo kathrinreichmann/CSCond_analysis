@@ -123,6 +123,8 @@ HLM$condition <- factor(HLM$condition, labels = c("many", "one"), levels = c("ma
 ##categorical variable: generalization as discrete
 HLM$type_discrete <- factor(HLM$type_specific, labels = c("CS", "GS"), levels = c("CS", "GS same"))
 
+#reverse dummy coding for condiiton
+HLM$condition <- factor(HLM$condition, labels = c("one", "many"), levels = c("one", "many"))
 
 
 # continuous variable for generalization ----------------------------------
@@ -1136,7 +1138,7 @@ HLM$diff <- HLM$pos - HLM$neg
 HLM$condition <- factor(HLM$condition, labels = c("many", "one"), levels = c("many_one", "one_one"))
 
 ##categorical variable: generalization as discrete
-HLM$type_discrete <- factor(HLM$type_specific, labels = c("defining"), levels = c("Feature"))
+HLM$type_discrete <- factor(HLM$type_specific, labels = c("predictive"), levels = c("Feature"))
 
 
 means <- aggregate(diff ~ type_discrete + condition, HLM, mean)
@@ -1145,8 +1147,8 @@ means
 
 ##add hypothetical data
 means$type_discrete <- as.character(means$type_discrete)
-hypoMany <- c("non-defining", "many", 22, 0)
-hypoOne <- c("non-defining", "one", 22, 0)
+hypoMany <- c("non-predictive", "many", 18, 0)
+hypoOne <- c("non-predictive", "one", 22, 0)
 means <- rbind(means, hypoMany, hypoOne)
 means$type_discrete <- as.factor(means$type_discrete)
 means$diff <- as.numeric(means$diff)
@@ -1167,3 +1169,26 @@ barplotDiff <- ggplot(means, aes (x = condition, y = diff, fill = type_discrete)
   theme(plot.title = element_text (hjust = 0.5, face = "bold", size = 12))
 barplotDiff
 
+### data analysis
+
+
+#hypothetical second level of factor type_discrete
+HLM2 <- HLM
+HLM2$type_discrete <- factor(HLM$type_specific, labels = c("non-predictive"), levels = c("Feature"))
+HLM <- rbind(HLM2, HLM)
+
+#reverse dummy coding for condiiton
+HLM$condition <- factor(HLM$condition, labels = c("one", "many"), levels = c("one", "many"))
+
+
+##### random intercept model with fixed effect of stimulus type
+model1 <- lmer(diff ~ type_discrete + (1|subject), data = HLM, REML = FALSE)
+summary(model1)
+
+##### + random slope
+model2 <- lmer(diff ~ type_discrete + (type_discrete|subject), data = HLM, REML = FALSE)
+summary(model2)
+
+##### + between-subjects factor condition
+model3 <- lmer(diff ~ type_discrete*condition + (type_discrete|subject), data = HLM, REML = FALSE)
+summary(model3)
