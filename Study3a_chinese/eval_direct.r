@@ -57,8 +57,6 @@ for (subject in unique(direct$subject)){
 
 ## like new experiment: no all; two instead of four categories
 new_direct$type <- NULL
-new_direct <- new_direct[!new_direct$type_specific == "Group",]
-new_direct <- new_direct[!new_direct$type_specific == "Feature",]
 
 ##aggregate over targets and category
 
@@ -113,6 +111,9 @@ dim(HLM)
 HLM$diff <- HLM$pos - HLM$neg
 
 HLM <- HLM[!HLM$type_specific =="GS different", ]
+HLM <- HLM[!HLM$type_specific == "Group",]
+HLM <- HLM[!HLM$type_specific == "Feature",]
+
 ## ? use type as a continuous predictor
 HLM$type_continuous <- factor(HLM$type_specific, labels = c("0", "1"), levels = c("CS", "GS same"))
 HLM$type_continuous <- as.numeric(HLM$type_continuous)
@@ -125,7 +126,6 @@ HLM$type_discrete <- factor(HLM$type_specific, labels = c("CS", "GS"), levels = 
 
 #reverse dummy coding for condiiton
 HLM$condition <- factor(HLM$condition, labels = c("one", "many"), levels = c("one", "many"))
-
 
 # continuous variable for generalization ----------------------------------
 
@@ -553,6 +553,12 @@ anova(model3, model4)
 plot(model3)
 summary(model3)
 
+#simple slopes (no additional information)
+CSs <- lm (diff ~ condition, HLM[HLM$type_discrete == "CS",])
+summary(CSs)
+
+GSs <- lm (diff ~ condition, HLM[HLM$type_discrete == "GS", ])
+summary(GSs)
 
 # HLM (effect coded) ------------------------------------------------------
 
@@ -1097,13 +1103,6 @@ csDirectPlot
 
 # components --------------------------------------------------------------
 
-## like new experiment: no all; two instead of four categories
-new_direct$type <- NULL
-new_direct <- new_direct[!new_direct$type_specific == "Group",]
-new_direct <- new_direct[!new_direct$type_specific == "GS different",]
-new_direct <- new_direct[!new_direct$type_specific == "GS same",]
-new_direct <- new_direct[!new_direct$type_specific == "CS",]
-
 ##aggregate over targets and category
 
 #with targets
@@ -1137,9 +1136,18 @@ HLM$diff <- HLM$pos - HLM$neg
 ## rename many_one to many and one_one to one
 HLM$condition <- factor(HLM$condition, labels = c("many", "one"), levels = c("many_one", "one_one"))
 
+#reverse dummy coding for condiiton
+HLM$condition <- factor(HLM$condition, labels = c("one", "many"), levels = c("one", "many"))
+
+## discard levels of type we don't need
+HLM <- HLM[!direct$type_specific == "Group",]
+HLM <- HLM[!new_direct$type_specific == "GS different",]
+HLM <- HLM[!new_direct$type_specific == "GS same",]
+HLM <- HLM[!new_direct$type_specific == "CS",]
+
+
 ##categorical variable: generalization as discrete
 HLM$type_discrete <- factor(HLM$type_specific, labels = c("predictive"), levels = c("Feature"))
-
 
 means <- aggregate(diff ~ type_discrete + condition, HLM, mean)
 means$se <- aggregate(diff ~ type_discrete + condition, HLM, se)[[3]]
@@ -1156,12 +1164,12 @@ means$se <- as.numeric(means$se)
 means
 
 #barplot with standard errors
-barplotDiff <- ggplot(means, aes (x = condition, y = diff, fill = type_discrete)) +
+barplotDiff <- ggplot(means, aes (x = type_discrete, y = diff, fill = condition)) +
   geom_bar(stat = 'identity', position = position_dodge(), show.legend = TRUE) +
   geom_errorbar(aes(ymin= diff - se, ymax= diff + se), width=.2,
                 position=position_dodge(.9)) +
-  ggtitle("!! Non-defining hypothetical result !!") + 
-  scale_fill_brewer(palette = "Paired") +
+  ggtitle("Evaluative Ratings for Components (non-predictive is hypothetical)") + 
+  scale_fill_brewer(palette = "Set3") +
   scale_x_discrete(name = "\nCondition") +
   scale_y_continuous (name = "Mean Difference Scores\n", breaks = seq(0, 100, 10), limits = c(0, 100)) + 
   theme_classic() +
@@ -1171,14 +1179,10 @@ barplotDiff
 
 ### data analysis
 
-
 #hypothetical second level of factor type_discrete
 HLM2 <- HLM
 HLM2$type_discrete <- factor(HLM$type_specific, labels = c("non-predictive"), levels = c("Feature"))
 HLM <- rbind(HLM2, HLM)
-
-#reverse dummy coding for condiiton
-HLM$condition <- factor(HLM$condition, labels = c("one", "many"), levels = c("one", "many"))
 
 
 ##### random intercept model with fixed effect of stimulus type
