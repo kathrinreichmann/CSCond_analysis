@@ -509,15 +509,15 @@ random3GS <- merge(random3GS, subjcond, by.y = "subject")
 random3 <- rbind(random3CS, random3GS)
 
 #fixed effect
-fix3CSMany <- data.frame(diff = summary(model3)$coef[1, "Estimate"], type_discrete = "CS")
-fix3GSMany <- data.frame(diff = summary(model3)$coef[1, "Estimate"] + summary(model3)$coef[2, "Estimate"], type_discrete = "GS")
-fix3Many <- rbind(fix3CSMany, fix3GSMany)
-fix3Many
-
-fix3CSOne <- data.frame(diff = summary(model3)$coef[1, "Estimate"] + summary(model3)$coef[3, "Estimate"], type_discrete = "CS")
-fix3GSOne <- data.frame(diff = (summary(model3)$coef[1, "Estimate"] + summary(model3)$coef[3, "Estimate"]) + (summary(model3)$coef[2, "Estimate"] + summary(model3)$coef[4, "Estimate"]), type_discrete = "GS")
+fix3CSOne <- data.frame(diff = summary(model3)$coef[1, "Estimate"], type_discrete = "CS")
+fix3GSOne <- data.frame(diff = summary(model3)$coef[1, "Estimate"] + summary(model3)$coef[2, "Estimate"], type_discrete = "GS")
 fix3One <- rbind(fix3CSOne, fix3GSOne)
 fix3One
+
+fix3CSMany <- data.frame(diff = summary(model3)$coef[1, "Estimate"] + summary(model3)$coef[3, "Estimate"], type_discrete = "CS")
+fix3GSMany <- data.frame(diff = (summary(model3)$coef[1, "Estimate"] + summary(model3)$coef[3, "Estimate"]) + (summary(model3)$coef[2, "Estimate"] + summary(model3)$coef[4, "Estimate"]), type_discrete = "GS")
+fix3Many <- rbind(fix3CSMany, fix3GSMany)
+fix3Many
 
 
 plotModel3 <- ggplot(random3, aes (x = as.factor(type_discrete), y = diff, group = as.factor(subject), color = condition)) +
@@ -537,8 +537,6 @@ plotModel3 <- ggplot(random3, aes (x = as.factor(type_discrete), y = diff, group
   theme(plot.title = element_text (hjust = 0.5, face = "bold", size = 12))
 plotModel3 
 
-
-
 #? - random slope
 model4 <- lmer(diff ~ type_discrete*condition + (1|subject), data = HLM, REML = FALSE)
 summary(model4)
@@ -552,6 +550,7 @@ anova(model3, model4)
 #parameter interpretation
 plot(model3)
 summary(model3)
+anova(model3)
 
 #simple slopes (no additional information)
 CSs <- lm (diff ~ condition, HLM[HLM$type_discrete == "CS",])
@@ -677,8 +676,11 @@ multiLevel$GS <- respGS$response
 multiLevel$CS <- multiLevel$response
 multiLevel$response <- NULL
 multiLevel$type_specific <- NULL
-head(multiLevel)
-multiLevel[multiLevel$subject == "02a80kdxm7",] #check
+
+#z-standardize GS and CS
+multiLevel$GS <- scale (multiLevel$GS, center = TRUE, scale = TRUE)
+multiLevel$CS <- scale (multiLevel$CS, center = TRUE, scale = TRUE)
+
 
 #(3) plot the two different levels involved in the analysis
 
@@ -695,28 +697,24 @@ dotplot <- ggplot(multiLevel, aes (x = CS, y = GS, color = category)) +
 dotplot
 
 #(4) build up the models
-#baseline
-lme1 <- gls(GS ~ 1, data = multiLevel, method = "ML")
 
 #add random intercept for category
-lme2 <- lme(GS ~ 1, data = multiLevel, random = ~ 1|category, method = "ML")
-summary(lme2)
-anova(lme1, lme2)
+lmer1 <- lmer(GS ~ 1 + (1| subject), data = multiLevel, REML = FALSE)
 
 #add CSs as predictor
-lme3 <- lme(GS ~ CS, data = multiLevel, random = ~ 1|category, method = "ML")
+lmer2 <- lmer(GS ~ CS + (1 | subject), data = multiLevel, REML = FALSE)
 
 #add random slopes
-lme4 <- lme(GS ~ CS, random = ~ CS |category, data = multiLevel, method = "ML" )
+lmer3 <- lmer(GS ~ CS + (CS | subject), data = multiLevel, REML = FALSE )
 
 #add interaction with condition
-lme5 <- lme(GS ~ CS*condition, random = ~ CS |category, data = multiLevel, method = "ML" )
+lmer4 <- lmer(GS ~ CS*condition + (CS | subject), data = multiLevel, REML = FALSE )
 
 #(5) pick best model
-anova(lme1, lme2, lme3, lme4, lme5)
+anova(lmer1, lmer2, lmer3, lmer4)
 
 #(6) results
-summary(lme5)
+summary(lmer4)
 
 #interpretations:
 
@@ -1140,10 +1138,10 @@ HLM$condition <- factor(HLM$condition, labels = c("many", "one"), levels = c("ma
 HLM$condition <- factor(HLM$condition, labels = c("one", "many"), levels = c("one", "many"))
 
 ## discard levels of type we don't need
-HLM <- HLM[!direct$type_specific == "Group",]
-HLM <- HLM[!new_direct$type_specific == "GS different",]
-HLM <- HLM[!new_direct$type_specific == "GS same",]
-HLM <- HLM[!new_direct$type_specific == "CS",]
+HLM <- HLM[!HLM$type_specific == "Group",]
+HLM <- HLM[!HLM$type_specific == "GS different",]
+HLM <- HLM[!HLM$type_specific == "GS same",]
+HLM <- HLM[!HLM$type_specific == "CS",]
 
 
 ##categorical variable: generalization as discrete
@@ -1164,7 +1162,7 @@ means$se <- as.numeric(means$se)
 means
 
 #barplot with standard errors
-barplotDiff <- ggplot(means, aes (x = type_discrete, y = diff, fill = condition)) +
+barplotDiff <- ggplot(means, aes (x = condition, y = diff, fill = type_discrete)) +
   geom_bar(stat = 'identity', position = position_dodge(), show.legend = TRUE) +
   geom_errorbar(aes(ymin= diff - se, ymax= diff + se), width=.2,
                 position=position_dodge(.9)) +
@@ -1196,3 +1194,11 @@ summary(model2)
 ##### + between-subjects factor condition
 model3 <- lmer(diff ~ type_discrete*condition + (type_discrete|subject), data = HLM, REML = FALSE)
 summary(model3)
+
+
+#### simple slopes for each condition
+one <- lm (diff ~ type_discrete, data = HLM[HLM$condition == "one", ])
+summary(one)
+
+many <- lm (diff ~ type_discrete, data = HLM[HLM$condition == "many", ])
+summary(many)

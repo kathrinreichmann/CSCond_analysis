@@ -2,8 +2,10 @@
 title: 'R-Script for Pre-Registration Experiment 1a: Direct evalautive ratings'
 author: "Kathrin Reichmann"
 date: "26 5 2021"
-input: "direct.csv"
-output: html_document
+output:
+  html_document: default
+  pdf_document: default
+input: direct.csv
 ---
 
 ```{r setup, include=FALSE}
@@ -21,7 +23,7 @@ Category size ("condition") is varied between-subjects (**one**: one exemplar pe
 Stimulus type ("type_discrete") is a within-subjects variable: consists of (**CS vs. GS**) for generalization and (**predictive vs. non-predictive**) for components
 
 Here: 
-+ Total number of participants: N = 200, 
+  + Total number of participants: N = 200, 
   + nr. obs "CS" = 2 per participant, total: 400
   + nr.obs."GS" = 6, total: 1200 *-> because participants rated 3 GSs for every category. Reduce this to 1 GS?*
   + nr. observations "predictive component" = 2, total: 400
@@ -337,7 +339,7 @@ Interpretation:
 
 + **Random slopes [8.22]:** variation of slopes across subjects: individual differences in the degree of generalization (here: in their "GS" ratings) -> individuals differ beyond the individual differences explained by the „condition“ variable
 
-###Predicted values by model: 
+### Predicted values by model: 
 
 ```{r plot model 3, include = FALSE, echo = FALSE}
 #create data frame for plotting random effects
@@ -353,18 +355,17 @@ random3 <- rbind(random3CS, random3GS)
 
 ```
 
-Predictions for "one" condition:
 
 ```{r prediced fix "one", echo = FALSE, include = TRUE}
 #fixed effect
 fix3CSOne <- data.frame(diff = summary(model3)$coef[1, "Estimate"], type_discrete = "CS")
 fix3GSOne <- data.frame(diff = summary(model3)$coef[1, "Estimate"] + summary(model3)$coef[2, "Estimate"], type_discrete = "GS")
 fix3One <- rbind(fix3CSOne, fix3GSOne)
-fix3One
+#fix3One
+
+summary(model3)$coef
 
 ```
-
-Predictions for "many" condition:
 
 ```{r prediced fix effect "many", echo  = FALSE, include = TRUE}
 
@@ -562,7 +563,7 @@ summary(model3)
 
 ```
 
-Dummy Coded: Stimulus Component (0 - Non-Predictive , 1 - Predictive) and *Condition (0 - One, 1 - Many) - reversed for H2*
+Dummy Coded: Stimulus Component (0 - Non-Predictive , 1 - Predictive) and Condition (0 - One, 1 - Many)
 
 Interpretation: (what we would predict)
 
