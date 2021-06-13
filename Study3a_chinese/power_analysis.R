@@ -8,13 +8,13 @@ library(lmerTest)
 
 #generate data
 
-ex1.fake <- function(J, K){
+ex1.fake <- function(N, K){
   
   #set up predictors (use mean and variance )
-  obs <- rep (seq (1, K, length = K), J) #K measurements per person
-  person <- rep (1:J, each = K) #J person IDs
-  type <- rbinom (J*K,1, .5) #type_discrete (within)
-  cond <- rbinom (J*K,1, .5) # condition (between)
+  obs <- rep (seq (1, K, length = K), N) #K measurements per person
+  person <- rep (1:N, each = K) #N person IDs
+  type <- rbinom (N*K,1, .5) #type_discrete (within)
+  cond <- rbinom (N*K,1, .5) # condition (between)
  
   #fixed effects (values from previous model)
   b0 <- 64.16   #true intercept value
@@ -29,11 +29,11 @@ ex1.fake <- function(J, K){
   
   
   #per person (use fixed effect as mean, and random effect as standard deviation)
-  b0.int <- rnorm (J, b0, sqrt (vsub.b0)) # intercept for every participant
-  b1.type <- rnorm (J, b1, sqrt (vsub.b1)) #slope for type for every participant
+  b0.int <- rnorm (N, b0, sqrt (vsub.b0)) # intercept for every participant
+  b1.type <- rnorm (N, b1, sqrt (vsub.b1)) #slope for type for every participant
 
   #generate depend measure based on the true estimates of the model
-  diff <- rnorm (J*K, b0.int[person]
+  diff <- rnorm (N*K, b0.int[person]
                 + b1.type[person]*type
                 + b2 * cond
                 + b3 * type * cond
@@ -43,7 +43,7 @@ ex1.fake <- function(J, K){
 }
 
 #generate example dataset with 68 people and 21 measurement time points (Observations per participant)
-data <- ex1.fake(J = 180, K = 8) 
+data <- ex1.fake(N = 180, K = 8) 
 #8 observations per person
 # 200 participants
 
@@ -53,10 +53,10 @@ lme.power <- lmer(diff ~ cond*type + (type | person), data = data)
 summary(lme.power)
 
 #loop data generation and analyze it
-ex1.power <- function (J, K, n.sims = 1000){
+ex1.power <- function (N, K, n.sims = 1000){
   signif <- rep (NA, n.sims) #vector that will record if the effect of interest is significant
   for (s in 1:n.sims){
-    fake <- ex1.fake(J, K)  #generate fake data set in every simulation round
+    fake <- ex1.fake(N, K)  #generate fake data set in every simulation round
     lme.power <- lmer(diff ~ cond*type + (type | person), data = fake)
     est <- fixef (lme.power)["cond:type"] #save parameter estimate (parameter relevant for hypothesis)
     se <- se.fixef(lme.power)["cond:type"] #save standard error
@@ -67,7 +67,7 @@ ex1.power <- function (J, K, n.sims = 1000){
 }
 
 #power analysis
-ex1.power(J = 180, K = 8, n.sims = 1000)
+ex1.power(N = 180, K = 8, n.sims = 1000)
 
 #sequential analysis
 
