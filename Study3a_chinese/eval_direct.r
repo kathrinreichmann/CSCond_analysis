@@ -1172,7 +1172,8 @@ barplotDiff <- ggplot(means, aes (x = condition, y = diff, fill = type_discrete)
   scale_y_continuous (name = "Mean Difference Scores\n", breaks = seq(0, 100, 10), limits = c(0, 100)) + 
   theme_classic() +
   labs(fill = "Component") +
-  theme(plot.title = element_text (hjust = 0.5, face = "bold", size = 12))
+  theme(plot.title = element_text (hjust = 0.5, face = "bold", size = 14),
+        text = element_text(size=14))
 barplotDiff
 
 ### data analysis
