@@ -341,8 +341,6 @@ summary(lm3)
 
 ###### logistic regression
 
-memory1$condition1 <- factor(memory1$condition1, levels = c("many_one", "many_fill", "one_one"))
-
 #calculate log odds
 memory1Prop$odds <- round(memory1$propAdj/(1-memory1Prop$propAdj), 4)
 memory1Prop$logodds <- round(log(memory1Prop$odds), 4)
@@ -353,13 +351,13 @@ memory1$condition1 <- factor(memory1$condition1, levels = c("many", "one", "fill
 glm <- glm(memoryResp ~ condition1*type, memory1, family = 'binomial')
 summary(glm)
 
-glm1 <- glm(memoryResp ~ condition1, memory1[memory1$type == "CS",], family = 'binomial')
+glm1 <- glm(memoryResp ~ condition1, memory1[memory1$type == "CS",], family = binomial (link = 'logit'))
 summary(glm1)
 exp(1.5629)/(1+exp(1.5629)) #many_one
-exp(-0.1134)/(1+exp(-0.1134)) #many_fill
+exp(-0.1134)/(1+exp(-0.1134)) #many_fill -> weird result!!
 exp(1.2344)/(1+exp(1.2344))#one_one
 
-glm2 <- glm(memoryResp ~ condition1, memory1[memory1$type == "GS",], family = 'binomial')
+glm2 <- glm(memoryResp ~ condition1, memory1[memory1$type == "GS",], family = binomial (link = 'logit'))
 summary(glm2)
 exp(-0.09607)/(1+exp(-0.09607)) #many_one
 exp(-0.33737)/(1+exp(-0.33737)) #many_fill
