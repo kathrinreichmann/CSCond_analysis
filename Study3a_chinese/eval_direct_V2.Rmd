@@ -32,7 +32,7 @@ Here:
 #set directory
 knitr::opts_knit$set(root.dir = "C:/Users/reich/Documents/GitHub/CSCond_analysis/Study1_EC/data")
 
-#load packages
+#load  packages
 library(dplyr)
 library(tidyverse)
 library(ggplot2)

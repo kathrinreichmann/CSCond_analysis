@@ -208,7 +208,7 @@ for (line in 1:dim(HLM)[1]){
 multiLevel$condition_effect
 str(multiLevel)
 
-options(contrasts = c("contr.sum", "contr.poly"))
+#options(contrasts = c("contr.sum", "contr.poly"))
 
 model2 <- lm(GS ~ CS*condition_effect, data = multiLevel)
 summary(model2)
