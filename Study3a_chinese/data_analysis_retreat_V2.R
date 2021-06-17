@@ -174,6 +174,7 @@ head(multiLevel)
 
 #condition_code: 0 =  many
 
+
 dotplot <- ggplot(multiLevel, aes (x = CS, y = GS, color = condition)) +
   facet_grid(. ~ condition) +
   geom_point(show.legend = TRUE) +
@@ -217,6 +218,29 @@ anova(model2)
 model.matrix(GS ~ CS*condition_effect, data = multiLevel)
 plot(model2)
 
+#fixed effect
+fix1CS <- data.frame(diff = summary(model2)$coef[1, "Estimate"], type_discrete = "CS")
+fix1GS <- data.frame(diff = summary(model2)$coef[1, "Estimate"] + summary(model1)$coef[2, "Estimate"], type_discrete = "GS")
+fix1 <- rbind(fix1CS, fix1GS)
+fix1
+
+dotplot <- ggplot(multiLevel, aes (x = CS, y = GS, color = condition)) +
+  facet_grid(. ~ condition) +
+  geom_abline(intercept = summary(model2)$coef[1, "Estimate"], slope = summary(model2)$coef[2, "Estimate"], color = "red" ) +
+  geom_abline(intercept = (summary(model2)$coef[1, "Estimate"] + summary(model2)$coef[3, "Estimate"]), slope = (summary(model2)$coef[2, "Estimate"] + summary(model2)$coef[4, "Estimate"]), color = "blue" ) +
+  geom_abline(intercept = (summary(model2)$coef[1, "Estimate"] - summary(model2)$coef[3, "Estimate"]), slope = (summary(model2)$coef[2, "Estimate"] - summary(model2)$coef[4, "Estimate"]), color = "black" ) +
+  geom_point(show.legend = TRUE) +
+  ggtitle("Direct Evaluative Ratings\n") + 
+  geom_smooth(method = 'lm', aes (color = condition)) +
+  scale_color_brewer(palette = "Set2") +
+  scale_x_continuous(name = "\nCS Ratings") +
+  scale_y_continuous (name = "GS Ratings\n") + 
+  theme_classic() +
+  labs(color = "Condition") +
+  theme(plot.title = element_text (hjust = 0.5, face = "bold", size = 14),
+        text = element_text(size=14))
+dotplot
+
 
 #Effektkodierung -1 und 1
 options(contrasts = c("contr.sum", "contr.poly"))
@@ -237,6 +261,24 @@ anova(model2)
 
 model.matrix(GS ~ CS*condition, data = multiLevel)
 plot(model2)
+
+
+dotplot <- ggplot(multiLevel, aes (x = CS, y = GS, color = condition)) +
+  facet_grid(. ~ condition) +
+  geom_abline(intercept = summary(model2)$coef[1, "Estimate"], slope = summary(model2)$coef[2, "Estimate"], color = "red" ) +
+  geom_abline(intercept = (summary(model2)$coef[1, "Estimate"] + summary(model2)$coef[3, "Estimate"]), slope = (summary(model2)$coef[2, "Estimate"] + summary(model2)$coef[4, "Estimate"]), color = "blue" ) +
+  geom_point(show.legend = TRUE) +
+  ggtitle("Direct Evaluative Ratings\n") + 
+  geom_smooth(method = 'lm', aes (color = condition)) +
+  scale_color_brewer(palette = "Set2") +
+  scale_x_continuous(name = "\nCS Ratings") +
+  scale_y_continuous (name = "GS Ratings\n") + 
+  theme_classic() +
+  labs(color = "Condition") +
+  theme(plot.title = element_text (hjust = 0.5, face = "bold", size = 14),
+        text = element_text(size=14))
+dotplot
+
 
 #simple slope for Many
 options(contrasts = c("contr.treatment","contr.poly")) #Dummykodierung
