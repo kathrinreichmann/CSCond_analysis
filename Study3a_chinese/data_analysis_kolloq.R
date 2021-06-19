@@ -242,7 +242,7 @@ dotplot <- ggplot(multiLevel, aes (x = CS, y = GS, color = condition)) +
 dotplot
 
 
-#Effektkodierung -1 und 1
+#Effektkodierung -1 und 1 (use for presentation)
 options(contrasts = c("contr.sum", "contr.poly"))
 
 model2 <- lm(GS ~ CS*condition, data = multiLevel)
@@ -297,22 +297,96 @@ summary(model3)
 
 
 
-dotplot <- ggplot(multiLevel, aes (x = CS, y = GS, color = condition, linetype = val, group = val)) +
+#condition_code: 0 =  many
+
+dotplot <- ggplot(multiLevel, aes (x = CS, y = GS, color = val)) +
   facet_grid(. ~ condition) +
   geom_point(show.legend = TRUE) +
   ggtitle("Direct Evaluative Ratings\n") + 
-  geom_smooth(method = 'lm', aes (linetype = val, color = condition)) +
-  scale_color_brewer(palette = "Set2") +
+  geom_smooth(method = 'lm', aes (color = val)) +
+  scale_color_brewer(palette = "Paired") +
   scale_x_continuous(name = "\nCS Ratings") +
   scale_y_continuous (name = "GS Ratings\n") + 
   theme_classic() +
-  labs(color = "Condition") +
+  labs(color = "Valence") +
   theme(plot.title = element_text (hjust = 0.5, face = "bold", size = 14),
         text = element_text(size=14))
 dotplot
 
-
 anova(model1, model2, model3)
+
+
+
+# components: direct evaluative measure -----------------------------------
+
+#right now: do not take different targets into account (participants are nested within targets)
+temp <- aggregate(response ~ subject + condition + val + type_specific + category, new_direct, mean)
+temp$nr_obs <- aggregate(response ~ subject + condition + val + type_specific + category, new_direct, length)[[6]]
+temp$nr_obs
+
+## order data
+temp <- temp[order(temp$subject, temp$val, temp$type_specific),]
+
+## cbind positive and negative scores
+HLMpos <- temp[temp$val == "pos",]
+HLMpos$pos <- HLMpos$response
+HLMpos$response <- NULL
+
+HLMneg <- temp[temp$val == "neg",]
+HLMneg$neg <- HLMneg$response
+HLM <- cbind(HLMpos, HLMneg$neg, HLMneg$category)
+
+HLM$val <- NULL
+HLM$neg <- HLM$`HLMneg$neg`
+HLM$`HLMneg$neg` <- NULL
+
+## calculate difference scores
+HLM$diff <- HLM$pos - HLM$neg
+
+#reverse dummy coding for condiiton
+HLM$condition <- factor(HLM$condition, labels = c("one", "many"), levels = c("one_one", "many_one"))
+str(HLM)
+
+## discard levels of type we don't need
+HLM <- HLM[!HLM$type_specific == "Group",]
+HLM <- HLM[!HLM$type_specific == "GS different",]
+HLM <- HLM[!HLM$type_specific == "GS same",]
+HLM <- HLM[!HLM$type_specific == "CS",]
+
+
+##categorical variable: generalization as discrete
+HLM$type_discrete <- factor(HLM$type_specific, labels = c("predictive"), levels = c("Feature"))
+
+means <- aggregate(diff ~ type_discrete + condition, HLM, mean)
+means$se <- aggregate(diff ~ type_discrete + condition, HLM, se)[[3]]
+means
+
+##add hypothetical data
+means$type_discrete <- as.character(means$type_discrete)
+hypoMany <- c("non-predictive", "many", 18, 0)
+hypoOne <- c("non-predictive", "one", 22, 0)
+means <- rbind(means, hypoMany, hypoOne)
+means$type_discrete <- as.factor(means$type_discrete)
+means$diff <- as.numeric(means$diff)
+means$se <- as.numeric(means$se)
+means
+
+#barplot with standard errors
+barplotDiff <- ggplot(means, aes (x = condition, y = diff, fill = type_discrete)) +
+  geom_bar(stat = 'identity', position = position_dodge(), show.legend = TRUE) +
+  geom_errorbar(aes(ymin= diff - se, ymax= diff + se), width=.2,
+                position=position_dodge(.9)) +
+  ggtitle("Evaluative Ratings for Components\n") + 
+  scale_fill_brewer(palette = "Set3") +
+  scale_x_discrete(name = "\nCondition") +
+  scale_y_continuous (name = "Mean Difference Scores\n", breaks = seq(0, 100, 10), limits = c(0, 100)) + 
+  theme_classic() +
+  labs(fill = "Component") +
+  theme (plot.title = element_text (hjust = 0.5, face = "bold", size = 16),
+         text = element_text(size=14))
+barplotDiff
+
+# generalization: indirect evaluative measure -----------------------------
 
 
 # recognition memory: DRM -------------------------------------------------
@@ -341,11 +415,8 @@ memory1 <- memory1[!memory1$type == "CSnonpred",]
 memory1 <- memory1[!memory1$type == "GSnew",]
 memory1 <- memory1[!memory1$type == "distractor",]
 
-#exclude filler condition
-memory1 <- memory1[!memory1$condition1 == "many_fill",]
-
 #rename factors and levels: condition
-memory1$condition1 <- factor(memory1$condition1, labels = c("one", "many"), levels = c("one_one", "many_one"))
+memory1$condition1 <- factor(memory1$condition1, labels = c("one", "many", "fill"), levels = c("one_one", "many_one", "many_fill"))
 
 #rename factors and levels: condition
 memory1$type <- factor(memory1$type, labels = c("CS", "GS"), levels = c("CS", "GSold"))
@@ -390,9 +461,6 @@ plotmemory1PropOld
 
 
 #ANOVA
-
-options(contrasts = c("contr.sum", "contr.poly"))
-
 aov.out2 <- aov(prop ~ condition1*type + Error(subject + subject:type), memory1Prop)
 aov.out2
 summary(aov.out2)
@@ -401,7 +469,7 @@ summary(aov.out2)
 eta_sq(aov.out2, partial = TRUE)
 
 
-options(contrasts = c("contr.sum", "contr.poly"))
+
 lm1 <- lmer(prop ~ condition1*type + (1|subject), memory1Prop)
 summary(lm1)
 
@@ -414,16 +482,25 @@ cov(X)
 
 #simple slopes
 
-#CS
-lm1 <- lm(prop ~ condition1, memory1Prop[memory1Prop$type == "CS",])
-t.test(prop ~ condition1, memory1Prop[memory1Prop$type == "CS",])
+#dummy coding:
+options(contrasts = c("contr.SAS", "contr.poly"))
+
+#many as reference category
+memory1Prop$condition1 <- factor(memory1Prop$condition1, labels = c("one", "fill", "many"), levels = c("one", "fill", "many"))
+
+#GS, ref. category is many
+memory1Prop$type <- factor(memory1Prop$type, labels = c("CS", "GS"), levels = c("CS", "GS"))
+lm1 <- lm(prop ~ condition1*type, memory1Prop)
 summary(lm1)
+model.matrix(lm1)
 
 
-#GS
-lm2 <- lm(prop ~ condition1, memory1Prop[memory1Prop$type == "GS",])
-t.test(prop ~ condition1, memory1Prop[memory1Prop$type == "GS",])
+#GS, ref. category is many
+memory1Prop$type <- factor(memory1Prop$type, labels = c("GS", "CS"), levels = c("GS", "CS"))
+
+lm2 <- lm(prop ~ condition1*type, memory1Prop)
 summary(lm2)
+model.matrix(lm2)
 
 ###### logistic regression
 
@@ -454,4 +531,126 @@ summary(glm3)
 exp(-2.1535)/(1+exp(-2.1535)) #many_one
 exp(0.5491)/(1+exp(0.5491)) #one_one --> weird result!!
 exp(-0.9145)/(1+exp(-0.9145))#many_fill
+
+
+
+
+# recognition memory: components ------------------------------------------
+
+
+setwd("C:/Users/reich/Documents/GitHub/CSCond_analysis/Study2_DRM/data_preprocessed")
+#setwd("\\\\sn00.zdv.uni-tuebingen.de/siskr01/Documents/Github/CScond_Exp2/data")
+
+memory1 <- read.csv2('memory1.csv', header = TRUE)
+str(memory1)
+
+#exclude timeouts
+table(memory1$timeout)
+memory1 <- memory1[memory1$timeout == "false",]
+table(memory1$timeout)
+
+#variables as factors
+memory1$type <- factor(memory1$type)
+memory1$memoryResp <- as.numeric(memory1$memoryResp)
+
+#delete the columns we don't need
+memory1 <- subset(memory1, select = -c(X, trial_index, task, rt, timeout, memoryCorrect, cs_selected, nr_pres))
+
+#exclude levels of "type" we don't want to look at
+memory1 <- memory1[!memory1$type == "CS",]
+memory1 <- memory1[!memory1$type == "GSold",]
+memory1 <- memory1[!memory1$type == "GSnew",]
+memory1 <- memory1[!memory1$type == "distractor",]
+
+#rename factors and levels: condition
+memory1$condition1 <- factor(memory1$condition1, labels = c("one", "many", "fill"), levels = c("one_one", "many_one", "many_fill"))
+
+#rename factors and levels: condition
+memory1$type <- factor(memory1$type, labels = c("non-predictive", "predictive"), levels = c("CSnonpred", "CSpred"))
+
+#subject to factor for rANOVA
+memory1$subject <- as.factor(memory1$subject)
+head(memory1)
+
+### (1) calculate proportions of "old" responses
+# correct recognition of studied items (CSs) -> true recognition
+# incorrect response "old" to critical lures (GSs) -> false recognition
+#0 new
+#1 old
+
+memory1Prop <- aggregate(memoryResp ~ subject + condition1 + type, memory1, sum)
+memory1Prop$nr <- aggregate(memoryResp ~ subject + condition1 + type, memory1, length)[[4]]
+memory1Prop$prop <- (memory1Prop$memoryResp/memory1Prop$nr)
+head(memory1Prop)
+
+# (1) plot proportion of "old" responses - barplot
+
+barplotData <- aggregate(prop ~ condition1 + type, memory1Prop, mean)
+barplotData$se <- aggregate(prop ~ condition1 + type, memory1Prop, se)[[3]]
+barplotData$sd <- aggregate(prop ~ condition1 + type, memory1Prop, sd)[[3]]
+barplotData
+
+##Plot generalization stimuli
+plotmemory1PropOld <- ggplot(barplotData, aes (x = type, y = prop, fill = condition1)) +
+  geom_bar (stat = "identity", position = position_dodge()) +
+  geom_errorbar(aes(ymin= prop - se, ymax= prop + se), width=.2,
+                position=position_dodge(.9)) +
+  ggtitle("Recognition Memory\n") + 
+  scale_fill_brewer(palette = "Set2") +
+  theme(plot.title = element_text (hjust = 0.5, face = "bold", size = 12)) +
+  labs(fill = "Condition") +
+  scale_y_continuous (name = "Proportion of 'old' responses\n", limits = c(0.0, 1.0)) +
+  scale_x_discrete(name = "\nType") +
+  theme_classic()+
+  theme (plot.title = element_text (hjust = 0.5, face = "bold", size = 16),
+         text = element_text(size=14))
+plotmemory1PropOld
+
+
+#ANOVA
+
+options(contrasts = c("contr.sum", "contr.poly"))
+
+aov.out2 <- aov(prop ~ condition1*type + Error(subject + subject:type), memory1Prop)
+aov.out2
+summary(aov.out2)
+
+#effect size
+eta_sq(aov.out2, partial = TRUE)
+
+
+options(contrasts = c("contr.sum", "contr.poly"))
+lm1 <- lm(prop ~ condition1*type, memory1Prop)
+summary(lm1)
+
+library(car)
+anova(lm1)
+plot(lm1)
+X <- model.matrix(lm1)
+C(X) %*% X
+cov(X)
+
+#simple slopes
+
+#options(contrasts = c("contr.sum", "contr.poly"))
+options(contrasts = c("contr.SAS", "contr.poly"))
+memory1Prop$condition1 <- factor(memory1Prop$condition1, labels = c("one", "fill", "many"), levels = c("one", "fill", "many"))
+
+
+str(memory1)
+#predictive, ref.category many
+lm1 <- lm(prop ~ condition1*type, memory1Prop)
+summary(lm1)
+model.matrix(lm1)
+
+#non-predictive, ref.category many
+memory1Prop$type <- factor(memory1Prop$type, labels = c("predictive", "non-predictive"), levels = c("predictive", "non-predictive"))
+
+lm2 <- lm(prop ~ condition1*type, memory1Prop)
+summary(lm2)
+model.matrix(lm1)
+
+lm2 <- lm(prop ~ condition1, memory1Prop[memory1Prop$type == "predictive",])
+t.test(prop ~ condition1, memory1Prop[memory1Prop$type == "predictive",])
+summary(lm2)
 
