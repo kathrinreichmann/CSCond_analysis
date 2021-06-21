@@ -535,6 +535,88 @@ exp(-0.9145)/(1+exp(-0.9145))#many_fill
 
 
 
+# recognition memory: type RTs --------------------------------------------
+
+setwd("C:/Users/reich/Documents/GitHub/CSCond_analysis/Study2_DRM/data_preprocessed")
+#setwd("\\\\sn00.zdv.uni-tuebingen.de/siskr01/Documents/Github/CScond_Exp2/data")
+
+memory1 <- read.csv2('memory1.csv', header = TRUE)
+str(memory1)
+
+#exclude timeouts
+table(memory1$timeout)
+memory1 <- memory1[memory1$timeout == "false",]
+table(memory1$timeout)
+
+#variables as factors
+memory1$type <- factor(memory1$type)
+memory1$memoryResp <- as.numeric(memory1$memoryResp)
+
+#delete the columns we don't need
+memory1 <- subset(memory1, select = -c(X, trial_index, task, memory, memoryResp, timeout, memoryCorrect, cs_selected, nr_pres))
+
+#exclude levels of "type" we don't want to look at
+memory1 <- memory1[!memory1$type == "CSnonpred",]
+memory1 <- memory1[!memory1$type == "CSpred",]
+memory1 <- memory1[!memory1$type == "GSnew",]
+memory1 <- memory1[!memory1$type == "distractor",]
+
+#rename factors and levels: condition
+memory1$condition1 <- factor(memory1$condition1, labels = c("one", "many", "fill"), levels = c("one_one", "many_one", "many_fill"))
+
+#rename factors and levels: condition
+memory1$type <- factor(memory1$type, labels = c("CS", "GS"), levels = c("CS", "GSold"))
+
+#subject to factor for rANOVA
+memory1$subject <- as.factor(memory1$subject)
+memory1$rt <- as.numeric(memory1$rt)
+head(memory1)
+
+plot(memory1$rt)
+
+#rt on logarithmic scale
+plot(log(memory1$rt))
+memory1$rt_log <- log(memory1$rt)
+
+barplotData <- aggregate(rt_log ~ condition1 + type, memory1, median)
+barplotData$se <- aggregate(rt_log ~ condition1 + type, memory1, se)[[3]]
+barplotData$mean <- aggregate(rt_log ~ condition1 + type, memory1, mean)[[3]]
+barplotData
+
+##Plot generalization stimuli
+plotmemory1PropOld <- ggplot(barplotData, aes (x = type, y = mean, color = condition1)) +
+  #geom_bar(stat = "identity", position = position_dodge()) +
+  #geom_point() + 
+  geom_errorbar(aes(ymin= rt_log - se, ymax= rt_log + se), width=.2,
+                position=position_dodge(.9)) +
+  ggtitle("Recognition Memory\n") + 
+  scale_fill_brewer(palette = "Set2") +
+  theme(plot.title = element_text (hjust = 0.5, face = "bold", size = 12)) +
+  labs(fill = "Condition") +
+  #scale_y_continuous (name = "Proportion of 'old' responses\n", limits = c(0.0, 7.0)) +
+  scale_x_discrete(name = "\nType") +
+  theme_classic()+
+  theme (plot.title = element_text (hjust = 0.5, face = "bold", size = 16),
+         text = element_text(size=14))
+plotmemory1PropOld
+
+plotBoxplot <- ggplot(memory1, aes (x = type, y = rt, color = condition1)) +
+  #geom_bar(stat = "identity", position = position_dodge()) +
+  geom_boxplot() +  
+  #geom_errorbar(aes(ymin= rt_log - se, ymax= rt_log + se), width=.2,
+  #position=position_dodge(.9)) +
+  ggtitle("Recognition Memory\n") + 
+  scale_color_brewer(palette = "Set2") +
+  theme(plot.title = element_text (hjust = 0.5, face = "bold", size = 12)) +
+  labs(color = "Condition") +
+  #scale_y_continuous (name = "Proportion of 'old' responses\n", limits = c(0.0, 7.0)) +
+  scale_x_discrete(name = "\nType") +
+  theme_classic()+
+  theme (plot.title = element_text (hjust = 0.5, face = "bold", size = 16),
+         text = element_text(size=14))
+plotBoxplot
+
+
 # recognition memory: components ------------------------------------------
 
 
@@ -654,3 +736,87 @@ lm2 <- lm(prop ~ condition1, memory1Prop[memory1Prop$type == "predictive",])
 t.test(prop ~ condition1, memory1Prop[memory1Prop$type == "predictive",])
 summary(lm2)
 
+
+
+
+# recognition memory: components RT ---------------------------------------
+
+
+setwd("C:/Users/reich/Documents/GitHub/CSCond_analysis/Study2_DRM/data_preprocessed")
+#setwd("\\\\sn00.zdv.uni-tuebingen.de/siskr01/Documents/Github/CScond_Exp2/data")
+
+memory1 <- read.csv2('memory1.csv', header = TRUE)
+str(memory1)
+
+#exclude timeouts
+table(memory1$timeout)
+memory1 <- memory1[memory1$timeout == "false",]
+table(memory1$timeout)
+
+#variables as factors
+memory1$type <- factor(memory1$type)
+memory1$memoryResp <- as.numeric(memory1$memoryResp)
+
+#delete the columns we don't need
+memory1 <- subset(memory1, select = -c(X, trial_index, task, memory, memoryResp, timeout, memoryCorrect, cs_selected, nr_pres))
+
+#exclude levels of "type" we don't want to look at
+memory1 <- memory1[!memory1$type == "CS",]
+memory1 <- memory1[!memory1$type == "GSold",]
+memory1 <- memory1[!memory1$type == "GSnew",]
+memory1 <- memory1[!memory1$type == "distractor",]
+
+#rename factors and levels: condition
+memory1$condition1 <- factor(memory1$condition1, labels = c("one", "many", "fill"), levels = c("one_one", "many_one", "many_fill"))
+
+#rename factors and levels: condition
+memory1$type <- factor(memory1$type, labels = c("non-predictive", "predictive"), levels = c("CSnonpred", "CSpred"))
+
+#subject to factor for rANOVA
+memory1$subject <- as.factor(memory1$subject)
+memory1$rt <- as.numeric(memory1$rt)
+head(memory1)
+
+plot(memory1$rt)
+
+#rt on logarithmic scale
+plot(log(memory1$rt))
+memory1$rt_log <- log(memory1$rt)
+
+barplotData <- aggregate(rt_log ~ condition1 + type, memory1, median)
+barplotData$se <- aggregate(rt_log ~ condition1 + type, memory1, se)[[3]]
+barplotData$mean <- aggregate(rt_log ~ condition1 + type, memory1, mean)[[3]]
+barplotData
+
+##Plot generalization stimuli
+plotmemory1PropOld <- ggplot(barplotData, aes (x = type, y = mean, color = condition1)) +
+  #geom_bar(stat = "identity", position = position_dodge()) +
+  #geom_point() + 
+  geom_errorbar(aes(ymin= rt_log - se, ymax= rt_log + se), width=.2,
+                position=position_dodge(.9)) +
+  ggtitle("Recognition Memory\n") + 
+  scale_fill_brewer(palette = "Set2") +
+  theme(plot.title = element_text (hjust = 0.5, face = "bold", size = 12)) +
+  labs(fill = "Condition") +
+  #scale_y_continuous (name = "Proportion of 'old' responses\n", limits = c(0.0, 7.0)) +
+  scale_x_discrete(name = "\nType") +
+  theme_classic()+
+  theme (plot.title = element_text (hjust = 0.5, face = "bold", size = 16),
+         text = element_text(size=14))
+plotmemory1PropOld
+
+plotBoxplot <- ggplot(memory1, aes (x = type, y = rt, color = condition1)) +
+  #geom_bar(stat = "identity", position = position_dodge()) +
+  geom_boxplot() +  
+  #geom_errorbar(aes(ymin= rt_log - se, ymax= rt_log + se), width=.2,
+                #position=position_dodge(.9)) +
+  ggtitle("Recognition Memory\n") + 
+  scale_color_brewer(palette = "Set2") +
+  theme(plot.title = element_text (hjust = 0.5, face = "bold", size = 12)) +
+  labs(color = "Condition") +
+  #scale_y_continuous (name = "Proportion of 'old' responses\n", limits = c(0.0, 7.0)) +
+  scale_x_discrete(name = "\nType") +
+  theme_classic()+
+  theme (plot.title = element_text (hjust = 0.5, face = "bold", size = 16),
+         text = element_text(size=14))
+plotBoxplot
