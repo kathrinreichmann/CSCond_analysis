@@ -1,5 +1,5 @@
 ################### CS Variability: one-to-one vs. many-to-one
-### junde, 2021
+### july, 2021
 ### Kathrin Reichmann
 
 ### Plots and analysis for retreat
@@ -19,10 +19,9 @@ se <- function(x) sd(x)/sqrt(length(x))
 # generalization: direct evaluative measure -------------------------------
 
 ### set working directory:
-#setwd("\\\\sn00.zdv.uni-tuebingen.de/siskr01/Documents/Github/CSCond_analysis/CSCond_analysis/data")
-setwd("C:/Users/reich/Documents/GitHub/CSCond_analysis/Study1_EC/data")
+setwd("C:/Users/siskr01/GitHub/CSCond_analysis/Study1_EC/data")
 
-
+#read table (pre-processed data)
 direct <- read.csv2('direct.csv', header = TRUE)
 str(direct)
 
@@ -35,7 +34,7 @@ for (factor in as_factor){
 direct$type_specific <- factor(direct$type_specific, levels = c("CS", "GS same", "GS different", "Feature", "Group"))
 
 
-## randomly select 1 CSs for many_one:
+## randomly select 1 CS for many_one:
 new_one <- direct[direct$condition == "one_one",]
 new_many <- direct[direct$condition == "many_one",]
 new_many <- new_many[!new_many$type_specific == "CS",]
@@ -50,117 +49,29 @@ for (subject in unique(direct$subject)){
     }
   }
 }
+head(new_direct)
 
-#right now: do not take different targets into account (participants are nested within targets)
-temp <- aggregate(response ~ subject + condition + val + type_specific + category, new_direct, mean)
-temp$nr_obs <- aggregate(response ~ subject + condition + val + type_specific + category, new_direct, length)[[6]]
+temp <- new_direct
 
-## order data
+# order data
 temp <- temp[order(temp$subject, temp$val, temp$type_specific),]
 
-## cbind positive and negative scores
-HLMpos <- temp[temp$val == "pos",]
-HLMpos$pos <- HLMpos$response
-HLMpos$response <- NULL
-
-HLMneg <- temp[temp$val == "neg",]
-HLMneg$neg <- HLMneg$response
-HLM <- cbind(HLMpos, HLMneg$neg, HLMneg$category)
-
-HLM$val <- NULL
-HLM$neg <- HLM$`HLMneg$neg`
-HLM$`HLMneg$neg` <- NULL
-
-## calculate difference scores
-HLM$diff <- HLM$pos - HLM$neg
-
-#look only at "CS" and "GS"
-HLM <- HLM[!HLM$type_specific =="GS different", ]
-HLM <- HLM[!HLM$type_specific == "Group",]
-HLM <- HLM[!HLM$type_specific == "Feature",]
+# omit information we don't need
+temp <- temp[!temp$type_specific =="GS different", ]
+temp <- temp[!temp$type_specific == "Group",]
+temp <- temp[!temp$type_specific == "Feature",]
 
 ## rename many_one to many and one_one to one
-HLM$condition <- factor(HLM$condition, labels = c("many", "one"), levels = c("many_one", "one_one"))
+temp$condition <- factor(temp$condition, labels = c("one", "many"), levels = c("one_one", "many_one"))
 
 ##categorical variable: generalization as discrete
-HLM$type_discrete <- factor(HLM$type_specific, labels = c("CS", "GS"), levels = c("CS", "GS same"))
+temp$type_specific <- factor(temp$type_specific, labels = c("CS", "GS"), levels = c("CS", "GS same"))
 
-#reverse dummy coding for condiiton
-HLM$condition <- factor(HLM$condition, labels = c("one", "many"), levels = c("one", "many"))
+##### Data Analysis: use CS as predictor for GS
 
-###### Plot data
-
-means <- aggregate(diff ~ condition + type_discrete, HLM, mean)
-means$se <- aggregate(diff ~ condition + type_discrete, HLM, se)[[3]]
-means
-
-#barplot with standard errors
-barplotDiff <- ggplot(means, aes (x = type_discrete, y = diff, fill = condition)) +
-  geom_bar(stat = 'identity', position = position_dodge(), show.legend = TRUE) +
-  geom_errorbar(aes(ymin= diff - se, ymax= diff + se), width=.2,
-                position=position_dodge(.9)) +
-  ggtitle("Mean Differences (with Standard Errors)") + 
-  scale_fill_brewer(palette = "Set2") +
-  scale_x_discrete(name = "\nType") +
-  scale_y_continuous (name = "Mean Difference Scores\n", breaks = seq(0, 100, 10), limits = c(0, 100)) + 
-  theme_classic() +
-  labs(fill = "Condition") +
-  theme(plot.title = element_text (hjust = 0.5, face = "bold", size = 14),
-        text = element_text(size=14))
-barplotDiff
-
-####### Data analysis
-
-#rANOVA
-
-aov.out <- aov(diff ~ condition*type_discrete + Error(subject + subject:type_discrete), HLM)
-summary(aov.out)
-
-#effect size
-eta_sq(aov.out, partial = TRUE)
-
-#simple slditionm <- lm (diff ~ condition*type_specific, HLM)
-summary(lm)
-
-#CS
-lm1 <- lm(diff ~ condition, HLM[HLM$type_discrete == "CS",])
-t.test(diff ~ condition, HLM[HLM$type_discrete== "CS",])
-summary(lm1)
-
-
-lm2 <- lm(diff ~ condition, HLM[HLM$type_discrete == "GS",])
-t.test(diff ~ condition, HLM[HLM$type_discrete == "GS",])
-summary(lm2)
-
-
-###################### 2nd Alternative to analyze data:
-
-#(1) mean scores for every category and participant
-#with category:
-#centerDirect <- aggregate(response ~ subject + condition + type_specific + val + category, new_direct, mean)
-
-#without category:
-centerDirect <- aggregate(response ~ subject + condition + type_specific + val, new_direct, mean)
-
-#look only at "CS" and "GS"
-centerDirect <- centerDirect[!centerDirect$type_specific =="GS different", ]
-centerDirect <- centerDirect[!centerDirect$type_specific == "Group",]
-centerDirect <- centerDirect[!centerDirect$type_specific == "Feature",]
-
-
-## rename many_one to many and one_one to one
-centerDirect$condition <- factor(centerDirect$condition, labels = c("many", "one"), levels = c("many_one", "one_one"))
-
-##categorical variable: generalization as discrete
-centerDirect$type_discrete <- factor(centerDirect$type_specific, labels = c("CS", "GS"), levels = c("CS", "GS same"))
-
-#reverse dummy coding for condition
-centerDirect$condition <- factor(centerDirect$condition, labels = c("one", "many"), levels = c("one", "many"))
-
-#(2) use CS as predictor for GS
-
-multiLevel <- centerDirect[centerDirect$type_discrete == "CS",]
-respGS <- centerDirect[centerDirect$type_discrete == "GS",]
+#wide format: GS and CS as different columns
+multiLevel <- temp[temp$type_specific == "CS",]
+respGS <- temp[centerDirect$type_discrete == "GS",]
 multiLevel$GS <- respGS$response
 multiLevel$CS <- multiLevel$response
 multiLevel$response <- NULL
