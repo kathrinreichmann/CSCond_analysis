@@ -1,3 +1,31 @@
+---
+title: "Pre_Reg-Chinese Characters"
+author: "Kathrin Reichmann"
+date: "29 7 2021"
+output: html_document
+---
+
+```{r setup, include=FALSE}
+knitr::opts_chunk$set(echo = TRUE)
+```
+
+## Data analysis for pre-registration
+
+Contains models of three previous tasks:
+- Direct evaluative ratings
+- AMP
+- DRM
+
+```{r prep, echo = FALSE, include = FALSE}
+#set directory
+knitr::opts_knit$set(root.dir = "C:/Users/siskr01/GitHub/CSCond_analysis/Study1_EC/data")
+DRM <- "C:/Users/siskr01/GitHub/CSCond_analysis/Study2_DRM/data_preprocessed"
+
+
+```
+
+
+```{r, echo = FALSE, include = FALSE}
 ################### CS Variability: one-to-one vs. many-to-one
 ### july, 2021
 ### Kathrin Reichmann
@@ -5,7 +33,7 @@
 ### Plots and analysis for retreat
 
 library(dplyr)
-library(tidyverse)
+#library(tidyverse)
 library(ggplot2)
 library(lme4)
 library(sjstats)
@@ -128,7 +156,21 @@ directDiff[directDiff$subject == "02a80kdxm7",]
 
 #set default to dummy coding
 options(contrasts = c("contr.treatment", "contr.poly"))
+```
 
+### Direct Evaluative ratings
+
+**(1) Analysis of Difference scores:**
+
+Diff score per individual, type and category e.g. [VP1 CS cat1 pos] - [VP1 CS cat2 neg]
+condition (-0.5 = one, 0.5 = many), type (-0.5 = CS, 0.5 = GS)
+
+Model with random intercepts for participants:
+lmer(diff ~ condition* type + (1|subject))
+
+*signifikant interaction: H1*
+
+```{r, echo = TRUE, include = TRUE}
 ## specify models
 lmer1Diff <- lmer(diff ~ condition_effect*type_effect 
                   + (1|subject), 
@@ -139,72 +181,102 @@ lmer2Diff <- lmer(diff ~ condition_effect*type_effect
                   directDiff, REML = FALSE)
 
 anova(lmer1Diff, lmer2Diff)
-summary(lmer1Diff)
+summary(lmer1Diff, corr = FALSE)
 #choose model1
-#significant two-way interaction
 
-aggregate(response ~ condition*type_specific, directDiff, mean)
-aggregate(response ~ condition*type_specific, directDiff, sd)
+```
 
+Simple slopes:
+lmer (diff ~ type (effect coded) + condition (effect coded): type (dummy coded) + (1|subject))
+
+```{r, echo = TRUE, include = TRUE}
 #model1: analyze simple slopes
 lmer1_1Diff <- lmer(diff ~ type_effect + condition_effect:type_specific
-                    + (type_effect|subject),
+                    + (1|subject),
                     directDiff, REML = FALSE)
-summary(lmer1_1Diff)
+summary(lmer1_1Diff, corr = FALSE)
+```
 
+
+```{r, echo = FALSE, include = TRUE}
 #plot model1
 boxplot2 <- ggplot(directDiff, aes (x = type_specific, y = diff, color = condition)) +
   geom_boxplot() +
   ggtitle("Direct Evaluative Ratings\n") + 
   scale_color_brewer(palette = "Set2") +
-  scale_x_discrete(name = "\n Valence") +
-  scale_y_continuous (name = "Evaluative Ratings\n") + 
+  scale_x_discrete(name = "\n Type") +
+  scale_y_continuous (name = "Difference Scores\n") + 
   theme_classic() +
   labs(color = "Condition") +
   theme(plot.title = element_text (hjust = 0.5, face = "bold", size = 14),
         text = element_text(size=14))
 boxplot2
 
-## use three-way interaction for power analysis
+## use two-way interaction for power analysis
+```
+ 
+ **(2) Include Valence as a factor, use raw evaluative rating scores as DV**
+ 
+condition (-0.5 = one, 0.5 = many), type (-0.5 = CS, 0.5 = GS), val (-0.5 = neg, 0.5 = pos)
 
+Model with random intercepts for participants:
+lmer(ratings ~ condition* type* val + (1|subject))
+
+```{r, echo = TRUE, include = TRUE}
 #analysis 2: with valence as a factor
 
-## specify models
+#random intercepts
 lmer1 <- lmer(response ~ val_effect*condition_effect*type_effect 
+              + (1|subject), 
+              direct, REML = FALSE)
+
+#random slopes
+lmer2 <- lmer(response ~ val_effect*condition_effect*type_effect 
               + (val_effect*type_effect|subject), 
               direct, REML = FALSE)
-summary(lmer1)
-model.matrix(response ~ val_effect*condition_effect*type_effect, direct)
-#significant three-way interaction
+anova(lmer1, lmer2)
+summary(lmer2, corr = FALSE)
+#choose model2
 
-aggregate(response ~ val*condition*type_specific, direct, mean)
-aggregate(response ~ val*condition*type_specific, direct, sd)
+```
 
+simple slopes:
 
+Model with random intercepts and slopes for participants:
+lmer(diff ~ type (effect coded) * val (effect coded) + condition (effect coded)* type (dummy coded) * val(dummy coded) +  (type(effect coded) * (effect coded)|subject))
+
+```{r, echo = TRUE, include = TRUE}
 #model2
-lmer1_1 <- lmer(response ~ val_effect*type_effect + condition_effect:val:type_specific
+lmer1_2 <- lmer(response ~ val_effect*type_effect + condition_effect:val:type_specific
                 + (val_effect*type_effect|subject),
                 direct, REML = FALSE)
-summary(lmer1_1)
+summary(lmer1_2, corr = FALSE)
+```
 
+
+```{r, echo = FALSE, include = TRUE}
 #plot model1
 
-boxplot1 <- ggplot(direct, aes (x = val, y = response, color = condition)) +
-  facet_grid(. ~ type_specific) +
+boxplot1 <- ggplot(direct, aes (x = type_specific, y = response, color = condition)) +
+  facet_grid(. ~ val) +
   geom_boxplot() +
-  geom_line(show.legend = TRUE, aes (x = val, color = condition)) +
   ggtitle("Direct Evaluative Ratings\n") + 
-  geom_smooth(method = "lm", color = "black", se = FALSE) +
   scale_color_brewer(palette = "Set2") +
-  scale_x_discrete(name = "\n Valence") +
+  scale_x_discrete(name = "\n Type") +
   scale_y_continuous (name = "Evaluative Ratings\n") + 
   theme_classic() +
   labs(color = "Condition") +
   theme(plot.title = element_text (hjust = 0.5, face = "bold", size = 14),
         text = element_text(size=14))
 boxplot1
+```
 
+
+```{r, echo = FALSE, include = FALSE}
 # AMP ---------------------------------------------------------------------
+
+knitr::opts_knit$set(root.dir = DRM)
+
 
 indirect <- read.csv2("indirect.csv", header = TRUE)
 
@@ -323,7 +395,22 @@ indirectDiff[indirectDiff$subject == "02a80kdxm7",]
 
 aggregate(diff ~ condition*type_specific, indirectDiff, mean)
 aggregate(diff ~ condition*type_specific, indirectDiff, se)
+```
 
+### AMP
+
+**(1) Analysis of Difference scores:**
+
+Difference scores: per participant and stimulus type: [proportion of "angenehm" responses for +] - [proportion of "angenehm" responeses for -] 
+
+condition (-0.5 = one, 0.5 = many), type (-0.5 = CS, 0.5 = GS)
+
+Model with random intercepts for participants:
+lmer(diff ~ condition* type + (1|subject))
+
+*signifikant interaction: H1*
+
+```{r, echo = TRUE, include = TRUE}
 #model specification
 lmer1Diff <- lmer(diff ~ condition_effect*type_effect + (1|subject), indirectDiff, REML = FALSE)
 
@@ -332,17 +419,24 @@ lmer1Diff <- lmer(diff ~ condition_effect*type_effect + (1|subject), indirectDif
 
 #anova(lmer1Diff, lmer2Diff)
 
-plot(lmer1Diff)
-summary(lmer1Diff)
+summary(lmer1Diff, corr = FALSE)
+```
 
+Simple slopes:
+lmer (diff ~ type (effect coded) + condition (effect coded): type (dummy coded) + (1|subject))
+
+
+```{r, echo = TRUE, include = TRUE}
 #simple slopes
 lmer1Diff_1 <- lmer(diff ~ type_effect + type_specific:condition_effect + (1|subject), indirectDiff, REML = FALSE)
-summary(lmer1Diff_1)
+summary(lmer1Diff_1, corr = FALSE)
+```
 
+
+```{r, echo = FALSE, include = TRUE}
 #plot1
 indirect_plot1 <- aggregate(diff ~ condition*type_specific, indirectDiff, mean)
 indirect_plot1$se <- aggregate(diff ~ condition*type_specific, indirectDiff, se) [[3]]
-indirect_plot1
 
 barplot1 <- ggplot(indirect_plot1, aes (y = diff, x = type_specific, fill = condition)) +
   geom_col(position = position_dodge()) +
@@ -357,47 +451,69 @@ barplot1 <- ggplot(indirect_plot1, aes (y = diff, x = type_specific, fill = cond
   theme(plot.title = element_text (hjust = 0.5, face = "bold", size = 14),
         text = element_text(size=14))
 barplot1
+```
 
+
+
+ **(2) Include Valence as a factor, use prop "angenehm" as DV**
+
+response: 1 = "angenehm", 0 = "unangenehm"
+condition (-0.5 = one, 0.5 = many), type (-0.5 = CS, 0.5 = GS), val (-0.5 = neg, 0.5 = pos)
+
+Model with random intercepts for participants and targets:
+glmer(response ~ condition* type* val + (1|subject) + (1|target))
+
+```{r, echo = TRUE, include = TRUE}
 ####analysis 2: with valence as additional variable
 
 #random intercept for participants
 glmer1 <- glmer(response ~ val_effect*condition_effect*type_effect 
                 + (1|subject), 
                 indirect, binomial)
-summary(glmer1)
 
 #random intercept for targets
 glmer2 <- glmer(response ~ val_effect*condition_effect*type_effect 
                 + (1|subject) + (1|target), 
                 indirect, binomial)
-summary(glmer2)
 
 #random slopes for participants (fails to converge)
 'glmer3 <- glmer(response ~ val_effect*condition_effect*type_effect 
                 + (val_effect*type_effect|subject) + (1|target), 
                 indirect, binomial)'
-summary(glmer3)
 
 #random slopes for targets (converges, but does not lead to better model fit)
 'glmer4 <- glmer(response ~ val_effect*condition_effect*type_effect 
               + (val_effect*type_effect|subject) + (val_effect*type_effect|target), 
               indirect, binomial)'
-anova(glmer1, glmer2, glmer3, glmer4)
+anova(glmer1, glmer2)
 #model choice: glmer2
 
+summary(glmer2, corr = FALSE)
+
+```
+
+simple slopes:
+
+Model with random intercepts for participants and random intercepts for targets:
+glmer(response ~ type (effect coded) * val (effect coded) + condition (effect coded)* type (dummy coded) *val(dummy coded) +  (1|subject) + (1|target))
+
+
+```{r, echo = TRUE, include = TRUE}
 #analyze simple slopes (even though three-way-interaction is not significant)
 glmer2_2 <- glmer(response ~ val_effect*type_effect + val:type_specific:condition_effect
                  + (1|subject) + (1|target), indirect, binomial)
-summary(glmer2_2)
+summary(glmer2_2, corr = FALSE)
 #significant three-way interaction
+```
 
+
+```{r, echo = FALSE, include = TRUE}
 #plot model1
 indirect_plot2 <- aggregate(prop ~ condition + val + type_specific, indirectProp, mean)
 indirect_plot2$se <- aggregate(prop ~ condition + val + type_specific, indirectProp, se)[[4]]
-indirect_plot2
 
-barplot2 <- ggplot(indirect_plot2, aes (y = prop, x = type_specific, fill = val)) +
-  facet_grid(. ~ condition) +
+barplot2 <- ggplot(indirect_plot2, aes (y = prop, x = type_specific, fill = condition)) +
+  facet_grid(. ~ val) +
   geom_col(position = position_dodge()) +
   geom_errorbar(aes(ymin= prop - se, ymax= prop + se), width=.2,
                 position=position_dodge(.9)) +
@@ -407,11 +523,14 @@ barplot2 <- ggplot(indirect_plot2, aes (y = prop, x = type_specific, fill = val)
   scale_x_discrete(name = "\n Valence") +
   scale_y_continuous (name = "Proportion pleasant\n") + 
   theme_classic() +
-  labs(color = "Condition") +
+  labs(fill = "Condition") +
   theme(plot.title = element_text (hjust = 0.5, face = "bold", size = 14),
         text = element_text(size=14))
 barplot2
+```
 
+
+```{r, echo = FALSE, include = FALSE}
 # recognition memory ------------------------------------------------------
 setwd(DRM)
 
@@ -495,10 +614,23 @@ hist(memoryProp$prop)
 head(memoryProp)
 
 ##### analysis 1: glmers
-
 #set default to dummy coding
 options(contrasts = c("contr.treatment", "contr.poly"))
 
+```
+
+**(1) Analysis of Difference scores:**
+
+for memory responses (1 = "old", 0 = "new")
+condition (-0.5 = one, 0.5 = many), type (-0.5 = CS, 0.5 = GS)
+
+Model with random intercepts for participants and stimulus:
+glmer(memoryResp ~ condition* type + (1|subject) + (1|stimulus))
+
+*signifikant interaction: H2*
+
+
+```{r, echo = TRUE, include = TRUE}
 #random intercept and slope for participants
 glmer1 <- glmer(memoryResp ~ condition_effect * type_effect
                 + (1|subject), 
@@ -520,29 +652,43 @@ glmer4 <- glmer(memoryResp ~ condition_effect*type_effect
                 memory, binomial)
 
 anova(glmer1, glmer2, glmer3, glmer4)
-#model choice: glmer2
 
+#model choice: glmer2
+summary(glmer2, corr = FALSE)
+```
+
+simple slopes:
+
+Model with random intercepts for participants and random intercepts for targets:
+glmer(memoryResp ~ type (effect coded) + condition (effect coded)* type (dummy coded) +  (1|subject) + (1|target))
+
+
+```{r, echo = TRUE, include = TRUE}
 #analyze simple slopes (even though three-way-interaction is not significant)
 glmer2_2 <- glmer(memoryResp ~ type_effect + type:condition_effect
                   + (1|subject) + (1|cs_selected), memory, binomial)
-summary(glmer2_2)
-#significant three-way interaction
+summary(glmer2_2, corr = FALSE)
+```
 
+
+```{r, echo = FALSE, include = TRUE}
 #plot model1
 memory_plot2 <- aggregate(prop ~ condition + type, memoryProp, mean)
 memory_plot2$se <- aggregate(prop ~ condition + type, memoryProp, se)[[3]]
-memory_plot2
 
 barplot1 <- ggplot(memory_plot2, aes (y = prop, x = type, fill = condition)) +
   geom_col(position = position_dodge()) +
   geom_errorbar(aes(ymin= prop - se, ymax= prop + se), width=.2,
                 position=position_dodge(.9)) +
-  ggtitle("Direct Evaluative Ratings\n") + 
+  ggtitle("DRM\n") + 
   scale_color_brewer(palette = "Set2") +
-  scale_x_discrete(name = "\n Valence") +
-  scale_y_continuous (name = "Proportion pleasant\n") + 
+  scale_x_discrete(name = "\n Type") +
+  scale_y_continuous (name = "Proportion 'old'\n") + 
   theme_classic() +
-  labs(color = "Condition") +
+  labs(fill = "Condition") +
   theme(plot.title = element_text (hjust = 0.5, face = "bold", size = 14),
         text = element_text(size=14))
 barplot1
+
+```
+
