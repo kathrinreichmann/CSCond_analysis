@@ -17,6 +17,7 @@ se <- function(x) sd(x)/sqrt(length(x))
 
 ### set working directory:
 setwd("C:/Users/siskr01/GitHub/CSCond_analysis/Study1_EC/data")
+DRM <- "C:/Users/siskr01/GitHub/CSCond_analysis/Study2_DRM/data_preprocessed"
 
 # generalization: direct evaluative measure -------------------------------
 
@@ -32,6 +33,9 @@ for (factor in as_factor){
 
 direct$type_specific <- factor(direct$type_specific, levels = c("CS", "GS same", "GS different", "Feature", "Group"))
 
+#delete variables we don't need
+direct$X <- NULL
+direct$type <- NULL
 
 ## randomly select 1 CS for many_one:
 new_one <- direct[direct$condition == "one_one",]
@@ -69,7 +73,7 @@ temp$condition <- factor(temp$condition, labels = c("one", "many"), levels = c("
 ##categorical variable: generalization as discrete
 temp$type_specific <- factor(temp$type_specific, labels = c("CS", "GS"), levels = c("CS", "GS same"))
 
-##### Data Analysis: Multilevel models
+##### Data Analysis: Multilevel models (with valence)
 
 ### Effektkodierung -0.5, 0.5
 
@@ -108,15 +112,62 @@ for (line in 1:dim(temp)[1]){
 temp$type_specific
 str(temp)
 
-#delete variables we don't need
-temp$X <- NULL
-temp$type <- NULL
+#set default to dummy coding
+options(contrasts = c("contr.treatment", "contr.poly"))
+direct <- temp
+direct <- direct[order(direct$subject, direct$val, direct$type_specific, direct$category),]
+
+#analysis 1: difference scores
+directNeg <- direct[direct$val == "neg",]
+directPos <- direct$response[direct$val == "pos"]
+
+directDiff <- cbind(directNeg, directPos)
+directDiff$diff <- directDiff$directPos - directDiff$response
+directDiff[directDiff$subject == "02a80kdxm7",]
+
 
 #set default to dummy coding
 options(contrasts = c("contr.treatment", "contr.poly"))
 
-#analysis 1
-direct <- temp
+## specify models
+lmer1Diff <- lmer(diff ~ condition_effect*type_effect 
+                  + (1|subject), 
+                  directDiff, REML = FALSE)
+
+lmer2Diff <- lmer(diff ~ condition_effect*type_effect 
+                  + (type_effect|subject), 
+                  directDiff, REML = FALSE)
+
+anova(lmer1Diff, lmer2Diff)
+summary(lmer1Diff)
+#choose model1
+#significant two-way interaction
+
+aggregate(response ~ condition*type_specific, directDiff, mean)
+aggregate(response ~ condition*type_specific, directDiff, sd)
+
+#model1: analyze simple slopes
+lmer1_1Diff <- lmer(diff ~ type_effect + condition_effect:type_specific
+                    + (type_effect|subject),
+                    directDiff, REML = FALSE)
+summary(lmer1_1Diff)
+
+#plot model1
+boxplot2 <- ggplot(directDiff, aes (x = type_specific, y = diff, color = condition)) +
+  geom_boxplot() +
+  ggtitle("Direct Evaluative Ratings\n") + 
+  scale_color_brewer(palette = "Set2") +
+  scale_x_discrete(name = "\n Valence") +
+  scale_y_continuous (name = "Evaluative Ratings\n") + 
+  theme_classic() +
+  labs(color = "Condition") +
+  theme(plot.title = element_text (hjust = 0.5, face = "bold", size = 14),
+        text = element_text(size=14))
+boxplot2
+
+## use three-way interaction for power analysis
+
+#analysis 2: with valence as a factor
 
 ## specify models
 lmer1 <- lmer(response ~ val_effect*condition_effect*type_effect 
@@ -126,6 +177,10 @@ summary(lmer1)
 model.matrix(response ~ val_effect*condition_effect*type_effect, direct)
 #significant three-way interaction
 
+aggregate(response ~ val*condition*type_specific, direct, mean)
+aggregate(response ~ val*condition*type_specific, direct, sd)
+
+
 #model2
 lmer1_1 <- lmer(response ~ val_effect*type_effect + condition_effect:val:type_specific
                 + (val_effect*type_effect|subject),
@@ -134,7 +189,7 @@ summary(lmer1_1)
 
 #plot model1
 
-dotplot <- ggplot(direct, aes (x = val, y = response, color = condition)) +
+boxplot1 <- ggplot(direct, aes (x = val, y = response, color = condition)) +
   facet_grid(. ~ type_specific) +
   geom_boxplot() +
   geom_line(show.legend = TRUE, aes (x = val, color = condition)) +
@@ -147,17 +202,444 @@ dotplot <- ggplot(direct, aes (x = val, y = response, color = condition)) +
   labs(color = "Condition") +
   theme(plot.title = element_text (hjust = 0.5, face = "bold", size = 14),
         text = element_text(size=14))
-dotplot
-
-## use three-way interaction for power analysis
-
-
+boxplot1
 
 # AMP ---------------------------------------------------------------------
 
+indirect <- read.csv2("indirect.csv", header = TRUE)
+
+#delete columns we don't need
+indirect$X <- NULL
+indirect$type <- NULL
+str(indirect)
+
+as_factor <- c("subject", "val", "condition", "measure", "type_specific", "category", "cs_selected", "target")
+
+for (factor in as_factor){
+  indirect[, factor] <- as.factor(indirect[,factor])
+}
+
+indirect$type_specific <- factor(indirect$type_specific, levels = c("CS", "GS same", "GS different", "Feature", "Group"))
 
 
-##### Data Analysis: use CS as predictor for GS
+## randomly select 1 CS for many_one:
+new_one <- indirect[indirect$condition == "one_one",]
+new_many <- indirect[indirect$condition == "many_one",]
+
+#remove the original CS evaluations
+new_many <- new_many[!new_many$type_specific == "CS",]
+new_indirect <- rbind(new_one, new_many)
+
+for (subject in unique(indirect$subject)){
+  if (indirect$condition[indirect$subject == subject] == "many_one"){
+    for (cat in 1:4){
+      temp <- indirect[indirect$subject == subject & indirect$type_specific == "CS" & indirect$category == cat,]
+      select <- temp[1,]
+      #concat only 1 CS rating per participant
+      new_indirect <- rbind(new_indirect, select)
+    }
+  }
+}
+head(new_indirect)
+
+temp <- new_indirect
+
+# order data
+temp <- temp[order(temp$subject, temp$val, temp$type_specific),]
+
+# omit information we don't need
+temp <- temp[!temp$type_specific =="GS different", ]
+temp <- temp[!temp$type_specific == "Feature",]
+
+## rename many_one to many and one_one to one
+temp$condition <- factor(temp$condition, labels = c("one", "many"), levels = c("one_one", "many_one"))
+
+##categorical variable: generalization as discrete
+temp$type_specific <- factor(temp$type_specific, labels = c("CS", "GS"), levels = c("CS", "GS same"))
+head(temp)
+
+## effect code variables
+#condition
+temp$condition_effect <- 0
+for (line in 1:dim(temp)[1]){
+  if (temp$condition[line] == "one"){
+    temp$condition_effect[line] <- -0.5
+  } else {
+    temp$condition_effect[line] <- 0.5
+  }
+}
+temp$condition_effect
+
+#valence
+temp$val_effect <- 0
+for (line in 1:dim(temp)[1]){
+  if (temp$val[line] == "neg"){
+    temp$val_effect[line] <- -0.5
+  } else {
+    temp$val_effect[line] <- 0.5
+  }
+}
+temp$condition_effect
+str(temp)
+
+#type
+temp$type_effect <- 0
+for (line in 1:dim(temp)[1]){
+  if (temp$type_specific[line] == "CS"){
+    temp$type_effect[line] <- -0.5
+  } else {
+    temp$type_effect[line] <- 0.5
+  }
+}
+temp$type_specific
+str(temp)
+
+#set default to dummy coding
+options(contrasts = c("contr.treatment", "contr.poly"))
+
+### specify models
+indirect <- temp
+indirect$response <- as.numeric(indirect$response)
+indirect <- indirect[order(indirect$subject, indirect$val, indirect$type_specific, indirect$category),]
+
+indirectProp <- aggregate(response ~ subject + val_effect + val + type_effect + type_specific
+                          + condition + condition_effect, indirect, sum)
+indirectProp$length <- aggregate(response ~ subject + val_effect + val + type_effect + type_specific
+                                 + condition + condition_effect, indirect, length)[[8]]
+indirectProp$prop <- indirectProp$response/indirectProp$length
+hist(indirectProp$prop)
+head(indirectProp)
+
+##### analysis 1: with difference scores
+indirectNeg <- indirectProp[indirectProp$val == "neg",]
+indirectPos <- indirectProp$prop[indirectProp$val == "pos"]
+
+indirectDiff <- cbind(indirectNeg, indirectPos)
+names(indirectDiff)[names(indirectDiff) == "prop"] <- "propNeg"
+names(indirectDiff)[names(indirectDiff) == "indirectPos"] <- "propPos"
+
+indirectDiff$diff <- indirectDiff$propPos - indirectDiff$propNeg
+indirectDiff[indirectDiff$subject == "02a80kdxm7",]
+
+aggregate(diff ~ condition*type_specific, indirectDiff, mean)
+aggregate(diff ~ condition*type_specific, indirectDiff, se)
+
+#model specification
+lmer1Diff <- lmer(diff ~ condition_effect*type_effect + (1|subject), indirectDiff, REML = FALSE)
+
+#lmer2Diff <- lmer(diff ~ condition_effect*type_effect + (type_effect|subject), indirectDiff, REML=FALSE)
+#model 2 not specifiable due to missing observations
+
+#anova(lmer1Diff, lmer2Diff)
+
+plot(lmer1Diff)
+summary(lmer1Diff)
+
+#simple slopes
+lmer1Diff_1 <- lmer(diff ~ type_effect + type_specific:condition_effect + (1|subject), indirectDiff, REML = FALSE)
+summary(lmer1Diff_1)
+
+#plot1
+indirect_plot1 <- aggregate(diff ~ condition*type_specific, indirectDiff, mean)
+indirect_plot1$se <- aggregate(diff ~ condition*type_specific, indirectDiff, se) [[3]]
+indirect_plot1
+
+barplot1 <- ggplot(indirect_plot1, aes (y = diff, x = type_specific, fill = condition)) +
+  geom_col(position = position_dodge()) +
+  geom_errorbar(aes(ymin= diff - se, ymax= diff + se), width=.2,
+                position=position_dodge(.9)) +
+  ggtitle("AMP\n") + 
+  scale_color_brewer(palette = "Set2") +
+  scale_x_discrete(name = "\n Type") +
+  scale_y_continuous (name = "Difference Scores\n") + 
+  theme_classic() +
+  labs(fill = "Condition") +
+  theme(plot.title = element_text (hjust = 0.5, face = "bold", size = 14),
+        text = element_text(size=14))
+barplot1
+
+####analysis 2: with valence as additional variable
+
+#random intercept for participants
+glmer1 <- glmer(response ~ val_effect*condition_effect*type_effect 
+                + (1|subject), 
+                indirect, binomial)
+summary(glmer1)
+
+#random intercept for targets
+glmer2 <- glmer(response ~ val_effect*condition_effect*type_effect 
+                + (1|subject) + (1|target), 
+                indirect, binomial)
+summary(glmer2)
+
+#random slopes for participants (fails to converge)
+'glmer3 <- glmer(response ~ val_effect*condition_effect*type_effect 
+                + (val_effect*type_effect|subject) + (1|target), 
+                indirect, binomial)'
+summary(glmer3)
+
+#random slopes for targets (converges, but does not lead to better model fit)
+'glmer4 <- glmer(response ~ val_effect*condition_effect*type_effect 
+              + (val_effect*type_effect|subject) + (val_effect*type_effect|target), 
+              indirect, binomial)'
+anova(glmer1, glmer2, glmer3, glmer4)
+#model choice: glmer2
+
+#analyze simple slopes (even though three-way-interaction is not significant)
+glmer2_2 <- glmer(response ~ val_effect*type_effect + val:type_specific:condition_effect
+                 + (1|subject) + (1|target), indirect, binomial)
+summary(glmer2_2)
+#significant three-way interaction
+
+#plot model1
+indirect_plot2 <- aggregate(prop ~ condition + val + type_specific, indirectProp, mean)
+indirect_plot2$se <- aggregate(prop ~ condition + val + type_specific, indirectProp, se)[[4]]
+indirect_plot2
+
+barplot2 <- ggplot(indirect_plot2, aes (y = prop, x = type_specific, fill = val)) +
+  facet_grid(. ~ condition) +
+  geom_col(position = position_dodge()) +
+  geom_errorbar(aes(ymin= prop - se, ymax= prop + se), width=.2,
+                position=position_dodge(.9)) +
+  geom_hline(yintercept = 0.5, col = "black") +
+  ggtitle("Direct Evaluative Ratings\n") + 
+  scale_color_brewer(palette = "Set2") +
+  scale_x_discrete(name = "\n Valence") +
+  scale_y_continuous (name = "Proportion pleasant\n") + 
+  theme_classic() +
+  labs(color = "Condition") +
+  theme(plot.title = element_text (hjust = 0.5, face = "bold", size = 14),
+        text = element_text(size=14))
+barplot2
+
+
+
+
+# recognition memory ------------------------------------------------------
+setwd(DRM)
+
+memory <- read.csv2("memory1.csv", header = TRUE)
+str(memory)
+
+#delete columns we don't need
+memory$X <- NULL
+memory$memoryCorrect <- NULL
+memory$trial_index <- NULL
+memory$task <- NULL
+memory$rt <- NULL
+
+#rename condition
+names(memory)[names(memory) == "condition1"] <- "condition"
+
+#delete trials with timeout
+memory <- memory[!memory$timeout == "true",]
+str(memory)
+#as factor
+as_factor <- c("subject", "condition", "type", "category", "cs_selected")
+
+for (factor in as_factor){
+  memory[, factor] <- as.factor(memory[,factor])
+}
+
+memory$type <- factor(memory$type, levels = c("CS", "GS same", "GS different", "Feature", "Group"))
+
+
+## randomly select 1 CS for many_one:
+new_one <- memory[memory$condition == "one_one",]
+new_many <- memory[memory$condition == "many_one",]
+
+#remove the original CS evaluations
+new_many <- new_many[!new_many$type_specific == "CS",]
+new_memory <- rbind(new_one, new_many)
+
+for (subject in unique(memory$subject)){
+  if (memory$condition[memory$subject == subject] == "many_one"){
+    for (cat in 1:4){
+      temp <- memory[memory$subject == subject & memory$type_specific == "CS" & memory$category == cat,]
+      select <- temp[1,]
+      #concat only 1 CS rating per participant
+      new_memory <- rbind(new_memory, select)
+    }
+  }
+}
+head(new_memory)
+
+temp <- new_memory
+
+# order data
+temp <- temp[order(temp$subject, temp$val, temp$type_specific),]
+
+# omit information we don't need
+temp <- temp[!temp$type_specific =="GS different", ]
+temp <- temp[!temp$type_specific == "Feature",]
+
+## rename many_one to many and one_one to one
+temp$condition <- factor(temp$condition, labels = c("one", "many"), levels = c("one_one", "many_one"))
+
+##categorical variable: generalization as discrete
+temp$type_specific <- factor(temp$type_specific, labels = c("CS", "GS"), levels = c("CS", "GS same"))
+head(temp)
+
+## effect code variables
+#condition
+temp$condition_effect <- 0
+for (line in 1:dim(temp)[1]){
+  if (temp$condition[line] == "one"){
+    temp$condition_effect[line] <- -0.5
+  } else {
+    temp$condition_effect[line] <- 0.5
+  }
+}
+temp$condition_effect
+
+#valence
+temp$val_effect <- 0
+for (line in 1:dim(temp)[1]){
+  if (temp$val[line] == "neg"){
+    temp$val_effect[line] <- -0.5
+  } else {
+    temp$val_effect[line] <- 0.5
+  }
+}
+temp$condition_effect
+str(temp)
+
+#type
+temp$type_effect <- 0
+for (line in 1:dim(temp)[1]){
+  if (temp$type_specific[line] == "CS"){
+    temp$type_effect[line] <- -0.5
+  } else {
+    temp$type_effect[line] <- 0.5
+  }
+}
+temp$type_specific
+str(temp)
+
+#set default to dummy coding
+options(contrasts = c("contr.treatment", "contr.poly"))
+
+### specify models
+memory <- temp
+memory$response <- as.numeric(memory$response)
+memory <- memory[order(memory$subject, memory$val, memory$type_specific, memory$category),]
+
+memoryProp <- aggregate(response ~ subject + val_effect + val + type_effect + type_specific
+                        + condition + condition_effect, memory, sum)
+memoryProp$length <- aggregate(response ~ subject + val_effect + val + type_effect + type_specific
+                               + condition + condition_effect, memory, length)[[8]]
+memoryProp$prop <- memoryProp$response/memoryProp$length
+hist(memoryProp$prop)
+head(memoryProp)
+
+##### analysis 1: with difference scores
+memoryNeg <- memoryProp[memoryProp$val == "neg",]
+memoryPos <- memoryProp$prop[memoryProp$val == "pos"]
+
+memoryDiff <- cbind(memoryNeg, memoryPos)
+names(memoryDiff)[names(memoryDiff) == "prop"] <- "propNeg"
+names(memoryDiff)[names(memoryDiff) == "memoryPos"] <- "propPos"
+
+memoryDiff$diff <- memoryDiff$propPos - memoryDiff$propNeg
+memoryDiff[memoryDiff$subject == "02a80kdxm7",]
+
+aggregate(diff ~ condition*type_specific, memoryDiff, mean)
+aggregate(diff ~ condition*type_specific, memoryDiff, se)
+
+#model specification
+lmer1Diff <- lmer(diff ~ condition_effect*type_effect + (1|subject), memoryDiff, REML = FALSE)
+
+#lmer2Diff <- lmer(diff ~ condition_effect*type_effect + (type_effect|subject), memoryDiff, REML=FALSE)
+#model 2 not specifiable due to missing observations
+
+#anova(lmer1Diff, lmer2Diff)
+
+plot(lmer1Diff)
+summary(lmer1Diff)
+
+#simple slopes
+lmer1Diff_1 <- lmer(diff ~ type_effect + type_specific:condition_effect + (1|subject), memoryDiff, REML = FALSE)
+summary(lmer1Diff_1)
+
+#plot1
+memory_plot1 <- aggregate(diff ~ condition*type_specific, memoryDiff, mean)
+memory_plot1$se <- aggregate(diff ~ condition*type_specific, memoryDiff, se) [[3]]
+memory_plot1
+
+barplot1 <- ggplot(memory_plot1, aes (y = diff, x = type_specific, fill = condition)) +
+  geom_col(position = position_dodge()) +
+  geom_errorbar(aes(ymin= diff - se, ymax= diff + se), width=.2,
+                position=position_dodge(.9)) +
+  ggtitle("AMP\n") + 
+  scale_color_brewer(palette = "Set2") +
+  scale_x_discrete(name = "\n Type") +
+  scale_y_continuous (name = "Difference Scores\n") + 
+  theme_classic() +
+  labs(fill = "Condition") +
+  theme(plot.title = element_text (hjust = 0.5, face = "bold", size = 14),
+        text = element_text(size=14))
+barplot1
+
+####analysis 2: with valence as additional variable
+
+#random intercept for participants
+glmer1 <- glmer(response ~ val_effect*condition_effect*type_effect 
+                + (1|subject), 
+                memory, binomial)
+summary(glmer1)
+
+#random intercept for targets
+glmer2 <- glmer(response ~ val_effect*condition_effect*type_effect 
+                + (1|subject) + (1|target), 
+                memory, binomial)
+summary(glmer2)
+
+#random slopes for participants (fails to converge)
+'glmer3 <- glmer(response ~ val_effect*condition_effect*type_effect 
+                + (val_effect*type_effect|subject) + (1|target), 
+                memory, binomial)'
+summary(glmer3)
+
+#random slopes for targets (converges, but does not lead to better model fit)
+'glmer4 <- glmer(response ~ val_effect*condition_effect*type_effect 
+              + (val_effect*type_effect|subject) + (val_effect*type_effect|target), 
+              memory, binomial)'
+anova(glmer1, glmer2, glmer3, glmer4)
+#model choice: glmer2
+
+#analyze simple slopes (even though three-way-interaction is not significant)
+glmer2_2 <- glmer(response ~ val_effect*type_effect + val:type_specific:condition_effect
+                  + (1|subject) + (1|target), memory, binomial)
+summary(glmer2_2)
+#significant three-way interaction
+
+#plot model1
+memory_plot2 <- aggregate(prop ~ condition + val + type_specific, memoryProp, mean)
+memory_plot2$se <- aggregate(prop ~ condition + val + type_specific, memoryProp, se)[[4]]
+memory_plot2
+
+barplot2 <- ggplot(memory_plot2, aes (y = prop, x = type_specific, fill = val)) +
+  facet_grid(. ~ condition) +
+  geom_col(position = position_dodge()) +
+  geom_errorbar(aes(ymin= prop - se, ymax= prop + se), width=.2,
+                position=position_dodge(.9)) +
+  geom_hline(yintercept = 0.5, col = "black") +
+  ggtitle("Direct Evaluative Ratings\n") + 
+  scale_color_brewer(palette = "Set2") +
+  scale_x_discrete(name = "\n Valence") +
+  scale_y_continuous (name = "Proportion pleasant\n") + 
+  theme_classic() +
+  labs(color = "Condition") +
+  theme(plot.title = element_text (hjust = 0.5, face = "bold", size = 14),
+        text = element_text(size=14))
+barplot2
+
+
+
+
+
+
+
 
 ##aggregate scores for each category :
 temp2 <- aggregate(response ~ subject + category + type_specific + condition + val, temp, mean)
