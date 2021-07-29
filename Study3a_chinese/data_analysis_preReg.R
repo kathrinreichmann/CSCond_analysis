@@ -9,23 +9,22 @@ library(tidyverse)
 library(ggplot2)
 library(lme4)
 library(sjstats)
-library(mvoutlier) #outlier analysis
+library(lmerTest)
 
 #Functions
 CI <- function(x) qnorm(0.975)*sd(x)/sqrt(length(x))
 se <- function(x) sd(x)/sqrt(length(x))
 
-
-# generalization: direct evaluative measure -------------------------------
-
 ### set working directory:
 setwd("C:/Users/siskr01/GitHub/CSCond_analysis/Study1_EC/data")
+
+# generalization: direct evaluative measure -------------------------------
 
 #read table (pre-processed data)
 direct <- read.csv2('direct.csv', header = TRUE)
 str(direct)
 
-as_factor <- c("subject", "val", "condition_code", "condition", "measure", "measure_code", "type", "type_specific", "category", "cs_selected")
+as_factor <- c("subject", "val", "condition", "measure", "type", "type_specific", "category", "cs_selected")
 
 for (factor in as_factor){
   direct[, factor] <- as.factor(direct[,factor])
@@ -37,6 +36,8 @@ direct$type_specific <- factor(direct$type_specific, levels = c("CS", "GS same",
 ## randomly select 1 CS for many_one:
 new_one <- direct[direct$condition == "one_one",]
 new_many <- direct[direct$condition == "many_one",]
+
+#remove the original CS evaluations
 new_many <- new_many[!new_many$type_specific == "CS",]
 new_direct <- rbind(new_one, new_many)
 
@@ -45,6 +46,7 @@ for (subject in unique(direct$subject)){
     for (cat in 1:4){
       temp <- direct[direct$subject == subject & direct$type_specific == "CS" & direct$category == cat,]
       select <- temp[1,]
+      #concat only 1 CS rating per participant
       new_direct <- rbind(new_direct, select)
     }
   }
@@ -67,49 +69,154 @@ temp$condition <- factor(temp$condition, labels = c("one", "many"), levels = c("
 ##categorical variable: generalization as discrete
 temp$type_specific <- factor(temp$type_specific, labels = c("CS", "GS"), levels = c("CS", "GS same"))
 
-##### Data Analysis: use CS as predictor for GS
+##### Data Analysis: Multilevel models
 
-#wide format: GS and CS as different columns
-multiLevel <- temp[temp$type_specific == "CS",]
-respGS <- temp[centerDirect$type_discrete == "GS",]
-multiLevel$GS <- respGS$response
-multiLevel$CS <- multiLevel$response
-multiLevel$response <- NULL
-multiLevel$type_specific <- NULL
-multiLevel$type_discrete <- NULL
-head(multiLevel)
-#z-standardize GS and CS
-#multiLevel$GS <- scale (multiLevel$GS, center = TRUE, scale = TRUE)
-#multiLevel$CS <- scale (multiLevel$CS, center = TRUE, scale = TRUE)
+### Effektkodierung -0.5, 0.5
 
-#condition_code: 0 =  many
+#condition
+temp$condition_effect <- 0
+for (line in 1:dim(temp)[1]){
+  if (temp$condition[line] == "one"){
+    temp$condition_effect[line] <- -0.5
+  } else {
+    temp$condition_effect[line] <- 0.5
+  }
+}
+temp$condition_effect
 
+#valence
+temp$val_effect <- 0
+for (line in 1:dim(temp)[1]){
+  if (temp$val[line] == "neg"){
+    temp$val_effect[line] <- -0.5
+  } else {
+    temp$val_effect[line] <- 0.5
+  }
+}
+temp$condition_effect
+str(temp)
 
-dotplot <- ggplot(multiLevel, aes (x = CS, y = GS, color = condition)) +
-  facet_grid(. ~ condition) +
-  geom_point(show.legend = TRUE) +
+#type
+temp$type_effect <- 0
+for (line in 1:dim(temp)[1]){
+  if (temp$type_specific[line] == "CS"){
+    temp$type_effect[line] <- -0.5
+  } else {
+    temp$type_effect[line] <- 0.5
+  }
+}
+temp$type_specific
+str(temp)
+
+#delete variables we don't need
+temp$X <- NULL
+temp$type <- NULL
+
+#set default to dummy coding
+options(contrasts = c("contr.treatment", "contr.poly"))
+
+#analysis 1
+direct <- temp
+
+## specify models
+lmer1 <- lmer(response ~ val_effect*condition_effect*type_effect 
+              + (val_effect*type_effect|subject), 
+              direct, REML = FALSE)
+summary(lmer1)
+model.matrix(response ~ val_effect*condition_effect*type_effect, direct)
+#significant three-way interaction
+
+#model2
+lmer1_1 <- lmer(response ~ val_effect*type_effect + condition_effect:val:type_specific
+                + (val_effect*type_effect|subject),
+                direct, REML = FALSE)
+summary(lmer1_1)
+
+#plot model1
+
+dotplot <- ggplot(direct, aes (x = val, y = response, color = condition)) +
+  facet_grid(. ~ type_specific) +
+  geom_boxplot() +
+  geom_line(show.legend = TRUE, aes (x = val, color = condition)) +
   ggtitle("Direct Evaluative Ratings\n") + 
-  geom_smooth(method = 'lm', aes (color = condition)) +
+  geom_smooth(method = "lm", color = "black", se = FALSE) +
   scale_color_brewer(palette = "Set2") +
-  scale_x_continuous(name = "\nCS Ratings") +
-  scale_y_continuous (name = "GS Ratings\n") + 
+  scale_x_discrete(name = "\n Valence") +
+  scale_y_continuous (name = "Evaluative Ratings\n") + 
   theme_classic() +
   labs(color = "Condition") +
   theme(plot.title = element_text (hjust = 0.5, face = "bold", size = 14),
         text = element_text(size=14))
 dotplot
 
-#calculate multiple regression
-
-model1 <- lm(GS ~ CS, data = multiLevel)
-summary(model1)
-
-#report this model in the presentation
+## use three-way interaction for power analysis
 
 
-#Effektkodierung -0.5, 0.5
+
+# AMP ---------------------------------------------------------------------
+
+
+
+##### Data Analysis: use CS as predictor for GS
+
+##aggregate scores for each category :
+temp2 <- aggregate(response ~ subject + category + type_specific + condition + val, temp, mean)
+
+#without category
+temp2 <- aggregate(response ~ subject + type_specific + condition + val, temp, mean)
+
+
+#without subjects
+#temp2 <- aggregate(response ~ type_specific + condition + val, temp, mean)
+
+#wide format: GS and CS as different columns
+multiLevel <- temp2[temp2$type_specific == "CS",]
+respGS <- temp2[temp2$type_specific == "GS",]
+multiLevel$GS <- respGS$response
+multiLevel$CS <- multiLevel$response
+
+#delete variables we don't need
+multiLevel$response <- NULL
+multiLevel$type_specific <- NULL
+multiLevel$type_discrete <- NULL
+head(multiLevel)
+
+#condition_code: 0 =  many
+
+dotplot <- ggplot(multiLevel, aes (x = CS, y = GS)) +
+  facet_grid(. ~ condition) +
+  geom_point(show.legend = TRUE, aes (color = val)) +
+  ggtitle("Direct Evaluative Ratings\n") + 
+  geom_smooth(method = "lm", color = "black", se = FALSE) +
+  geom_smooth(method = 'lm', aes(color = val, linetype = val), se = FALSE) +
+  scale_color_brewer(palette = "Set2") +
+  scale_x_continuous(name = "\nCS Ratings") +
+  scale_y_continuous (name = "GS Ratings\n") + 
+  theme_classic() +
+  labs(color = "Valence", linetype = "Valence") +
+  theme(plot.title = element_text (hjust = 0.5, face = "bold", size = 14),
+        text = element_text(size=14))
+dotplot
+
+
+barplotCS <- ggplot(multiLevel, aes (x = condition, y = CS, color = val)) +
+  geom_boxplot() +
+  facet_grid(.~ category) +
+  ggtitle("Direct Evaluative Ratings\n") + 
+  scale_color_brewer(palette = "Set2") +
+  scale_x_discrete(name = "\nCS Ratings") +
+  scale_y_continuous (name = "GS Ratings\n") + 
+  theme_classic() +
+  labs(color = "Condition") +
+  theme(plot.title = element_text (hjust = 0.5, face = "bold", size = 14),
+        text = element_text(size=14))
+barplotCS
+
+### Effektkodierung -0.5, 0.5
+
+#condition
 multiLevel$condition_effect <- 0
-for (line in 1:dim(HLM)[1]){
+for (line in 1:dim(multiLevel)[1]){
   if (multiLevel$condition[line] == "one"){
     multiLevel$condition_effect[line] <- -0.5
   } else {
@@ -117,16 +224,76 @@ for (line in 1:dim(HLM)[1]){
   }
 }
 multiLevel$condition_effect
+
+#valence
+multiLevel$val_effect <- 0
+for (line in 1:dim(multiLevel)[1]){
+  if (multiLevel$val[line] == "neg"){
+    multiLevel$val_effect[line] <- -0.5
+  } else {
+    multiLevel$val_effect[line] <- 0.5
+  }
+}
+multiLevel$condition_effect
 str(multiLevel)
 
-#options(contrasts = c("contr.sum", "contr.poly"))
+#calculate multiple regression
+model1 <- lm(GS ~ CS, data = multiLevel)
+summary(model1)
 
-model2 <- lm(GS ~ CS*condition_effect, data = multiLevel)
+model2 <- lm(GS ~ CS*val_effect, data = multiLevel)
 summary(model2)
 anova(model2)
+model.matrix(GS ~ CS*val_effect, data = multiLevel)
+#plot(model2)
 
-model.matrix(GS ~ CS*condition_effect, data = multiLevel)
-plot(model2)
+model3 <- lm(GS ~ CS*condition_effect*val_effect, data = multiLevel)
+summary(model3)
+anova(model3)
+model.matrix(GS ~ CS*condition_effect*val_effect, data = multiLevel)
+#plot(model2)
+
+anova(model1, model2, model3)
+
+#analyze specific effects by dummy coding (setting to 0)
+
+#test CS*condition interaction for both positive and negative valence
+multiLevel$val_rev <- factor(multiLevel$val, levels = c("pos", "neg"))
+
+#0 = negativ, 1 = postiv
+model3_1 <- lm(GS ~ CS*condition_effect*val, data = multiLevel)
+summary(model3_1)
+model.matrix(GS ~ CS*condition_effect*val, data = multiLevel)
+
+#0 = positiv, 0 = negativ 
+model3_2 <- lm(GS ~ CS*condition_effect, data = multiLevel[multiLevel$val == "neg",])
+summary(model3_2)
+model.matrix(GS ~ CS*condition*val, data = multiLevel)
+
+#calculate multilevel Model
+#z-standardize GS and CS
+multiLevel$GS_z <- scale (multiLevel$GS, center = TRUE, scale = TRUE)
+multiLevel$CS_z <- scale (multiLevel$CS, center = TRUE, scale = TRUE)
+
+lmer1 <- lmer(GS_z ~ CS_z + (1|category), multiLevel)
+summary(lmer1)
+
+lmer2 <- lmer(GS_z ~ CS_z + (CS_z | category), multiLevel)
+summary(lmer2)
+
+lmer3 <- lmer(GS_z ~ CS_z*condition_effect + (CS_z |category), multiLevel)
+summary(lmer3)
+
+lmer4 <- lmer(GS_z ~ CS_z*condition_effect*val_effect + (CS_z|val), multiLevel )
+summary(lmer4)
+anova(lmer4)
+anova(lmer1, lmer2, lmer3, lmer4)
+
+lmer4_1 <- lmer(GS_z ~ CS_z*condition_effect*val + (val|subject), multiLevel )
+summary(lmer4_1)
+
+lmer4_1 <- lmer(GS_z ~ CS_z*condition_effect*val_rev + (val_rev + CS_z|subject), multiLevel )
+summary(lmer4_1)
 
 #fixed effect
 fix1CS <- data.frame(diff = summary(model2)$coef[1, "Estimate"], type_discrete = "CS")
