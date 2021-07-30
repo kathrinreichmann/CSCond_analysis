@@ -162,6 +162,9 @@ options(contrasts = c("contr.treatment", "contr.poly"))
 
 **(1) Analysis of Difference scores:**
 
+**H1** Wider generalization when the category size is large, in comparison to the small category size. This translates into a significant category size x stimulus type interaction with a positive parameter estimate. We expect this for both evaluative ratings and the AMP.
+
+
 Diff score per individual, type and category e.g. [VP1 CS cat1 pos] - [VP1 CS cat2 neg]
 condition (-0.5 = one, 0.5 = many), type (-0.5 = CS, 0.5 = GS)
 
@@ -401,6 +404,9 @@ aggregate(diff ~ condition*type_specific, indirectDiff, se)
 
 **(1) Analysis of Difference scores:**
 
+**H1** Wider generalization when the category size is large, in comparison to the small category size. This translates into a significant category size x stimulus type interaction with a positive parameter estimate. We expect this for both evaluative ratings and the AMP.
+
+
 Difference scores: per participant and stimulus type: [proportion of "angenehm" responses for +] - [proportion of "angenehm" responeses for -] 
 
 condition (-0.5 = one, 0.5 = many), type (-0.5 = CS, 0.5 = GS)
@@ -409,6 +415,7 @@ Model with random intercepts for participants:
 lmer(diff ~ condition* type + (1|subject))
 
 *signifikant interaction: H1*
+
 
 ```{r, echo = TRUE, include = TRUE}
 #model specification
@@ -621,6 +628,9 @@ options(contrasts = c("contr.treatment", "contr.poly"))
 
 **(1) Analysis of Difference scores:**
 
+**H2**: Higher false memory rates when the category size is large, in comparison to the small category size. This translates into a significant category size x stimulus type interaction. We expect this for the recognition memory measure.
+
+
 for memory responses (1 = "old", 0 = "new")
 condition (-0.5 = one, 0.5 = many), type (-0.5 = CS, 0.5 = GS)
 
@@ -628,6 +638,7 @@ Model with random intercepts for participants and stimulus:
 glmer(memoryResp ~ condition* type + (1|subject) + (1|stimulus))
 
 *signifikant interaction: H2*
+
 
 
 ```{r, echo = TRUE, include = TRUE}
