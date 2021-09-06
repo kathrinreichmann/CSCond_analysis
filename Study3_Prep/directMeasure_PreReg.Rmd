@@ -1,0 +1,218 @@
+---
+title: "EvaluativeRating_PreReg"
+author: "Kathrin Reichmann"
+date: "23 4 2021"
+output: html_document
+---
+
+```{r setup, include=FALSE}
+knitr::opts_chunk$set(echo = TRUE)
+```
+
+## Abstraction Mechanisms predict Generalization in EC - Study 1a (Chinese Characters), Direct Evaluative Measure
+
+Data analysis of the direct evaluative measure that asks participants to rate each stimulus from negative - positive (-100 to 100).
+
+```{r load libraries and clean the environment, echo=FALSE, include=FALSE}
+library(dplyr)
+library(tidyverse)
+
+library(ggplot2)
+
+library(afex)
+library(lme4)
+library(nlme)
+library(effsize)
+
+rm(list = ls())
+
+```
+
+```{r set local directory, echo=FALSE, include=FALSE}
+
+localGitDir <- "C:/Users/reich/Documents/GitHub/CSCond_analysis/Study3a_chinese"
+
+```
+
+```{r required functions, echo=FALSE, include=FALSE}
+CI <- function(x) qnorm(0.975)*sd(x)/sqrt(length(x))
+se <- function(x) sd(x)/sqrt(length(x))
+
+```
+
+```{r, import data of direct measure, echo = FALSE,  include=FALSE}
+
+direct <- read.csv2(paste (localGitDir, "/data_preprocessed/direct.csv", sep = ""), header = TRUE)
+str(direct)
+
+
+as_factor <- c("subject", "val", "condition_code", "condition", "measure", "measure_code", "type", "type_specific", "category", "cs_selected")
+
+for (factor in as_factor){
+  direct[, factor] <- as.factor(direct[,factor])
+}
+
+direct$type_specific <- factor(direct$type_specific, levels = c("CS", "GS same", "GS different", "Feature", "Group"))
+
+```
+
+## (1) Basic EC effect
+
+First of all, we check if the basic EC effect is significant.
+
+```{r basic EC effect, echo = FALSE, include = FALSE}
+
+```
+
+
+## (2) Prediction of GS (same)
+
+With this analysis, we use ratings of the CSs (stimuli participants saw in the learning phase) and the conditions to predict ratings of GS (same) (novel stimuli with the predictive radical at the same spot), controlling for the different categories.
+
+**Hypothesis 1**:  Considering the conditions significantly enhances model fit. Slope is steeper for many-to-one than one-to-one, indicating greater generalization in the many-to-one than in the one-to-one condition.
+
+```{r mean scores for every category and participant, echo = FALSE, include = FALSE}
+
+centerDirect <- aggregate(response ~ subject + condition + category + type_specific + val, direct, mean)
+#condition_code: 0 =  many
+centerDirect[centerDirect$subject == "02a80kdxm7",] #check
+
+
+```
+
+```{r data prep, echo = FALSE, include = FALSE}
+multiLevel <- centerDirect[centerDirect$type_specific == "CS",]
+respGS <- centerDirect[centerDirect$type_specific == "GS same",]
+multiLevel$GS <- respGS$response
+multiLevel$CS <- multiLevel$response
+multiLevel$response <- NULL
+multiLevel$type_specific <- NULL
+head(multiLevel)
+multiLevel[multiLevel$subject == "02a80kdxm7",] #check
+
+
+```
+
+```{r plot multilevel model, echo = FALSE, include = TRUE}
+
+dotplot <- ggplot(multiLevel, aes (x = CS, y = GS, color = category)) +
+  facet_grid(. ~ condition) +
+  geom_point(show.legend = TRUE) +
+  geom_smooth(method = 'lm') +
+  ggtitle("Generalization for GS (same) ") + 
+  scale_fill_brewer(palette = "Paired") +
+  scale_x_continuous(name = "\nRatings of CSs") +
+  scale_y_continuous (name = "Ratings of GSs (same)\n") + 
+  theme_classic() +
+  labs(fill = "CS Variability") +
+  theme(plot.title = element_text (hjust = 0.5, face = "bold", size = 12))
+
+plot(dotplot)
+
+```
+
+
+```{r build up models, echo = TRUE, include = TRUE}
+
+#baseline
+lme1 <- gls(GS ~ 1, data = multiLevel, method = "ML")
+
+#add random intercept for category
+lme2 <- lme(GS ~ 1, data = multiLevel, random = ~ 1|category, method = "ML")
+summary(lme2)
+anova(lme1, lme2)
+
+#add CSs as predictor
+lme3 <- lme(GS ~ CS, data = multiLevel, random = ~ 1|category, method = "ML")
+
+#add random slopes
+lme4 <- lme(GS ~ CS, random = ~ CS |category, data = multiLevel, method = "ML" )
+
+#add interaction with condition
+lme5 <- lme(GS ~ CS*condition, random = ~ CS |category, data = multiLevel, method = "ML" )
+
+#(5) pick best model
+anova(lme1, lme2, lme3, lme4, lme5)
+
+#(6) results
+summary(lme5)
+
+```
+
+Interpretations:
+
+
+## (2) Prediction of GS (different)
+
+With this analysis, we use ratings of the CSs (stimuli participants saw in the learning phase) and the conditions to predict ratings of GS (different) (novel stimuli with the predictive radical a different spot), controlling for the different categories.
+
+**Hypothesis 2**:  Considering the conditions significantly enhances model fit. Slope is steeper for many-to-one than one-to-one, indicating greater generalization in the many-to-one than in the one-to-one condition.
+
+
+```{r data prep, echo = FALSE, include = FALSE}
+multiLevel <- centerDirect[centerDirect$type_specific == "CS",]
+respGS <- centerDirect[centerDirect$type_specific == "GS different",]
+multiLevel$GS <- respGS$response
+multiLevel$CS <- multiLevel$response
+multiLevel$response <- NULL
+multiLevel$type_specific <- NULL
+head(multiLevel)
+multiLevel[multiLevel$subject == "02a80kdxm7",] #check
+
+
+```
+
+```{r plot multilevel model, echo = FALSE, include = TRUE}
+
+dotplot <- ggplot(multiLevel, aes (x = CS, y = GS, color = category)) +
+  facet_grid(. ~ condition) +
+  geom_point(show.legend = TRUE) +
+  geom_smooth(method = 'lm') +
+  ggtitle("Generalization for GS (different) ") + 
+  scale_fill_brewer(palette = "Paired") +
+  scale_x_continuous(name = "\nRatings of CSs") +
+  scale_y_continuous (name = "Ratings of GSs (different)\n") + 
+  theme_classic() +
+  labs(fill = "CS Variability") +
+  theme(plot.title = element_text (hjust = 0.5, face = "bold", size = 12))
+
+plot(dotplot)
+
+```
+
+## (3) Prediction of predictive Feature
+
+With this analysis, we use ratings of the CSs (stimuli participants saw in the learning phase) and the conditions to predict ratings of predictive Features (features that determined the category), controlling for the different categories.
+
+**Hypothesis 3**:  Considering the conditions significantly enhances model fit. Slope is steeper for many-to-one than one-to-one, indicating greater generalization in the many-to-one than in the one-to-one condition.
+
+```{r data prep, echo = FALSE, include = FALSE}
+multiLevel <- centerDirect[centerDirect$type_specific == "CS",]
+respGS <- centerDirect[centerDirect$type_specific == "Feature",]
+multiLevel$GS <- respGS$response
+multiLevel$CS <- multiLevel$response
+multiLevel$response <- NULL
+multiLevel$type_specific <- NULL
+head(multiLevel)
+multiLevel[multiLevel$subject == "02a80kdxm7",] #check
+
+
+```
+
+```{r plot multilevel model, echo = FALSE, include = TRUE}
+
+dotplot <- ggplot(multiLevel, aes (x = CS, y = GS, color = category)) +
+  facet_grid(. ~ condition) +
+  geom_point(show.legend = TRUE) +
+  geom_smooth(method = 'lm') +
+  ggtitle("Generalization for predictive Feature ") + 
+  scale_fill_brewer(palette = "Paired") +
+  scale_x_continuous(name = "\nRatings of CSs") +
+  scale_y_continuous (name = "Ratings of Feature\n") + 
+  theme_classic() +
+  labs(fill = "CS Variability") +
+  theme(plot.title = element_text (hjust = 0.5, face = "bold", size = 12))
+
+plot(dotplot)
+
+```

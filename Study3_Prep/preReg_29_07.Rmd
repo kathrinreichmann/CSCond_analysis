@@ -1,0 +1,796 @@
+---
+title: "Pre-Registration"
+author: "Kathrin Reichmann"
+date: "September 2021"
+output: html_document
+---
+
+```{r setup, include=FALSE}
+knitr::opts_chunk$set(echo = TRUE)
+```
+
+## Category Size and Generalization in EC 
+
+Contains models of three previous tasks:
+(1) Direct evaluative ratings
+(2) AMP
+(3) DRM
+
+```{r prep, echo = FALSE, include = FALSE}
+#set directory
+knitr::opts_knit$set(root.dir = "C:/Users/siskr01/GitHub/CSCond_analysis/Study1_EC/data")
+DRM <- "C:/Users/siskr01/GitHub/CSCond_analysis/Study2_DRM/data_preprocessed"
+
+
+```
+
+
+```{r, echo = FALSE, include = FALSE}
+################### CS Variability: one-to-one vs. many-to-one
+### july, 2021
+### Kathrin Reichmann
+
+### Plots and analysis for retreat
+
+library(dplyr)
+#library(tidyverse)
+library(ggplot2)
+library(lme4)
+library(sjstats)
+library(lmerTest)
+library(afex)
+
+#Functions
+CI <- function(x) qnorm(0.975)*sd(x)/sqrt(length(x))
+se <- function(x) sd(x)/sqrt(length(x))
+
+### set working directory:
+setwd("C:/Users/siskr01/GitHub/CSCond_analysis/Study1_EC/data")
+DRM <- "C:/Users/siskr01/GitHub/CSCond_analysis/Study2_DRM/data_preprocessed"
+
+# generalization: direct evaluative measure -------------------------------
+
+#read table (pre-processed data)
+direct <- read.csv2('direct.csv', header = TRUE)
+str(direct)
+
+as_factor <- c("subject", "val", "condition", "measure", "type", "type_specific", "category", "cs_selected")
+
+for (factor in as_factor){
+  direct[, factor] <- as.factor(direct[,factor])
+}
+
+direct$type_specific <- factor(direct$type_specific, levels = c("CS", "GS same", "GS different", "Feature", "Group"))
+
+#delete variables we don't need
+direct$X <- NULL
+direct$type <- NULL
+
+## randomly select 1 CS for many_one:
+new_one <- direct[direct$condition == "one_one",]
+new_many <- direct[direct$condition == "many_one",]
+
+#remove the original CS evaluations
+new_many <- new_many[!new_many$type_specific == "CS",]
+new_direct <- rbind(new_one, new_many)
+
+for (subject in unique(direct$subject)){
+  if (direct$condition[direct$subject == subject] == "many_one"){
+    for (cat in 1:4){
+      temp <- direct[direct$subject == subject & direct$type_specific == "CS" & direct$category == cat,]
+      select <- temp[1,]
+      #concat only 1 CS rating per participant
+      new_direct <- rbind(new_direct, select)
+    }
+  }
+}
+head(new_direct)
+
+temp <- new_direct
+
+# order data
+temp <- temp[order(temp$subject, temp$val, temp$type_specific),]
+
+# omit information we don't need
+temp <- temp[!temp$type_specific =="GS different", ]
+temp <- temp[!temp$type_specific == "Group",]
+temp <- temp[!temp$type_specific == "Feature",]
+
+## rename many_one to many and one_one to one
+temp$condition <- factor(temp$condition, labels = c("one", "many"), levels = c("one_one", "many_one"))
+
+##categorical variable: generalization as discrete
+temp$type_specific <- factor(temp$type_specific, labels = c("CS", "GS"), levels = c("CS", "GS same"))
+
+##### Data Analysis: Multilevel models (with valence)
+
+### Effektkodierung -0.5, 0.5
+
+#condition
+temp$condition_effect <- 0
+for (line in 1:dim(temp)[1]){
+  if (temp$condition[line] == "one"){
+    temp$condition_effect[line] <- -0.5
+  } else {
+    temp$condition_effect[line] <- 0.5
+  }
+}
+temp$condition_effect
+
+#valence
+temp$val_effect <- 0
+for (line in 1:dim(temp)[1]){
+  if (temp$val[line] == "neg"){
+    temp$val_effect[line] <- -0.5
+  } else {
+    temp$val_effect[line] <- 0.5
+  }
+}
+temp$condition_effect
+str(temp)
+
+#type
+temp$type_effect <- 0
+for (line in 1:dim(temp)[1]){
+  if (temp$type_specific[line] == "CS"){
+    temp$type_effect[line] <- -0.5
+  } else {
+    temp$type_effect[line] <- 0.5
+  }
+}
+temp$type_specific
+str(temp)
+
+#set default to dummy coding
+options(contrasts = c("contr.treatment", "contr.poly"))
+direct <- temp
+direct <- direct[order(direct$subject, direct$val, direct$type_specific, direct$category),]
+
+#analysis 1: difference scores
+directNeg <- direct[direct$val == "neg",]
+directPos <- direct$response[direct$val == "pos"]
+
+directDiff <- cbind(directNeg, directPos)
+directDiff$diff <- directDiff$directPos - directDiff$response
+directDiff[directDiff$subject == "02a80kdxm7",]
+
+
+#set default to dummy coding
+options(contrasts = c("contr.treatment", "contr.poly"))
+```
+
+### Direct Evaluative ratings
+
+**(1) Analysis of Difference scores:**
+
+**H1** Wider generalization when the category size is large, in comparison to the small category size. This translates into a significant category size x stimulus type interaction. We expect this for both evaluative ratings and the AMP.
+
+
+**ANOVA**
+
+```{r, echo = FALSE, include = TRUE}
+
+##ANOVA
+
+anovaDiff <- aov_car(diff ~ condition*type_specific + Error (subject / type_specific), directDiff)
+anovaDiff
+eta_sq(anovaDiff, partial = TRUE)
+
+
+```
+
+
+
+**mixed effect models**
+
+Diff score per individual, type and category e.g. [VP1 CS cat1 pos] - [VP1 CS cat2 neg]
+condition (-0.5 = one, 0.5 = many), type (-0.5 = CS, 0.5 = GS)
+
+Model with random intercepts for participants:
+lmer(diff ~ condition* type + (1|subject))
+
+*significant interaction: H1*
+
+```{r, echo = TRUE, include = TRUE}
+## specify models
+lmer1Diff <- lmer(diff ~ condition_effect*type_effect 
+                  + (1|subject), 
+                  directDiff, REML = FALSE)
+
+lmer2Diff <- lmer(diff ~ condition_effect*type_effect 
+                  + (type_effect|subject), 
+                  directDiff, REML = FALSE)
+
+anova(lmer1Diff, lmer2Diff)
+```
+
+The difference in deviance between Model 1 and Model 2 is not significant X²(2, 1594) = 2.48, p = .068 This indicates that including a random slope effect does not contribute to a better fitting model than a mere random intercept effect.
+
+```{r, echo = TRUE, include = TRUE}
+summary(lmer1Diff, corr = FALSE)
+#choose model1
+
+```
+
+Parameter Interpretation: lmer1Diff
+
+**Random Intercept subjects = 39.86** -> variation of intercepts across subjects (goes beyond the fixed effect of stimulus type -> there are substantial interindividual differences in the average evaluative ratings of participants)
+
+**Intercept = 50.114** -> Grand mean (on average, difference scores were 50.114 points)
+
+**Fixed Effect Condition = 10.706** -> main effect condition: The mean difference between conditions in difference scores was 10.706: 10.706 points higher in the "many" condition than in the "one" condition.
+
+**Fixed Effect Type = -28.845** -> main effect type: the mean difference between stimulus types in difference scores was -28.845: 28.845 points lower in for "GSs" than for "CSs".
+
+**Interaction TypexCondition = 22.91** -> interaction effect condition*type: the difference between "one" and "many" for CSs and "one" and "many" for GSs was 22.91 in total, indicating that the effect of condition was qualified by the type of stimulus.
+
+Simple slopes:
+lmer (diff ~ type (effect coded) + condition (effect coded): type (dummy coded) + (1|subject))
+
+```{r, echo = TRUE, include = TRUE}
+#model1: analyze simple slopes
+lmer1_1Diff <- lmer(diff ~ type_effect + condition_effect:type_specific
+                    + (1|subject),
+                    directDiff, REML = FALSE)
+summary(lmer1_1Diff, corr = FALSE)
+```
+
+Parameter Interpretation: lmer1_1Diff
+
+**Interaction TypeCS x Condition = -0.75** -> Effect of condition for CSs is -0.75 (on average, the difference scores are 0.75 points lower in the "many" condition than in the "one" condition, when looking at CSs)
+
+**Interaction TypeGS x Condition = 22.16** -> Effect of condition for GSs is 22.16 (on average, the difference scores are 22.16 points higher in the "many" condition than in the "one" condition, when looking at GSs)
+-> this is the finding that we are looking for
+
+
+```{r, echo = FALSE, include = TRUE}
+#plot model1
+boxplot2 <- ggplot(directDiff, aes (x = type_specific, y = diff, color = condition)) +
+  geom_boxplot() +
+  ggtitle("Direct Evaluative Ratings\n") + 
+  scale_color_brewer(palette = "Set2") +
+  scale_x_discrete(name = "\n Type") +
+  scale_y_continuous (name = "Difference Scores\n") + 
+  theme_classic() +
+  labs(color = "Condition") +
+  theme(plot.title = element_text (hjust = 0.5, face = "bold", size = 14),
+        text = element_text(size=14))
+boxplot2
+
+## use two-way interaction for power analysis
+```
+ 
+ **(2) Include Valence as a factor, use raw evaluative rating scores as DV**
+ 
+ **ANOVA**
+
+```{r, echo = FALSE, include = TRUE}
+
+##ANOVA
+
+anovaVal <- aov_car(response ~ condition*type_specific*val + Error (subject / type_specific*val), direct)
+anovaVal
+eta_sq(anovaVal, partial = TRUE)
+
+
+```
+
+**mixed models**
+
+condition (-0.5 = one, 0.5 = many), type (-0.5 = CS, 0.5 = GS), val (-0.5 = neg, 0.5 = pos)
+
+Model with random intercepts for participants:
+lmer(ratings ~ condition* type* val + (1|subject))
+
+```{r, echo = TRUE, include = TRUE}
+#analysis 2: with valence as a factor
+
+#random intercepts
+lmer1 <- lmer(response ~ val_effect*condition_effect*type_effect 
+              + (1|subject), 
+              direct, REML = FALSE)
+
+#random slopes
+lmer2 <- lmer(response ~ val_effect*condition_effect*type_effect 
+              + (val_effect*type_effect|subject), 
+              direct, REML = FALSE)
+anova(lmer1, lmer2)
+summary(lmer2, corr = FALSE)
+#choose model2
+
+```
+
+
+(1) simple slopes:
+
+Model with random intercepts and slopes for participants, testing if the difference between pos and neg (EC effect) is significant for each combination of type x category size:
+
+lmer(diff ~ condition (effect coded) * type_specific (effect coded) + val (effect coded)* type (dummy coded) * condition(dummy coded) +  (type(effect coded) * val(effect coded)|subject))
+
+```{r, echo = TRUE, include = TRUE}
+#model2
+lmer1_2 <- lmer(response ~ condition_effect*type_effect + val_effect:condition:type_specific
+                + (val_effect*type_effect|subject),
+                direct, REML = FALSE)
+summary(lmer1_2, corr = FALSE)
+```
+
+
+```{r, echo = FALSE, include = TRUE}
+#plot model2
+
+boxplot2 <- ggplot(direct, aes (x = type_specific, y = response, color = val)) +
+  facet_grid(. ~ condition) +
+  geom_boxplot() +
+  ggtitle("Direct Evaluative Ratings\n") + 
+  scale_color_brewer(palette = "Set2") +
+  scale_x_discrete(name = "\n Type") +
+  scale_y_continuous (name = "Evaluative Ratings\n") + 
+  theme_classic() +
+  labs(color = "Condition") +
+  theme(plot.title = element_text (hjust = 0.5, face = "bold", size = 14),
+        text = element_text(size=14))
+boxplot2
+```
+
+(2) simple slopes:
+
+Model with random intercepts and slopes for participants, testing the difference for category sizes for each combination of valence and stimulus type:
+
+lmer(diff ~ type (effect coded) * val (effect coded) + condition (effect coded)* type (dummy coded) * val(dummy coded) +  (type(effect coded) * val(effect coded)|subject))
+
+```{r, echo = TRUE, include = TRUE}
+#model3
+lmer1_3 <- lmer(response ~ val_effect*type_effect + condition_effect:val:type_specific
+                + (val_effect*type_effect|subject),
+                direct, REML = FALSE)
+summary(lmer1_3, corr = FALSE)
+```
+
+
+```{r, echo = FALSE, include = TRUE}
+#plot model3
+
+boxplot3 <- ggplot(direct, aes (x = type_specific, y = response, color = condition)) +
+  facet_grid(. ~ val) +
+  geom_boxplot() +
+  ggtitle("Direct Evaluative Ratings\n") + 
+  scale_color_brewer(palette = "Set2") +
+  scale_x_discrete(name = "\n Type") +
+  scale_y_continuous (name = "Evaluative Ratings\n") + 
+  theme_classic() +
+  labs(color = "Condition") +
+  theme(plot.title = element_text (hjust = 0.5, face = "bold", size = 14),
+        text = element_text(size=14))
+boxplot3
+```
+
+
+```{r, echo = FALSE, include = FALSE}
+# AMP ---------------------------------------------------------------------
+
+knitr::opts_knit$set(root.dir = DRM)
+
+
+indirect <- read.csv2("indirect.csv", header = TRUE)
+
+#delete columns we don't need
+indirect$X <- NULL
+indirect$type <- NULL
+str(indirect)
+
+as_factor <- c("subject", "val", "condition", "measure", "type_specific", "category", "cs_selected", "target")
+
+for (factor in as_factor){
+  indirect[, factor] <- as.factor(indirect[,factor])
+}
+
+indirect$type_specific <- factor(indirect$type_specific, levels = c("CS", "GS same", "GS different", "Feature", "Group"))
+
+
+## randomly select 1 CS for many_one:
+new_one <- indirect[indirect$condition == "one_one",]
+new_many <- indirect[indirect$condition == "many_one",]
+
+#remove the original CS evaluations
+new_many <- new_many[!new_many$type_specific == "CS",]
+new_indirect <- rbind(new_one, new_many)
+
+for (subject in unique(indirect$subject)){
+  if (indirect$condition[indirect$subject == subject] == "many_one"){
+    for (cat in 1:4){
+      temp <- indirect[indirect$subject == subject & indirect$type_specific == "CS" & indirect$category == cat,]
+      select <- temp[1,]
+      #concat only 1 CS rating per participant
+      new_indirect <- rbind(new_indirect, select)
+    }
+  }
+}
+head(new_indirect)
+
+temp <- new_indirect
+
+# order data
+temp <- temp[order(temp$subject, temp$val, temp$type_specific),]
+
+# omit information we don't need
+temp <- temp[!temp$type_specific =="GS different", ]
+temp <- temp[!temp$type_specific == "Feature",]
+
+## rename many_one to many and one_one to one
+temp$condition <- factor(temp$condition, labels = c("one", "many"), levels = c("one_one", "many_one"))
+
+##categorical variable: generalization as discrete
+temp$type_specific <- factor(temp$type_specific, labels = c("CS", "GS"), levels = c("CS", "GS same"))
+head(temp)
+
+## effect code variables
+#condition
+temp$condition_effect <- 0
+for (line in 1:dim(temp)[1]){
+  if (temp$condition[line] == "one"){
+    temp$condition_effect[line] <- -0.5
+  } else {
+    temp$condition_effect[line] <- 0.5
+  }
+}
+temp$condition_effect
+
+#valence
+temp$val_effect <- 0
+for (line in 1:dim(temp)[1]){
+  if (temp$val[line] == "neg"){
+    temp$val_effect[line] <- -0.5
+  } else {
+    temp$val_effect[line] <- 0.5
+  }
+}
+temp$condition_effect
+str(temp)
+
+#type
+temp$type_effect <- 0
+for (line in 1:dim(temp)[1]){
+  if (temp$type_specific[line] == "CS"){
+    temp$type_effect[line] <- -0.5
+  } else {
+    temp$type_effect[line] <- 0.5
+  }
+}
+temp$type_specific
+str(temp)
+
+#set default to dummy coding
+options(contrasts = c("contr.treatment", "contr.poly"))
+
+### specify models
+indirect <- temp
+indirect$response <- as.numeric(indirect$response)
+indirect <- indirect[order(indirect$subject, indirect$val, indirect$type_specific, indirect$category),]
+
+indirectProp <- aggregate(response ~ subject + val_effect + val + type_effect + type_specific
+                          + condition + condition_effect, indirect, sum)
+indirectProp$length <- aggregate(response ~ subject + val_effect + val + type_effect + type_specific
+                                 + condition + condition_effect, indirect, length)[[8]]
+indirectProp$prop <- indirectProp$response/indirectProp$length
+hist(indirectProp$prop)
+head(indirectProp)
+
+##### analysis 1: with difference scores
+indirectNeg <- indirectProp[indirectProp$val == "neg",]
+indirectPos <- indirectProp$prop[indirectProp$val == "pos"]
+
+indirectDiff <- cbind(indirectNeg, indirectPos)
+names(indirectDiff)[names(indirectDiff) == "prop"] <- "propNeg"
+names(indirectDiff)[names(indirectDiff) == "indirectPos"] <- "propPos"
+
+indirectDiff$diff <- indirectDiff$propPos - indirectDiff$propNeg
+indirectDiff[indirectDiff$subject == "02a80kdxm7",]
+
+aggregate(diff ~ condition*type_specific, indirectDiff, mean)
+aggregate(diff ~ condition*type_specific, indirectDiff, se)
+```
+
+### AMP
+
+**(1) Analysis of Difference scores:**
+
+**H1** Wider generalization when the category size is large, in comparison to the small category size. This translates into a significant category size x stimulus type interaction with a positive parameter estimate. We expect this for both evaluative ratings and the AMP.
+
+
+Difference scores: per participant and stimulus type: [proportion of "angenehm" responses for +] - [proportion of "angenehm" responeses for -] 
+
+condition (-0.5 = one, 0.5 = many), type (-0.5 = CS, 0.5 = GS)
+
+Model with random intercepts for participants:
+lmer(diff ~ condition* type + (1|subject))
+
+*signifikant interaction: H1*
+
+
+```{r, echo = TRUE, include = TRUE}
+#model specification
+lmer1Diff <- lmer(diff ~ condition_effect*type_effect + (1|subject), indirectDiff, REML = FALSE)
+
+#lmer2Diff <- lmer(diff ~ condition_effect*type_effect + (type_effect|subject), indirectDiff, REML=FALSE)
+#model 2 not specifiable due to missing observations
+
+#anova(lmer1Diff, lmer2Diff)
+
+summary(lmer1Diff, corr = FALSE)
+```
+
+Simple slopes:
+lmer (diff ~ type (effect coded) + condition (effect coded): type (dummy coded) + (1|subject))
+
+
+```{r, echo = TRUE, include = TRUE}
+#simple slopes
+lmer1Diff_1 <- lmer(diff ~ type_effect + type_specific:condition_effect + (1|subject), indirectDiff, REML = FALSE)
+summary(lmer1Diff_1, corr = FALSE)
+```
+
+
+```{r, echo = FALSE, include = TRUE}
+#plot1
+indirect_plot1 <- aggregate(diff ~ condition*type_specific, indirectDiff, mean)
+indirect_plot1$se <- aggregate(diff ~ condition*type_specific, indirectDiff, se) [[3]]
+
+barplot1 <- ggplot(indirect_plot1, aes (y = diff, x = type_specific, fill = condition)) +
+  geom_col(position = position_dodge()) +
+  geom_errorbar(aes(ymin= diff - se, ymax= diff + se), width=.2,
+                position=position_dodge(.9)) +
+  ggtitle("AMP\n") + 
+  scale_color_brewer(palette = "Set2") +
+  scale_x_discrete(name = "\n Type") +
+  scale_y_continuous (name = "Difference Scores\n") + 
+  theme_classic() +
+  labs(fill = "Condition") +
+  theme(plot.title = element_text (hjust = 0.5, face = "bold", size = 14),
+        text = element_text(size=14))
+barplot1
+```
+
+
+
+ **(2) Include Valence as a factor, use prop "angenehm" as DV**
+
+response: 1 = "angenehm", 0 = "unangenehm"
+condition (-0.5 = one, 0.5 = many), type (-0.5 = CS, 0.5 = GS), val (-0.5 = neg, 0.5 = pos)
+
+Model with random intercepts for participants and targets:
+glmer(response ~ condition* type* val + (1|subject) + (1|target))
+
+```{r, echo = TRUE, include = TRUE}
+####analysis 2: with valence as additional variable
+
+#random intercept for participants
+glmer1 <- glmer(response ~ val_effect*condition_effect*type_effect 
+                + (1|subject), 
+                indirect, binomial)
+
+#random intercept for targets
+glmer2 <- glmer(response ~ val_effect*condition_effect*type_effect 
+                + (1|subject) + (1|target), 
+                indirect, binomial)
+
+#random slopes for participants (fails to converge)
+'glmer3 <- glmer(response ~ val_effect*condition_effect*type_effect 
+                + (val_effect*type_effect|subject) + (1|target), 
+                indirect, binomial)'
+
+#random slopes for targets (converges, but does not lead to better model fit)
+'glmer4 <- glmer(response ~ val_effect*condition_effect*type_effect 
+              + (val_effect*type_effect|subject) + (val_effect*type_effect|target), 
+              indirect, binomial)'
+anova(glmer1, glmer2)
+#model choice: glmer2
+
+summary(glmer2, corr = FALSE)
+
+```
+
+simple slopes:
+
+Model with random intercepts for participants and random intercepts for targets:
+glmer(response ~ type (effect coded) * val (effect coded) + condition (effect coded)* type (dummy coded) *val(dummy coded) +  (1|subject) + (1|target))
+
+
+```{r, echo = TRUE, include = TRUE}
+#analyze simple slopes (even though three-way-interaction is not significant)
+glmer2_2 <- glmer(response ~ val_effect*type_effect + val:type_specific:condition_effect
+                 + (1|subject) + (1|target), indirect, binomial)
+summary(glmer2_2, corr = FALSE)
+#significant three-way interaction
+```
+
+
+```{r, echo = FALSE, include = TRUE}
+#plot model1
+indirect_plot2 <- aggregate(prop ~ condition + val + type_specific, indirectProp, mean)
+indirect_plot2$se <- aggregate(prop ~ condition + val + type_specific, indirectProp, se)[[4]]
+
+barplot2 <- ggplot(indirect_plot2, aes (y = prop, x = type_specific, fill = condition)) +
+  facet_grid(. ~ val) +
+  geom_col(position = position_dodge()) +
+  geom_errorbar(aes(ymin= prop - se, ymax= prop + se), width=.2,
+                position=position_dodge(.9)) +
+  geom_hline(yintercept = 0.5, col = "black") +
+  ggtitle("Direct Evaluative Ratings\n") + 
+  scale_color_brewer(palette = "Set2") +
+  scale_x_discrete(name = "\n Valence") +
+  scale_y_continuous (name = "Proportion pleasant\n") + 
+  theme_classic() +
+  labs(fill = "Condition") +
+  theme(plot.title = element_text (hjust = 0.5, face = "bold", size = 14),
+        text = element_text(size=14))
+barplot2
+```
+
+
+```{r, echo = FALSE, include = FALSE}
+# recognition memory ------------------------------------------------------
+setwd(DRM)
+
+memory <- read.csv2("memory1.csv", header = TRUE)
+str(memory)
+
+#delete columns we don't need
+memory$X <- NULL
+memory$memoryCorrect <- NULL
+memory$trial_index <- NULL
+memory$task <- NULL
+memory$rt <- NULL
+
+#rename condition
+names(memory)[names(memory) == "condition1"] <- "condition"
+
+#delete trials with timeout
+memory <- memory[!memory$timeout == "true",]
+str(memory)
+#as factor
+as_factor <- c("subject", "condition", "type", "category", "cs_selected")
+
+for (factor in as_factor){
+  memory[, factor] <- as.factor(memory[,factor])
+}
+
+temp <- memory
+
+# omit information we don't need
+temp <- temp[!temp$type =="CSpred", ]
+temp <- temp[!temp$type =="CSnonpred", ]
+temp <- temp[!temp$type =="GSnew", ]
+temp <- temp[!temp$type == "distractor",]
+temp <- temp[!temp$condition == "many_fill",]
+
+# order data
+temp <- temp[order(temp$subject, temp$type),]
+
+## rename many_one to many and one_one to one
+temp$condition <- factor(temp$condition, labels = c("one", "many"), levels = c("one_one", "many_one"))
+
+##categorical variable: generalization as discrete
+temp$type <- factor(temp$type, labels = c("CS", "GS"), levels = c("CS", "GSold"))
+head(temp)
+
+## effect code variables
+#condition, one = 0.5
+temp$condition_effect <- 0
+for (line in 1:dim(temp)[1]){
+  if (temp$condition[line] == "one"){
+    temp$condition_effect[line] <- -0.5
+  } else {
+    temp$condition_effect[line] <- 0.5
+  }
+}
+temp$condition_effect
+
+
+#type, GS = 0.5
+temp$type_effect <- 0
+for (line in 1:dim(temp)[1]){
+  if (temp$type[line] == "CS"){
+    temp$type_effect[line] <- -0.5
+  } else  {
+    temp$type_effect[line] <- 0.5
+  } 
+}
+temp$type_effect
+str(temp)
+
+memory <- temp
+memory$memoryResp <- as.numeric(memory$memoryResp)
+memory <- memory[order(memory$subject, memory$type, memory$category),]
+str(memory)
+
+#for plotting
+memoryProp <- aggregate(memoryResp ~ subject + type + condition, memory, sum)
+memoryProp$length <- aggregate(memoryResp ~ subject + type + condition, memory, length)[[4]]
+memoryProp$prop <- memoryProp$memoryResp/memoryProp$length
+hist(memoryProp$prop)
+head(memoryProp)
+
+##### analysis 1: glmers
+#set default to dummy coding
+options(contrasts = c("contr.treatment", "contr.poly"))
+
+```
+
+**(1) Analysis of Difference scores:**
+
+**H2**: Higher false memory rates when the category size is large, in comparison to the small category size. This translates into a significant category size x stimulus type interaction. We expect this for the recognition memory measure.
+
+
+for memory responses (1 = "old", 0 = "new")
+condition (-0.5 = one, 0.5 = many), type (-0.5 = CS, 0.5 = GS)
+
+Model with random intercepts for participants and stimulus:
+glmer(memoryResp ~ condition* type + (1|subject) + (1|stimulus))
+
+*signifikant interaction: H2*
+
+
+
+```{r, echo = TRUE, include = TRUE}
+#random intercept and slope for participants
+glmer1 <- glmer(memoryResp ~ condition_effect * type_effect
+                + (1|subject), 
+                memory, binomial)
+
+#random intercept and slope for stimuli for participants
+glmer2 <- glmer(memoryResp ~ condition_effect*type_effect 
+                + (1|subject) + (1|cs_selected), 
+                memory, binomial)
+
+#random intercept and slope for stimuli for participants
+glmer3 <- glmer(memoryResp ~ condition_effect*type_effect 
+                + (type_effect|subject) + (1|cs_selected), 
+                memory, binomial)
+
+#random intercept and slope for targets (does not converge)
+glmer4 <- glmer(memoryResp ~ condition_effect*type_effect 
+                + (type_effect|subject) + (type_effect|cs_selected), 
+                memory, binomial)
+
+anova(glmer1, glmer2, glmer3, glmer4)
+
+#model choice: glmer2
+summary(glmer2, corr = FALSE)
+```
+
+simple slopes:
+
+Model with random intercepts for participants and random intercepts for targets:
+glmer(memoryResp ~ type (effect coded) + condition (effect coded)* type (dummy coded) +  (1|subject) + (1|target))
+
+
+```{r, echo = TRUE, include = TRUE}
+#analyze simple slopes (even though three-way-interaction is not significant)
+glmer2_2 <- glmer(memoryResp ~ type_effect + type:condition_effect
+                  + (1|subject) + (1|cs_selected), memory, binomial)
+summary(glmer2_2, corr = FALSE)
+```
+
+
+```{r, echo = FALSE, include = TRUE}
+#plot model1
+memory_plot2 <- aggregate(prop ~ condition + type, memoryProp, mean)
+memory_plot2$se <- aggregate(prop ~ condition + type, memoryProp, se)[[3]]
+
+barplot1 <- ggplot(memory_plot2, aes (y = prop, x = type, fill = condition)) +
+  geom_col(position = position_dodge()) +
+  geom_errorbar(aes(ymin= prop - se, ymax= prop + se), width=.2,
+                position=position_dodge(.9)) +
+  ggtitle("DRM\n") + 
+  scale_color_brewer(palette = "Set2") +
+  scale_x_discrete(name = "\n Type") +
+  scale_y_continuous (name = "Proportion 'old'\n") + 
+  theme_classic() +
+  labs(fill = "Condition") +
+  theme(plot.title = element_text (hjust = 0.5, face = "bold", size = 14),
+        text = element_text(size=14))
+barplot1
+
+```
+

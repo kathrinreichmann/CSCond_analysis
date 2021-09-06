@@ -1,0 +1,519 @@
+"success","trial_type","trial_index","time_elapsed","internal_node_id","subject","condition","condition_code","measure","measure_code","codeword","gender","age","education","chinese","fach","handedness","comment","hinschauen","ablenkung","gewissenhaft","rt","url","responses","stimulus","key_press","val","type","type_specific","category","cs_selected","response","target","task","indirect","nr_pres"
+"true","fullscreen","0","4961","0.0-0.0","fr2l4n7yqq","one_one","1","direct_first","1","er05im13","0","33","2","1","1","1","Kurzweilig und spannend!
+Eine Auslösung/Hypothesen wäre noch interessant. ","0","1","0","","","","","","","","","","","","","","",""
+"","external-html","1","60576","0.0-1.0","fr2l4n7yqq","one_one","1","direct_first","1","er05im13","0","33","2","1","1","1","Kurzweilig und spannend!
+Eine Auslösung/Hypothesen wäre noch interessant. ","0","1","0","55565.13500000006","text/information.html","","","","","","","","","","","","",""
+"","external-html","2","100845","0.0-2.0","fr2l4n7yqq","one_one","1","direct_first","1","er05im13","0","33","2","1","1","1","Kurzweilig und spannend!
+Eine Auslösung/Hypothesen wäre noch interessant. ","0","1","0","40198.30999999998","text/consent.html","","","","","","","","","","","","",""
+"","survey-html-form","3","141443","0.0-3.0","fr2l4n7yqq","one_one","1","direct_first","1","er05im13","0","33","2","1","1","1","Kurzweilig und spannend!
+Eine Auslösung/Hypothesen wäre noch interessant. ","0","1","0","40596.07500000016","","{""codeword_enter"":""er05im13""}","","","","","","","","","","","",""
+"","survey-html-form","4","162045","0.0-4.0","fr2l4n7yqq","one_one","1","direct_first","1","er05im13","0","33","2","1","1","1","Kurzweilig und spannend!
+Eine Auslösung/Hypothesen wäre noch interessant. ","0","1","0","20599.895000000048","","{""age"":""33"",""education"":""2"",""subject"":""1"",""gender"":""0"",""handedness"":""1"",""chinese"":""1""}","","","","","","","","","","","",""
+"","survey-html-form","5","175806","0.0-5.0","fr2l4n7yqq","one_one","1","direct_first","1","er05im13","0","33","2","1","1","1","Kurzweilig und spannend!
+Eine Auslösung/Hypothesen wäre noch interessant. ","0","1","0","13758.984999999957","","{}","","","","","","","","","","","",""
+"","html-keyboard-response","6","179811","0.0-6.0-0.0-0.0","fr2l4n7yqq","one_one","1","direct_first","1","er05im13","0","33","2","1","1","1","Kurzweilig und spannend!
+Eine Auslösung/Hypothesen wäre noch interessant. ","0","1","0","null","","","<div class = 'row'><div class = 'column'><img src = 'category4/CS8.png' width = '70%;'></div><div class = 'column'><img src = 'uspos/5831.bmp' width = '100%;'></div></div>","null","pos","CS","CS","4","category4/CS8.png","","","","",""
+"","html-keyboard-response","7","182324","0.0-6.0-0.0-0.1","fr2l4n7yqq","one_one","1","direct_first","1","er05im13","0","33","2","1","1","1","Kurzweilig und spannend!
+Eine Auslösung/Hypothesen wäre noch interessant. ","0","1","0","null","","","<div class = 'row'><div class = 'column'><img src = 'uspos/1463.bmp' width = '100%;'></div><div class = 'column'><img src = 'category3/CS6.png' width = '70%;'></div></div>","null","pos","CS","CS","3","category3/CS6.png","","","","",""
+"","html-keyboard-response","8","184833","0.0-6.0-0.0-0.2","fr2l4n7yqq","one_one","1","direct_first","1","er05im13","0","33","2","1","1","1","Kurzweilig und spannend!
+Eine Auslösung/Hypothesen wäre noch interessant. ","0","1","0","null","","","<div class = 'row'><div class = 'column'><img src = 'usneg/1280.bmp' width = '100%;'></div><div class = 'column'><img src = 'category1/CS3.png' width = '70%;'></div></div>","null","neg","CS","CS","1","category1/CS3.png","","","","",""
+"","html-keyboard-response","9","187341","0.0-6.0-0.0-0.3","fr2l4n7yqq","one_one","1","direct_first","1","er05im13","0","33","2","1","1","1","Kurzweilig und spannend!
+Eine Auslösung/Hypothesen wäre noch interessant. ","0","1","0","null","","","<div class = 'row'><div class = 'column'><img src = 'category3/CS6.png' width = '70%;'></div><div class = 'column'><img src = 'uspos/1463.bmp' width = '100%;'></div></div>","null","pos","CS","CS","3","category3/CS6.png","","","","",""
+"","html-keyboard-response","10","189844","0.0-6.0-0.0-0.4","fr2l4n7yqq","one_one","1","direct_first","1","er05im13","0","33","2","1","1","1","Kurzweilig und spannend!
+Eine Auslösung/Hypothesen wäre noch interessant. ","0","1","0","null","","","<div class = 'row'><div class = 'column'><img src = 'uspos/5831.bmp' width = '100%;'></div><div class = 'column'><img src = 'category4/CS8.png' width = '70%;'></div></div>","null","pos","CS","CS","4","category4/CS8.png","","","","",""
+"","html-keyboard-response","11","192356","0.0-6.0-0.0-0.5","fr2l4n7yqq","one_one","1","direct_first","1","er05im13","0","33","2","1","1","1","Kurzweilig und spannend!
+Eine Auslösung/Hypothesen wäre noch interessant. ","0","1","0","null","","","<div class = 'row'><div class = 'column'><img src = 'usneg/1280.bmp' width = '100%;'></div><div class = 'column'><img src = 'category1/CS3.png' width = '70%;'></div></div>","null","neg","CS","CS","1","category1/CS3.png","","","","",""
+"","html-keyboard-response","12","194868","0.0-6.0-0.0-0.6","fr2l4n7yqq","one_one","1","direct_first","1","er05im13","0","33","2","1","1","1","Kurzweilig und spannend!
+Eine Auslösung/Hypothesen wäre noch interessant. ","0","1","0","null","","","<div class = 'row'><div class = 'column'><img src = 'category2/CS3.png' width = '70%;'></div><div class = 'column'><img src = 'usneg/6212.bmp' width = '100%;'></div></div>","null","neg","CS","CS","2","category2/CS3.png","","","","",""
+"","html-keyboard-response","13","197376","0.0-6.0-0.0-0.7","fr2l4n7yqq","one_one","1","direct_first","1","er05im13","0","33","2","1","1","1","Kurzweilig und spannend!
+Eine Auslösung/Hypothesen wäre noch interessant. ","0","1","0","null","","","<div class = 'row'><div class = 'column'><img src = 'category4/CS8.png' width = '70%;'></div><div class = 'column'><img src = 'uspos/5831.bmp' width = '100%;'></div></div>","null","pos","CS","CS","4","category4/CS8.png","","","","",""
+"","html-keyboard-response","14","199889","0.0-6.0-0.0-0.8","fr2l4n7yqq","one_one","1","direct_first","1","er05im13","0","33","2","1","1","1","Kurzweilig und spannend!
+Eine Auslösung/Hypothesen wäre noch interessant. ","0","1","0","null","","","<div class = 'row'><div class = 'column'><img src = 'usneg/6212.bmp' width = '100%;'></div><div class = 'column'><img src = 'category2/CS3.png' width = '70%;'></div></div>","null","neg","CS","CS","2","category2/CS3.png","","","","",""
+"","html-keyboard-response","15","202401","0.0-6.0-0.0-0.9","fr2l4n7yqq","one_one","1","direct_first","1","er05im13","0","33","2","1","1","1","Kurzweilig und spannend!
+Eine Auslösung/Hypothesen wäre noch interessant. ","0","1","0","null","","","<div class = 'row'><div class = 'column'><img src = 'category1/CS3.png' width = '70%;'></div><div class = 'column'><img src = 'usneg/1280.bmp' width = '100%;'></div></div>","null","neg","CS","CS","1","category1/CS3.png","","","","",""
+"","html-keyboard-response","16","204913","0.0-6.0-0.0-0.10","fr2l4n7yqq","one_one","1","direct_first","1","er05im13","0","33","2","1","1","1","Kurzweilig und spannend!
+Eine Auslösung/Hypothesen wäre noch interessant. ","0","1","0","null","","","<div class = 'row'><div class = 'column'><img src = 'usneg/6212.bmp' width = '100%;'></div><div class = 'column'><img src = 'category2/CS3.png' width = '70%;'></div></div>","null","neg","CS","CS","2","category2/CS3.png","","","","",""
+"","html-keyboard-response","17","207425","0.0-6.0-0.0-0.11","fr2l4n7yqq","one_one","1","direct_first","1","er05im13","0","33","2","1","1","1","Kurzweilig und spannend!
+Eine Auslösung/Hypothesen wäre noch interessant. ","0","1","0","null","","","<div class = 'row'><div class = 'column'><img src = 'category1/CS3.png' width = '70%;'></div><div class = 'column'><img src = 'usneg/1280.bmp' width = '100%;'></div></div>","null","neg","CS","CS","1","category1/CS3.png","","","","",""
+"","html-keyboard-response","18","209938","0.0-6.0-0.0-0.12","fr2l4n7yqq","one_one","1","direct_first","1","er05im13","0","33","2","1","1","1","Kurzweilig und spannend!
+Eine Auslösung/Hypothesen wäre noch interessant. ","0","1","0","null","","","<div class = 'row'><div class = 'column'><img src = 'uspos/1463.bmp' width = '100%;'></div><div class = 'column'><img src = 'category3/CS6.png' width = '70%;'></div></div>","null","pos","CS","CS","3","category3/CS6.png","","","","",""
+"","html-keyboard-response","19","212450","0.0-6.0-0.0-0.13","fr2l4n7yqq","one_one","1","direct_first","1","er05im13","0","33","2","1","1","1","Kurzweilig und spannend!
+Eine Auslösung/Hypothesen wäre noch interessant. ","0","1","0","null","","","<div class = 'row'><div class = 'column'><img src = 'uspos/5831.bmp' width = '100%;'></div><div class = 'column'><img src = 'category4/CS8.png' width = '70%;'></div></div>","null","pos","CS","CS","4","category4/CS8.png","","","","",""
+"","html-keyboard-response","20","214963","0.0-6.0-0.0-0.14","fr2l4n7yqq","one_one","1","direct_first","1","er05im13","0","33","2","1","1","1","Kurzweilig und spannend!
+Eine Auslösung/Hypothesen wäre noch interessant. ","0","1","0","null","","","<div class = 'row'><div class = 'column'><img src = 'uspos/1463.bmp' width = '100%;'></div><div class = 'column'><img src = 'category3/CS6.png' width = '70%;'></div></div>","null","pos","CS","CS","3","category3/CS6.png","","","","",""
+"","html-keyboard-response","21","217475","0.0-6.0-0.0-0.15","fr2l4n7yqq","one_one","1","direct_first","1","er05im13","0","33","2","1","1","1","Kurzweilig und spannend!
+Eine Auslösung/Hypothesen wäre noch interessant. ","0","1","0","null","","","<div class = 'row'><div class = 'column'><img src = 'usneg/6212.bmp' width = '100%;'></div><div class = 'column'><img src = 'category2/CS3.png' width = '70%;'></div></div>","null","neg","CS","CS","2","category2/CS3.png","","","","",""
+"","html-keyboard-response","22","219986","0.0-6.0-0.0-0.16","fr2l4n7yqq","one_one","1","direct_first","1","er05im13","0","33","2","1","1","1","Kurzweilig und spannend!
+Eine Auslösung/Hypothesen wäre noch interessant. ","0","1","0","null","","","<div class = 'row'><div class = 'column'><img src = 'uspos/5831.bmp' width = '100%;'></div><div class = 'column'><img src = 'category4/CS8.png' width = '70%;'></div></div>","null","pos","CS","CS","4","category4/CS8.png","","","","",""
+"","html-keyboard-response","23","222494","0.0-6.0-0.0-0.17","fr2l4n7yqq","one_one","1","direct_first","1","er05im13","0","33","2","1","1","1","Kurzweilig und spannend!
+Eine Auslösung/Hypothesen wäre noch interessant. ","0","1","0","null","","","<div class = 'row'><div class = 'column'><img src = 'category3/CS6.png' width = '70%;'></div><div class = 'column'><img src = 'uspos/1463.bmp' width = '100%;'></div></div>","null","pos","CS","CS","3","category3/CS6.png","","","","",""
+"","html-keyboard-response","24","225006","0.0-6.0-0.0-0.18","fr2l4n7yqq","one_one","1","direct_first","1","er05im13","0","33","2","1","1","1","Kurzweilig und spannend!
+Eine Auslösung/Hypothesen wäre noch interessant. ","0","1","0","null","","","<div class = 'row'><div class = 'column'><img src = 'usneg/1280.bmp' width = '100%;'></div><div class = 'column'><img src = 'category1/CS3.png' width = '70%;'></div></div>","null","neg","CS","CS","1","category1/CS3.png","","","","",""
+"","html-keyboard-response","25","227518","0.0-6.0-0.0-0.19","fr2l4n7yqq","one_one","1","direct_first","1","er05im13","0","33","2","1","1","1","Kurzweilig und spannend!
+Eine Auslösung/Hypothesen wäre noch interessant. ","0","1","0","null","","","<div class = 'row'><div class = 'column'><img src = 'usneg/6212.bmp' width = '100%;'></div><div class = 'column'><img src = 'category2/CS3.png' width = '70%;'></div></div>","null","neg","CS","CS","2","category2/CS3.png","","","","",""
+"","survey-html-form","26","231610","0.0-6.0-1.0","fr2l4n7yqq","one_one","1","direct_first","1","er05im13","0","33","2","1","1","1","Kurzweilig und spannend!
+Eine Auslösung/Hypothesen wäre noch interessant. ","0","1","0","3585.3150000000605","","{}","","","","","","","","","","","",""
+"","html-keyboard-response","27","235619","0.0-6.0-2.0-0.0","fr2l4n7yqq","one_one","1","direct_first","1","er05im13","0","33","2","1","1","1","Kurzweilig und spannend!
+Eine Auslösung/Hypothesen wäre noch interessant. ","0","1","0","null","","","<div class = 'row'><div class = 'column'><img src = 'uspos/5831.bmp' width = '100%;'></div><div class = 'column'><img src = 'category4/CS8.png' width = '70%;'></div></div>","null","pos","CS","CS","4","category4/CS8.png","","","","",""
+"","html-keyboard-response","28","238132","0.0-6.0-2.0-0.1","fr2l4n7yqq","one_one","1","direct_first","1","er05im13","0","33","2","1","1","1","Kurzweilig und spannend!
+Eine Auslösung/Hypothesen wäre noch interessant. ","0","1","0","null","","","<div class = 'row'><div class = 'column'><img src = 'usneg/6212.bmp' width = '100%;'></div><div class = 'column'><img src = 'category2/CS3.png' width = '70%;'></div></div>","null","neg","CS","CS","2","category2/CS3.png","","","","",""
+"","html-keyboard-response","29","240644","0.0-6.0-2.0-0.2","fr2l4n7yqq","one_one","1","direct_first","1","er05im13","0","33","2","1","1","1","Kurzweilig und spannend!
+Eine Auslösung/Hypothesen wäre noch interessant. ","0","1","0","null","","","<div class = 'row'><div class = 'column'><img src = 'category1/CS3.png' width = '70%;'></div><div class = 'column'><img src = 'usneg/1280.bmp' width = '100%;'></div></div>","null","neg","CS","CS","1","category1/CS3.png","","","","",""
+"","html-keyboard-response","30","243153","0.0-6.0-2.0-0.3","fr2l4n7yqq","one_one","1","direct_first","1","er05im13","0","33","2","1","1","1","Kurzweilig und spannend!
+Eine Auslösung/Hypothesen wäre noch interessant. ","0","1","0","null","","","<div class = 'row'><div class = 'column'><img src = 'category2/CS3.png' width = '70%;'></div><div class = 'column'><img src = 'usneg/6212.bmp' width = '100%;'></div></div>","null","neg","CS","CS","2","category2/CS3.png","","","","",""
+"","html-keyboard-response","31","245663","0.0-6.0-2.0-0.4","fr2l4n7yqq","one_one","1","direct_first","1","er05im13","0","33","2","1","1","1","Kurzweilig und spannend!
+Eine Auslösung/Hypothesen wäre noch interessant. ","0","1","0","null","","","<div class = 'row'><div class = 'column'><img src = 'usneg/1280.bmp' width = '100%;'></div><div class = 'column'><img src = 'category1/CS3.png' width = '70%;'></div></div>","null","neg","CS","CS","1","category1/CS3.png","","","","",""
+"","html-keyboard-response","32","248176","0.0-6.0-2.0-0.5","fr2l4n7yqq","one_one","1","direct_first","1","er05im13","0","33","2","1","1","1","Kurzweilig und spannend!
+Eine Auslösung/Hypothesen wäre noch interessant. ","0","1","0","null","","","<div class = 'row'><div class = 'column'><img src = 'category2/CS3.png' width = '70%;'></div><div class = 'column'><img src = 'usneg/6212.bmp' width = '100%;'></div></div>","null","neg","CS","CS","2","category2/CS3.png","","","","",""
+"","html-keyboard-response","33","250687","0.0-6.0-2.0-0.6","fr2l4n7yqq","one_one","1","direct_first","1","er05im13","0","33","2","1","1","1","Kurzweilig und spannend!
+Eine Auslösung/Hypothesen wäre noch interessant. ","0","1","0","null","","","<div class = 'row'><div class = 'column'><img src = 'category4/CS8.png' width = '70%;'></div><div class = 'column'><img src = 'uspos/5831.bmp' width = '100%;'></div></div>","null","pos","CS","CS","4","category4/CS8.png","","","","",""
+"","html-keyboard-response","34","253199","0.0-6.0-2.0-0.7","fr2l4n7yqq","one_one","1","direct_first","1","er05im13","0","33","2","1","1","1","Kurzweilig und spannend!
+Eine Auslösung/Hypothesen wäre noch interessant. ","0","1","0","null","","","<div class = 'row'><div class = 'column'><img src = 'usneg/6212.bmp' width = '100%;'></div><div class = 'column'><img src = 'category2/CS3.png' width = '70%;'></div></div>","null","neg","CS","CS","2","category2/CS3.png","","","","",""
+"","html-keyboard-response","35","255708","0.0-6.0-2.0-0.8","fr2l4n7yqq","one_one","1","direct_first","1","er05im13","0","33","2","1","1","1","Kurzweilig und spannend!
+Eine Auslösung/Hypothesen wäre noch interessant. ","0","1","0","null","","","<div class = 'row'><div class = 'column'><img src = 'uspos/1463.bmp' width = '100%;'></div><div class = 'column'><img src = 'category3/CS6.png' width = '70%;'></div></div>","null","pos","CS","CS","3","category3/CS6.png","","","","",""
+"","html-keyboard-response","36","258220","0.0-6.0-2.0-0.9","fr2l4n7yqq","one_one","1","direct_first","1","er05im13","0","33","2","1","1","1","Kurzweilig und spannend!
+Eine Auslösung/Hypothesen wäre noch interessant. ","0","1","0","null","","","<div class = 'row'><div class = 'column'><img src = 'usneg/1280.bmp' width = '100%;'></div><div class = 'column'><img src = 'category1/CS3.png' width = '70%;'></div></div>","null","neg","CS","CS","1","category1/CS3.png","","","","",""
+"","html-keyboard-response","37","260731","0.0-6.0-2.0-0.10","fr2l4n7yqq","one_one","1","direct_first","1","er05im13","0","33","2","1","1","1","Kurzweilig und spannend!
+Eine Auslösung/Hypothesen wäre noch interessant. ","0","1","0","null","","","<div class = 'row'><div class = 'column'><img src = 'uspos/5831.bmp' width = '100%;'></div><div class = 'column'><img src = 'category4/CS8.png' width = '70%;'></div></div>","null","pos","CS","CS","4","category4/CS8.png","","","","",""
+"","html-keyboard-response","38","263242","0.0-6.0-2.0-0.11","fr2l4n7yqq","one_one","1","direct_first","1","er05im13","0","33","2","1","1","1","Kurzweilig und spannend!
+Eine Auslösung/Hypothesen wäre noch interessant. ","0","1","0","null","","","<div class = 'row'><div class = 'column'><img src = 'category3/CS6.png' width = '70%;'></div><div class = 'column'><img src = 'uspos/1463.bmp' width = '100%;'></div></div>","null","pos","CS","CS","3","category3/CS6.png","","","","",""
+"","html-keyboard-response","39","265750","0.0-6.0-2.0-0.12","fr2l4n7yqq","one_one","1","direct_first","1","er05im13","0","33","2","1","1","1","Kurzweilig und spannend!
+Eine Auslösung/Hypothesen wäre noch interessant. ","0","1","0","null","","","<div class = 'row'><div class = 'column'><img src = 'category4/CS8.png' width = '70%;'></div><div class = 'column'><img src = 'uspos/5831.bmp' width = '100%;'></div></div>","null","pos","CS","CS","4","category4/CS8.png","","","","",""
+"","html-keyboard-response","40","268263","0.0-6.0-2.0-0.13","fr2l4n7yqq","one_one","1","direct_first","1","er05im13","0","33","2","1","1","1","Kurzweilig und spannend!
+Eine Auslösung/Hypothesen wäre noch interessant. ","0","1","0","null","","","<div class = 'row'><div class = 'column'><img src = 'uspos/1463.bmp' width = '100%;'></div><div class = 'column'><img src = 'category3/CS6.png' width = '70%;'></div></div>","null","pos","CS","CS","3","category3/CS6.png","","","","",""
+"","html-keyboard-response","41","270775","0.0-6.0-2.0-0.14","fr2l4n7yqq","one_one","1","direct_first","1","er05im13","0","33","2","1","1","1","Kurzweilig und spannend!
+Eine Auslösung/Hypothesen wäre noch interessant. ","0","1","0","null","","","<div class = 'row'><div class = 'column'><img src = 'usneg/1280.bmp' width = '100%;'></div><div class = 'column'><img src = 'category1/CS3.png' width = '70%;'></div></div>","null","neg","CS","CS","1","category1/CS3.png","","","","",""
+"","html-keyboard-response","42","273282","0.0-6.0-2.0-0.15","fr2l4n7yqq","one_one","1","direct_first","1","er05im13","0","33","2","1","1","1","Kurzweilig und spannend!
+Eine Auslösung/Hypothesen wäre noch interessant. ","0","1","0","null","","","<div class = 'row'><div class = 'column'><img src = 'usneg/6212.bmp' width = '100%;'></div><div class = 'column'><img src = 'category2/CS3.png' width = '70%;'></div></div>","null","neg","CS","CS","2","category2/CS3.png","","","","",""
+"","html-keyboard-response","43","275794","0.0-6.0-2.0-0.16","fr2l4n7yqq","one_one","1","direct_first","1","er05im13","0","33","2","1","1","1","Kurzweilig und spannend!
+Eine Auslösung/Hypothesen wäre noch interessant. ","0","1","0","null","","","<div class = 'row'><div class = 'column'><img src = 'uspos/1463.bmp' width = '100%;'></div><div class = 'column'><img src = 'category3/CS6.png' width = '70%;'></div></div>","null","pos","CS","CS","3","category3/CS6.png","","","","",""
+"","html-keyboard-response","44","278298","0.0-6.0-2.0-0.17","fr2l4n7yqq","one_one","1","direct_first","1","er05im13","0","33","2","1","1","1","Kurzweilig und spannend!
+Eine Auslösung/Hypothesen wäre noch interessant. ","0","1","0","null","","","<div class = 'row'><div class = 'column'><img src = 'usneg/1280.bmp' width = '100%;'></div><div class = 'column'><img src = 'category1/CS3.png' width = '70%;'></div></div>","null","neg","CS","CS","1","category1/CS3.png","","","","",""
+"","html-keyboard-response","45","280810","0.0-6.0-2.0-0.18","fr2l4n7yqq","one_one","1","direct_first","1","er05im13","0","33","2","1","1","1","Kurzweilig und spannend!
+Eine Auslösung/Hypothesen wäre noch interessant. ","0","1","0","null","","","<div class = 'row'><div class = 'column'><img src = 'category4/CS8.png' width = '70%;'></div><div class = 'column'><img src = 'uspos/5831.bmp' width = '100%;'></div></div>","null","pos","CS","CS","4","category4/CS8.png","","","","",""
+"","html-keyboard-response","46","283323","0.0-6.0-2.0-0.19","fr2l4n7yqq","one_one","1","direct_first","1","er05im13","0","33","2","1","1","1","Kurzweilig und spannend!
+Eine Auslösung/Hypothesen wäre noch interessant. ","0","1","0","null","","","<div class = 'row'><div class = 'column'><img src = 'uspos/1463.bmp' width = '100%;'></div><div class = 'column'><img src = 'category3/CS6.png' width = '70%;'></div></div>","null","pos","CS","CS","3","category3/CS6.png","","","","",""
+"","survey-html-form","47","286846","0.0-6.0-3.0","fr2l4n7yqq","one_one","1","direct_first","1","er05im13","0","33","2","1","1","1","Kurzweilig und spannend!
+Eine Auslösung/Hypothesen wäre noch interessant. ","0","1","0","3020.070000000007","","{}","","","","","","","","","","","",""
+"","html-keyboard-response","48","290856","0.0-6.0-4.0-0.0","fr2l4n7yqq","one_one","1","direct_first","1","er05im13","0","33","2","1","1","1","Kurzweilig und spannend!
+Eine Auslösung/Hypothesen wäre noch interessant. ","0","1","0","null","","","<div class = 'row'><div class = 'column'><img src = 'usneg/6212.bmp' width = '100%;'></div><div class = 'column'><img src = 'category2/CS3.png' width = '70%;'></div></div>","null","neg","CS","CS","2","category2/CS3.png","","","","",""
+"","html-keyboard-response","49","293363","0.0-6.0-4.0-0.1","fr2l4n7yqq","one_one","1","direct_first","1","er05im13","0","33","2","1","1","1","Kurzweilig und spannend!
+Eine Auslösung/Hypothesen wäre noch interessant. ","0","1","0","null","","","<div class = 'row'><div class = 'column'><img src = 'uspos/1463.bmp' width = '100%;'></div><div class = 'column'><img src = 'category3/CS6.png' width = '70%;'></div></div>","null","pos","CS","CS","3","category3/CS6.png","","","","",""
+"","html-keyboard-response","50","295876","0.0-6.0-4.0-0.2","fr2l4n7yqq","one_one","1","direct_first","1","er05im13","0","33","2","1","1","1","Kurzweilig und spannend!
+Eine Auslösung/Hypothesen wäre noch interessant. ","0","1","0","null","","","<div class = 'row'><div class = 'column'><img src = 'category2/CS3.png' width = '70%;'></div><div class = 'column'><img src = 'usneg/6212.bmp' width = '100%;'></div></div>","null","neg","CS","CS","2","category2/CS3.png","","","","",""
+"","html-keyboard-response","51","298388","0.0-6.0-4.0-0.3","fr2l4n7yqq","one_one","1","direct_first","1","er05im13","0","33","2","1","1","1","Kurzweilig und spannend!
+Eine Auslösung/Hypothesen wäre noch interessant. ","0","1","0","null","","","<div class = 'row'><div class = 'column'><img src = 'usneg/1280.bmp' width = '100%;'></div><div class = 'column'><img src = 'category1/CS3.png' width = '70%;'></div></div>","null","neg","CS","CS","1","category1/CS3.png","","","","",""
+"","html-keyboard-response","52","300897","0.0-6.0-4.0-0.4","fr2l4n7yqq","one_one","1","direct_first","1","er05im13","0","33","2","1","1","1","Kurzweilig und spannend!
+Eine Auslösung/Hypothesen wäre noch interessant. ","0","1","0","null","","","<div class = 'row'><div class = 'column'><img src = 'category3/CS6.png' width = '70%;'></div><div class = 'column'><img src = 'uspos/1463.bmp' width = '100%;'></div></div>","null","pos","CS","CS","3","category3/CS6.png","","","","",""
+"","html-keyboard-response","53","303405","0.0-6.0-4.0-0.5","fr2l4n7yqq","one_one","1","direct_first","1","er05im13","0","33","2","1","1","1","Kurzweilig und spannend!
+Eine Auslösung/Hypothesen wäre noch interessant. ","0","1","0","null","","","<div class = 'row'><div class = 'column'><img src = 'category4/CS8.png' width = '70%;'></div><div class = 'column'><img src = 'uspos/5831.bmp' width = '100%;'></div></div>","null","pos","CS","CS","4","category4/CS8.png","","","","",""
+"","html-keyboard-response","54","305917","0.0-6.0-4.0-0.6","fr2l4n7yqq","one_one","1","direct_first","1","er05im13","0","33","2","1","1","1","Kurzweilig und spannend!
+Eine Auslösung/Hypothesen wäre noch interessant. ","0","1","0","null","","","<div class = 'row'><div class = 'column'><img src = 'category1/CS3.png' width = '70%;'></div><div class = 'column'><img src = 'usneg/1280.bmp' width = '100%;'></div></div>","null","neg","CS","CS","1","category1/CS3.png","","","","",""
+"","html-keyboard-response","55","308428","0.0-6.0-4.0-0.7","fr2l4n7yqq","one_one","1","direct_first","1","er05im13","0","33","2","1","1","1","Kurzweilig und spannend!
+Eine Auslösung/Hypothesen wäre noch interessant. ","0","1","0","null","","","<div class = 'row'><div class = 'column'><img src = 'uspos/1463.bmp' width = '100%;'></div><div class = 'column'><img src = 'category3/CS6.png' width = '70%;'></div></div>","null","pos","CS","CS","3","category3/CS6.png","","","","",""
+"","html-keyboard-response","56","310932","0.0-6.0-4.0-0.8","fr2l4n7yqq","one_one","1","direct_first","1","er05im13","0","33","2","1","1","1","Kurzweilig und spannend!
+Eine Auslösung/Hypothesen wäre noch interessant. ","0","1","0","null","","","<div class = 'row'><div class = 'column'><img src = 'usneg/6212.bmp' width = '100%;'></div><div class = 'column'><img src = 'category2/CS3.png' width = '70%;'></div></div>","null","neg","CS","CS","2","category2/CS3.png","","","","",""
+"","html-keyboard-response","57","313444","0.0-6.0-4.0-0.9","fr2l4n7yqq","one_one","1","direct_first","1","er05im13","0","33","2","1","1","1","Kurzweilig und spannend!
+Eine Auslösung/Hypothesen wäre noch interessant. ","0","1","0","null","","","<div class = 'row'><div class = 'column'><img src = 'uspos/1463.bmp' width = '100%;'></div><div class = 'column'><img src = 'category3/CS6.png' width = '70%;'></div></div>","null","pos","CS","CS","3","category3/CS6.png","","","","",""
+"","html-keyboard-response","58","315952","0.0-6.0-4.0-0.10","fr2l4n7yqq","one_one","1","direct_first","1","er05im13","0","33","2","1","1","1","Kurzweilig und spannend!
+Eine Auslösung/Hypothesen wäre noch interessant. ","0","1","0","null","","","<div class = 'row'><div class = 'column'><img src = 'usneg/1280.bmp' width = '100%;'></div><div class = 'column'><img src = 'category1/CS3.png' width = '70%;'></div></div>","null","neg","CS","CS","1","category1/CS3.png","","","","",""
+"","html-keyboard-response","59","318456","0.0-6.0-4.0-0.11","fr2l4n7yqq","one_one","1","direct_first","1","er05im13","0","33","2","1","1","1","Kurzweilig und spannend!
+Eine Auslösung/Hypothesen wäre noch interessant. ","0","1","0","null","","","<div class = 'row'><div class = 'column'><img src = 'category3/CS6.png' width = '70%;'></div><div class = 'column'><img src = 'uspos/1463.bmp' width = '100%;'></div></div>","null","pos","CS","CS","3","category3/CS6.png","","","","",""
+"","html-keyboard-response","60","320968","0.0-6.0-4.0-0.12","fr2l4n7yqq","one_one","1","direct_first","1","er05im13","0","33","2","1","1","1","Kurzweilig und spannend!
+Eine Auslösung/Hypothesen wäre noch interessant. ","0","1","0","null","","","<div class = 'row'><div class = 'column'><img src = 'usneg/6212.bmp' width = '100%;'></div><div class = 'column'><img src = 'category2/CS3.png' width = '70%;'></div></div>","null","neg","CS","CS","2","category2/CS3.png","","","","",""
+"","html-keyboard-response","61","323480","0.0-6.0-4.0-0.13","fr2l4n7yqq","one_one","1","direct_first","1","er05im13","0","33","2","1","1","1","Kurzweilig und spannend!
+Eine Auslösung/Hypothesen wäre noch interessant. ","0","1","0","null","","","<div class = 'row'><div class = 'column'><img src = 'category4/CS8.png' width = '70%;'></div><div class = 'column'><img src = 'uspos/5831.bmp' width = '100%;'></div></div>","null","pos","CS","CS","4","category4/CS8.png","","","","",""
+"","html-keyboard-response","62","325993","0.0-6.0-4.0-0.14","fr2l4n7yqq","one_one","1","direct_first","1","er05im13","0","33","2","1","1","1","Kurzweilig und spannend!
+Eine Auslösung/Hypothesen wäre noch interessant. ","0","1","0","null","","","<div class = 'row'><div class = 'column'><img src = 'usneg/6212.bmp' width = '100%;'></div><div class = 'column'><img src = 'category2/CS3.png' width = '70%;'></div></div>","null","neg","CS","CS","2","category2/CS3.png","","","","",""
+"","html-keyboard-response","63","328502","0.0-6.0-4.0-0.15","fr2l4n7yqq","one_one","1","direct_first","1","er05im13","0","33","2","1","1","1","Kurzweilig und spannend!
+Eine Auslösung/Hypothesen wäre noch interessant. ","0","1","0","null","","","<div class = 'row'><div class = 'column'><img src = 'uspos/5831.bmp' width = '100%;'></div><div class = 'column'><img src = 'category4/CS8.png' width = '70%;'></div></div>","null","pos","CS","CS","4","category4/CS8.png","","","","",""
+"","html-keyboard-response","64","331010","0.0-6.0-4.0-0.16","fr2l4n7yqq","one_one","1","direct_first","1","er05im13","0","33","2","1","1","1","Kurzweilig und spannend!
+Eine Auslösung/Hypothesen wäre noch interessant. ","0","1","0","null","","","<div class = 'row'><div class = 'column'><img src = 'usneg/1280.bmp' width = '100%;'></div><div class = 'column'><img src = 'category1/CS3.png' width = '70%;'></div></div>","null","neg","CS","CS","1","category1/CS3.png","","","","",""
+"","html-keyboard-response","65","333517","0.0-6.0-4.0-0.17","fr2l4n7yqq","one_one","1","direct_first","1","er05im13","0","33","2","1","1","1","Kurzweilig und spannend!
+Eine Auslösung/Hypothesen wäre noch interessant. ","0","1","0","null","","","<div class = 'row'><div class = 'column'><img src = 'category4/CS8.png' width = '70%;'></div><div class = 'column'><img src = 'uspos/5831.bmp' width = '100%;'></div></div>","null","pos","CS","CS","4","category4/CS8.png","","","","",""
+"","html-keyboard-response","66","336030","0.0-6.0-4.0-0.18","fr2l4n7yqq","one_one","1","direct_first","1","er05im13","0","33","2","1","1","1","Kurzweilig und spannend!
+Eine Auslösung/Hypothesen wäre noch interessant. ","0","1","0","null","","","<div class = 'row'><div class = 'column'><img src = 'usneg/1280.bmp' width = '100%;'></div><div class = 'column'><img src = 'category1/CS3.png' width = '70%;'></div></div>","null","neg","CS","CS","1","category1/CS3.png","","","","",""
+"","html-keyboard-response","67","338540","0.0-6.0-4.0-0.19","fr2l4n7yqq","one_one","1","direct_first","1","er05im13","0","33","2","1","1","1","Kurzweilig und spannend!
+Eine Auslösung/Hypothesen wäre noch interessant. ","0","1","0","null","","","<div class = 'row'><div class = 'column'><img src = 'uspos/5831.bmp' width = '100%;'></div><div class = 'column'><img src = 'category4/CS8.png' width = '70%;'></div></div>","null","pos","CS","CS","4","category4/CS8.png","","","","",""
+"","survey-html-form","68","340741","0.0-6.0-5.0","fr2l4n7yqq","one_one","1","direct_first","1","er05im13","0","33","2","1","1","1","Kurzweilig und spannend!
+Eine Auslösung/Hypothesen wäre noch interessant. ","0","1","0","1698.4700000000303","","{}","","","","","","","","","","","",""
+"","html-keyboard-response","69","344752","0.0-6.0-6.0-0.0","fr2l4n7yqq","one_one","1","direct_first","1","er05im13","0","33","2","1","1","1","Kurzweilig und spannend!
+Eine Auslösung/Hypothesen wäre noch interessant. ","0","1","0","null","","","<div class = 'row'><div class = 'column'><img src = 'usneg/6212.bmp' width = '100%;'></div><div class = 'column'><img src = 'category2/CS3.png' width = '70%;'></div></div>","null","neg","CS","CS","2","category2/CS3.png","","","","",""
+"","html-keyboard-response","70","347261","0.0-6.0-6.0-0.1","fr2l4n7yqq","one_one","1","direct_first","1","er05im13","0","33","2","1","1","1","Kurzweilig und spannend!
+Eine Auslösung/Hypothesen wäre noch interessant. ","0","1","0","null","","","<div class = 'row'><div class = 'column'><img src = 'category3/CS6.png' width = '70%;'></div><div class = 'column'><img src = 'uspos/1463.bmp' width = '100%;'></div></div>","null","pos","CS","CS","3","category3/CS6.png","","","","",""
+"","html-keyboard-response","71","349773","0.0-6.0-6.0-0.2","fr2l4n7yqq","one_one","1","direct_first","1","er05im13","0","33","2","1","1","1","Kurzweilig und spannend!
+Eine Auslösung/Hypothesen wäre noch interessant. ","0","1","0","null","","","<div class = 'row'><div class = 'column'><img src = 'uspos/5831.bmp' width = '100%;'></div><div class = 'column'><img src = 'category4/CS8.png' width = '70%;'></div></div>","null","pos","CS","CS","4","category4/CS8.png","","","","",""
+"","html-keyboard-response","72","352286","0.0-6.0-6.0-0.3","fr2l4n7yqq","one_one","1","direct_first","1","er05im13","0","33","2","1","1","1","Kurzweilig und spannend!
+Eine Auslösung/Hypothesen wäre noch interessant. ","0","1","0","null","","","<div class = 'row'><div class = 'column'><img src = 'category2/CS3.png' width = '70%;'></div><div class = 'column'><img src = 'usneg/6212.bmp' width = '100%;'></div></div>","null","neg","CS","CS","2","category2/CS3.png","","","","",""
+"","html-keyboard-response","73","354798","0.0-6.0-6.0-0.4","fr2l4n7yqq","one_one","1","direct_first","1","er05im13","0","33","2","1","1","1","Kurzweilig und spannend!
+Eine Auslösung/Hypothesen wäre noch interessant. ","0","1","0","null","","","<div class = 'row'><div class = 'column'><img src = 'uspos/5831.bmp' width = '100%;'></div><div class = 'column'><img src = 'category4/CS8.png' width = '70%;'></div></div>","null","pos","CS","CS","4","category4/CS8.png","","","","",""
+"","html-keyboard-response","74","357308","0.0-6.0-6.0-0.5","fr2l4n7yqq","one_one","1","direct_first","1","er05im13","0","33","2","1","1","1","Kurzweilig und spannend!
+Eine Auslösung/Hypothesen wäre noch interessant. ","0","1","0","null","","","<div class = 'row'><div class = 'column'><img src = 'usneg/1280.bmp' width = '100%;'></div><div class = 'column'><img src = 'category1/CS3.png' width = '70%;'></div></div>","null","neg","CS","CS","1","category1/CS3.png","","","","",""
+"","html-keyboard-response","75","359820","0.0-6.0-6.0-0.6","fr2l4n7yqq","one_one","1","direct_first","1","er05im13","0","33","2","1","1","1","Kurzweilig und spannend!
+Eine Auslösung/Hypothesen wäre noch interessant. ","0","1","0","null","","","<div class = 'row'><div class = 'column'><img src = 'category4/CS8.png' width = '70%;'></div><div class = 'column'><img src = 'uspos/5831.bmp' width = '100%;'></div></div>","null","pos","CS","CS","4","category4/CS8.png","","","","",""
+"","html-keyboard-response","76","362331","0.0-6.0-6.0-0.7","fr2l4n7yqq","one_one","1","direct_first","1","er05im13","0","33","2","1","1","1","Kurzweilig und spannend!
+Eine Auslösung/Hypothesen wäre noch interessant. ","0","1","0","null","","","<div class = 'row'><div class = 'column'><img src = 'usneg/6212.bmp' width = '100%;'></div><div class = 'column'><img src = 'category2/CS3.png' width = '70%;'></div></div>","null","neg","CS","CS","2","category2/CS3.png","","","","",""
+"","html-keyboard-response","77","364841","0.0-6.0-6.0-0.8","fr2l4n7yqq","one_one","1","direct_first","1","er05im13","0","33","2","1","1","1","Kurzweilig und spannend!
+Eine Auslösung/Hypothesen wäre noch interessant. ","0","1","0","null","","","<div class = 'row'><div class = 'column'><img src = 'uspos/1463.bmp' width = '100%;'></div><div class = 'column'><img src = 'category3/CS6.png' width = '70%;'></div></div>","null","pos","CS","CS","3","category3/CS6.png","","","","",""
+"","html-keyboard-response","78","367353","0.0-6.0-6.0-0.9","fr2l4n7yqq","one_one","1","direct_first","1","er05im13","0","33","2","1","1","1","Kurzweilig und spannend!
+Eine Auslösung/Hypothesen wäre noch interessant. ","0","1","0","null","","","<div class = 'row'><div class = 'column'><img src = 'category1/CS3.png' width = '70%;'></div><div class = 'column'><img src = 'usneg/1280.bmp' width = '100%;'></div></div>","null","neg","CS","CS","1","category1/CS3.png","","","","",""
+"","html-keyboard-response","79","369865","0.0-6.0-6.0-0.10","fr2l4n7yqq","one_one","1","direct_first","1","er05im13","0","33","2","1","1","1","Kurzweilig und spannend!
+Eine Auslösung/Hypothesen wäre noch interessant. ","0","1","0","null","","","<div class = 'row'><div class = 'column'><img src = 'uspos/1463.bmp' width = '100%;'></div><div class = 'column'><img src = 'category3/CS6.png' width = '70%;'></div></div>","null","pos","CS","CS","3","category3/CS6.png","","","","",""
+"","html-keyboard-response","80","372378","0.0-6.0-6.0-0.11","fr2l4n7yqq","one_one","1","direct_first","1","er05im13","0","33","2","1","1","1","Kurzweilig und spannend!
+Eine Auslösung/Hypothesen wäre noch interessant. ","0","1","0","null","","","<div class = 'row'><div class = 'column'><img src = 'category1/CS3.png' width = '70%;'></div><div class = 'column'><img src = 'usneg/1280.bmp' width = '100%;'></div></div>","null","neg","CS","CS","1","category1/CS3.png","","","","",""
+"","html-keyboard-response","81","374887","0.0-6.0-6.0-0.12","fr2l4n7yqq","one_one","1","direct_first","1","er05im13","0","33","2","1","1","1","Kurzweilig und spannend!
+Eine Auslösung/Hypothesen wäre noch interessant. ","0","1","0","null","","","<div class = 'row'><div class = 'column'><img src = 'category3/CS6.png' width = '70%;'></div><div class = 'column'><img src = 'uspos/1463.bmp' width = '100%;'></div></div>","null","pos","CS","CS","3","category3/CS6.png","","","","",""
+"","html-keyboard-response","82","377397","0.0-6.0-6.0-0.13","fr2l4n7yqq","one_one","1","direct_first","1","er05im13","0","33","2","1","1","1","Kurzweilig und spannend!
+Eine Auslösung/Hypothesen wäre noch interessant. ","0","1","0","null","","","<div class = 'row'><div class = 'column'><img src = 'category4/CS8.png' width = '70%;'></div><div class = 'column'><img src = 'uspos/5831.bmp' width = '100%;'></div></div>","null","pos","CS","CS","4","category4/CS8.png","","","","",""
+"","html-keyboard-response","83","379904","0.0-6.0-6.0-0.14","fr2l4n7yqq","one_one","1","direct_first","1","er05im13","0","33","2","1","1","1","Kurzweilig und spannend!
+Eine Auslösung/Hypothesen wäre noch interessant. ","0","1","0","null","","","<div class = 'row'><div class = 'column'><img src = 'uspos/1463.bmp' width = '100%;'></div><div class = 'column'><img src = 'category3/CS6.png' width = '70%;'></div></div>","null","pos","CS","CS","3","category3/CS6.png","","","","",""
+"","html-keyboard-response","84","382417","0.0-6.0-6.0-0.15","fr2l4n7yqq","one_one","1","direct_first","1","er05im13","0","33","2","1","1","1","Kurzweilig und spannend!
+Eine Auslösung/Hypothesen wäre noch interessant. ","0","1","0","null","","","<div class = 'row'><div class = 'column'><img src = 'category2/CS3.png' width = '70%;'></div><div class = 'column'><img src = 'usneg/6212.bmp' width = '100%;'></div></div>","null","neg","CS","CS","2","category2/CS3.png","","","","",""
+"","html-keyboard-response","85","384928","0.0-6.0-6.0-0.16","fr2l4n7yqq","one_one","1","direct_first","1","er05im13","0","33","2","1","1","1","Kurzweilig und spannend!
+Eine Auslösung/Hypothesen wäre noch interessant. ","0","1","0","null","","","<div class = 'row'><div class = 'column'><img src = 'usneg/1280.bmp' width = '100%;'></div><div class = 'column'><img src = 'category1/CS3.png' width = '70%;'></div></div>","null","neg","CS","CS","1","category1/CS3.png","","","","",""
+"","html-keyboard-response","86","387439","0.0-6.0-6.0-0.17","fr2l4n7yqq","one_one","1","direct_first","1","er05im13","0","33","2","1","1","1","Kurzweilig und spannend!
+Eine Auslösung/Hypothesen wäre noch interessant. ","0","1","0","null","","","<div class = 'row'><div class = 'column'><img src = 'category4/CS8.png' width = '70%;'></div><div class = 'column'><img src = 'uspos/5831.bmp' width = '100%;'></div></div>","null","pos","CS","CS","4","category4/CS8.png","","","","",""
+"","html-keyboard-response","87","389950","0.0-6.0-6.0-0.18","fr2l4n7yqq","one_one","1","direct_first","1","er05im13","0","33","2","1","1","1","Kurzweilig und spannend!
+Eine Auslösung/Hypothesen wäre noch interessant. ","0","1","0","null","","","<div class = 'row'><div class = 'column'><img src = 'usneg/1280.bmp' width = '100%;'></div><div class = 'column'><img src = 'category1/CS3.png' width = '70%;'></div></div>","null","neg","CS","CS","1","category1/CS3.png","","","","",""
+"","html-keyboard-response","88","392456","0.0-6.0-6.0-0.19","fr2l4n7yqq","one_one","1","direct_first","1","er05im13","0","33","2","1","1","1","Kurzweilig und spannend!
+Eine Auslösung/Hypothesen wäre noch interessant. ","0","1","0","null","","","<div class = 'row'><div class = 'column'><img src = 'usneg/6212.bmp' width = '100%;'></div><div class = 'column'><img src = 'category2/CS3.png' width = '70%;'></div></div>","null","neg","CS","CS","2","category2/CS3.png","","","","",""
+"","survey-html-form","89","404737","0.0-7.0","fr2l4n7yqq","one_one","1","direct_first","1","er05im13","0","33","2","1","1","1","Kurzweilig und spannend!
+Eine Auslösung/Hypothesen wäre noch interessant. ","0","1","0","11779.044999999984","","{}","","","","","","","","","","","",""
+"","image-slider-response","90","416769","0.0-8.0-0.0","fr2l4n7yqq","one_one","1","direct_first","1","er05im13","0","33","2","1","1","1","Kurzweilig und spannend!
+Eine Auslösung/Hypothesen wäre noch interessant. ","0","1","0","10028.325000000012","","","","","neg","GS","abstract","2","category2/men.png","-9","targets/15.png","direct","",""
+"","image-slider-response","91","425563","0.0-8.0-0.1","fr2l4n7yqq","one_one","1","direct_first","1","er05im13","0","33","2","1","1","1","Kurzweilig und spannend!
+Eine Auslösung/Hypothesen wäre noch interessant. ","0","1","0","8791.179999999935","","","","","pos","GS","GSnew","4","category4/GS1.png","-28","targets/4.png","direct","",""
+"","image-slider-response","92","431166","0.0-8.0-0.2","fr2l4n7yqq","one_one","1","direct_first","1","er05im13","0","33","2","1","1","1","Kurzweilig und spannend!
+Eine Auslösung/Hypothesen wäre noch interessant. ","0","1","0","5601.004999999946","","","","","pos","GS","abstract","4","category4/lin.png","19","targets/3.png","direct","",""
+"","image-slider-response","93","440179","0.0-8.0-0.3","fr2l4n7yqq","one_one","1","direct_first","1","er05im13","0","33","2","1","1","1","Kurzweilig und spannend!
+Eine Auslösung/Hypothesen wäre noch interessant. ","0","1","0","9011.629999999946","","","","","pos","GS","GSold","3","category3/CS7.png","19","targets/32.png","direct","",""
+"","image-slider-response","94","446925","0.0-8.0-0.4","fr2l4n7yqq","one_one","1","direct_first","1","er05im13","0","33","2","1","1","1","Kurzweilig und spannend!
+Eine Auslösung/Hypothesen wäre noch interessant. ","0","1","0","6743.034999999916","","","","","neg","GS","GSnew","1","category1/GS1.png","8","targets/26.png","direct","",""
+"","image-slider-response","95","451047","0.0-8.0-0.5","fr2l4n7yqq","one_one","1","direct_first","1","er05im13","0","33","2","1","1","1","Kurzweilig und spannend!
+Eine Auslösung/Hypothesen wäre noch interessant. ","0","1","0","4120.585000000137","","","","","pos","GS","abstract","3","category3/wang.png","28","targets/47.png","direct","",""
+"","image-slider-response","96","457299","0.0-8.0-0.6","fr2l4n7yqq","one_one","1","direct_first","1","er05im13","0","33","2","1","1","1","Kurzweilig und spannend!
+Eine Auslösung/Hypothesen wäre noch interessant. ","0","1","0","6248.940000000002","","","","","neg","CS","CS","1","category1/CS3.png","-83","targets/33.png","direct","",""
+"","image-slider-response","97","461388","0.0-8.0-0.7","fr2l4n7yqq","one_one","1","direct_first","1","er05im13","0","33","2","1","1","1","Kurzweilig und spannend!
+Eine Auslösung/Hypothesen wäre noch interessant. ","0","1","0","4086.6749999999884","","","","","neg","GS","GSnew","2","category2/GS3.png","70","targets/19.png","direct","",""
+"","image-slider-response","98","465828","0.0-8.0-0.8","fr2l4n7yqq","one_one","1","direct_first","1","er05im13","0","33","2","1","1","1","Kurzweilig und spannend!
+Eine Auslösung/Hypothesen wäre noch interessant. ","0","1","0","4438.285000000207","","","","","neg","GS","GSold","2","category2/CS1.png","-44","targets/18.png","direct","",""
+"","image-slider-response","99","468890","0.0-8.0-0.9","fr2l4n7yqq","one_one","1","direct_first","1","er05im13","0","33","2","1","1","1","Kurzweilig und spannend!
+Eine Auslösung/Hypothesen wäre noch interessant. ","0","1","0","3059.0349999999744","","","","","neg","GS","GSnew","1","category1/GS3.png","-29","targets/43.png","direct","",""
+"","image-slider-response","100","472795","0.0-8.0-0.10","fr2l4n7yqq","one_one","1","direct_first","1","er05im13","0","33","2","1","1","1","Kurzweilig und spannend!
+Eine Auslösung/Hypothesen wäre noch interessant. ","0","1","0","3903.475000000035","","","","","pos","CS","CS","4","category4/CS8.png","67","targets/48.png","direct","",""
+"","image-slider-response","101","476128","0.0-8.0-0.11","fr2l4n7yqq","one_one","1","direct_first","1","er05im13","0","33","2","1","1","1","Kurzweilig und spannend!
+Eine Auslösung/Hypothesen wäre noch interessant. ","0","1","0","3330.854999999923","","","","","pos","GS","GSold","3","category3/CS10.png","16","targets/44.png","direct","",""
+"","image-slider-response","102","481846","0.0-8.0-0.12","fr2l4n7yqq","one_one","1","direct_first","1","er05im13","0","33","2","1","1","1","Kurzweilig und spannend!
+Eine Auslösung/Hypothesen wäre noch interessant. ","0","1","0","5715.25499999983","","","","","neg","GS","GSold","1","category1/CS2.png","6","targets/20.png","direct","",""
+"","image-slider-response","103","487874","0.0-8.0-0.13","fr2l4n7yqq","one_one","1","direct_first","1","er05im13","0","33","2","1","1","1","Kurzweilig und spannend!
+Eine Auslösung/Hypothesen wäre noch interessant. ","0","1","0","6024.994999999995","","","","","pos","CS","CS","3","category3/CS6.png","85","targets/35.png","direct","",""
+"","image-slider-response","104","490783","0.0-8.0-0.14","fr2l4n7yqq","one_one","1","direct_first","1","er05im13","0","33","2","1","1","1","Kurzweilig und spannend!
+Eine Auslösung/Hypothesen wäre noch interessant. ","0","1","0","2907.695000000065","","","","","pos","GS","GSold","4","category4/CS7.png","-10","targets/9.png","direct","",""
+"","image-slider-response","105","495009","0.0-8.0-0.15","fr2l4n7yqq","one_one","1","direct_first","1","er05im13","0","33","2","1","1","1","Kurzweilig und spannend!
+Eine Auslösung/Hypothesen wäre noch interessant. ","0","1","0","4223.764999999956","","","","","pos","GS","GSnew","4","category4/GS3.png","-86","targets/30.png","direct","",""
+"","image-slider-response","106","498693","0.0-8.0-0.16","fr2l4n7yqq","one_one","1","direct_first","1","er05im13","0","33","2","1","1","1","Kurzweilig und spannend!
+Eine Auslösung/Hypothesen wäre noch interessant. ","0","1","0","3680.4200000001583","","","","","neg","GS","GSold","1","category1/CS5.png","13","targets/11.png","direct","",""
+"","image-slider-response","107","501355","0.0-8.0-0.17","fr2l4n7yqq","one_one","1","direct_first","1","er05im13","0","33","2","1","1","1","Kurzweilig und spannend!
+Eine Auslösung/Hypothesen wäre noch interessant. ","0","1","0","2660.1149999998743","","","","","pos","GS","GSnew","4","category4/GS2.png","-45","targets/41.png","direct","",""
+"","image-slider-response","108","504225","0.0-8.0-0.18","fr2l4n7yqq","one_one","1","direct_first","1","er05im13","0","33","2","1","1","1","Kurzweilig und spannend!
+Eine Auslösung/Hypothesen wäre noch interessant. ","0","1","0","2868.8700000000536","","","","","neg","GS","abstract","1","category1/ma.png","-28","targets/25.png","direct","",""
+"","image-slider-response","109","507622","0.0-8.0-0.19","fr2l4n7yqq","one_one","1","direct_first","1","er05im13","0","33","2","1","1","1","Kurzweilig und spannend!
+Eine Auslösung/Hypothesen wäre noch interessant. ","0","1","0","3394.340000000084","","","","","pos","GS","GSold","4","category4/CS5.png","-41","targets/36.png","direct","",""
+"","image-slider-response","110","510404","0.0-8.0-0.20","fr2l4n7yqq","one_one","1","direct_first","1","er05im13","0","33","2","1","1","1","Kurzweilig und spannend!
+Eine Auslösung/Hypothesen wäre noch interessant. ","0","1","0","2779.6149999999325","","","","","pos","GS","GSold","3","category3/CS2.png","-31","targets/39.png","direct","",""
+"","image-slider-response","111","518596","0.0-8.0-0.21","fr2l4n7yqq","one_one","1","direct_first","1","er05im13","0","33","2","1","1","1","Kurzweilig und spannend!
+Eine Auslösung/Hypothesen wäre noch interessant. ","0","1","0","8190.894999999902","","","","","neg","GS","GSold","2","category2/CS10.png","-17","targets/8.png","direct","",""
+"","image-slider-response","112","522227","0.0-8.0-0.22","fr2l4n7yqq","one_one","1","direct_first","1","er05im13","0","33","2","1","1","1","Kurzweilig und spannend!
+Eine Auslösung/Hypothesen wäre noch interessant. ","0","1","0","3629.505000000121","","","","","pos","GS","GSnew","3","category3/GS1.png","-22","targets/22.png","direct","",""
+"","image-slider-response","113","525679","0.0-8.0-0.23","fr2l4n7yqq","one_one","1","direct_first","1","er05im13","0","33","2","1","1","1","Kurzweilig und spannend!
+Eine Auslösung/Hypothesen wäre noch interessant. ","0","1","0","3449.3549999999814","","","","","pos","GS","GSold","4","category4/CS3.png","54","targets/24.png","direct","",""
+"","image-slider-response","114","532280","0.0-8.0-0.24","fr2l4n7yqq","one_one","1","direct_first","1","er05im13","0","33","2","1","1","1","Kurzweilig und spannend!
+Eine Auslösung/Hypothesen wäre noch interessant. ","0","1","0","6598.994999999995","","","","","neg","GS","GSold","2","category2/CS4.png","10","targets/7.png","direct","",""
+"","image-slider-response","115","535389","0.0-8.0-0.25","fr2l4n7yqq","one_one","1","direct_first","1","er05im13","0","33","2","1","1","1","Kurzweilig und spannend!
+Eine Auslösung/Hypothesen wäre noch interessant. ","0","1","0","3106.480000000214","","","","","neg","GS","GSnew","2","category2/GS2.png","-45","targets/6.png","direct","",""
+"","image-slider-response","116","538569","0.0-8.0-0.26","fr2l4n7yqq","one_one","1","direct_first","1","er05im13","0","33","2","1","1","1","Kurzweilig und spannend!
+Eine Auslösung/Hypothesen wäre noch interessant. ","0","1","0","3178.755000000121","","","","","neg","CS","CS","2","category2/CS3.png","-77","targets/38.png","direct","",""
+"","image-slider-response","117","542969","0.0-8.0-0.27","fr2l4n7yqq","one_one","1","direct_first","1","er05im13","0","33","2","1","1","1","Kurzweilig und spannend!
+Eine Auslösung/Hypothesen wäre noch interessant. ","0","1","0","4398.589999999967","","","","","neg","GS","GSold","1","category1/CS8.png","-86","targets/27.png","direct","",""
+"","image-slider-response","118","545736","0.0-8.0-0.28","fr2l4n7yqq","one_one","1","direct_first","1","er05im13","0","33","2","1","1","1","Kurzweilig und spannend!
+Eine Auslösung/Hypothesen wäre noch interessant. ","0","1","0","2764.6450000000186","","","","","neg","GS","GSnew","1","category1/GS2.png","-40","targets/46.png","direct","",""
+"","image-slider-response","119","549379","0.0-8.0-0.29","fr2l4n7yqq","one_one","1","direct_first","1","er05im13","0","33","2","1","1","1","Kurzweilig und spannend!
+Eine Auslösung/Hypothesen wäre noch interessant. ","0","1","0","3640.6650000000373","","","","","neg","GS","GSnew","2","category2/GS1.png","22","targets/37.png","direct","",""
+"","image-slider-response","120","552632","0.0-8.0-0.30","fr2l4n7yqq","one_one","1","direct_first","1","er05im13","0","33","2","1","1","1","Kurzweilig und spannend!
+Eine Auslösung/Hypothesen wäre noch interessant. ","0","1","0","3250.4599999999627","","","","","pos","GS","GSnew","3","category3/GS3.png","35","targets/16.png","direct","",""
+"","image-slider-response","121","556543","0.0-8.0-0.31","fr2l4n7yqq","one_one","1","direct_first","1","er05im13","0","33","2","1","1","1","Kurzweilig und spannend!
+Eine Auslösung/Hypothesen wäre noch interessant. ","0","1","0","3908.9000000001397","","","","","pos","GS","GSnew","3","category3/GS2.png","41","targets/42.png","direct","",""
+"","html-keyboard-response","122","587885","0.0-9.0","fr2l4n7yqq","one_one","1","direct_first","1","er05im13","0","33","2","1","1","1","Kurzweilig und spannend!
+Eine Auslösung/Hypothesen wäre noch interessant. ","0","1","0","31320.54999999993","","","<p>Sie sehen nun die chinesischen Zeichen nur ganz kurz. Danach sehen Sie die jeweilige Aussprache der Zeichen als Silbe auf dem Bildschrim. Ihre Aufgabe ist es, für jede Silbe anzugeben, ob diese etwas angenehmes, oder unangenehmes bedeuten könnte. Verlassen Sie sich hier vor allem auf Ihre Intuition.<br><br>Die Zeichen werden nur zur Orientierung dargestellt, beachten Sie sie deshalb nicht. Konzentrieren Sie sich vor allem auf die Silben. <br>Reagieren Sie mit folgenden zwei Tasten: <br><br><b>'D' </b> wenn die Silbe etwas <b>unangenehmes</b> bedeuten könnte. <br><b>'K'</b> wenn die Silbe etwas <b>angenehmes</b> bedeuten könnte. <br><br>Bitte legen Sie nun den Zeigefinger der linken Hand auf die Taste 'D' und den Zeigefinger der rechten Hand auf die Taste 'K'. <br>Reagieren Sie auf jede Silbe so schnell wie möglich. Uns interessiert Ihre spontane Reaktion. <br> <br> <br>Drücken Sie 'D' oder 'K', um die nächste Aufgabe zu starten. </p>","75","","","","","","","","","",""
+"","html-keyboard-response","123","590898","0.0-10.0-0.0","fr2l4n7yqq","one_one","1","direct_first","1","er05im13","0","33","2","1","1","1","Kurzweilig und spannend!
+Eine Auslösung/Hypothesen wäre noch interessant. ","0","1","0","null","","","<div style=""font-size:60px;"">+</div>","null","","","","","","","","","",""
+"","html-keyboard-response","124","590994","0.0-10.0-1.0","fr2l4n7yqq","one_one","1","direct_first","1","er05im13","0","33","2","1","1","1","Kurzweilig und spannend!
+Eine Auslösung/Hypothesen wäre noch interessant. ","0","1","0","null","","","<img src = 'category1/CS2.png' width = '100%;'>","null","","","","","","","","","",""
+"","html-keyboard-response","125","591254","0.0-10.0-2.0","fr2l4n7yqq","one_one","1","direct_first","1","er05im13","0","33","2","1","1","1","Kurzweilig und spannend!
+Eine Auslösung/Hypothesen wäre noch interessant. ","0","1","0","null","","","<img src = 'targets/20.png' width = '100%;'>","null","","","","","","","","","",""
+"","html-keyboard-response","126","599173","0.0-10.0-3.0","fr2l4n7yqq","one_one","1","direct_first","1","er05im13","0","33","2","1","1","1","Kurzweilig und spannend!
+Eine Auslösung/Hypothesen wäre noch interessant. ","0","1","0","7912.445000000182","","","<img src = 'targets/mask.png' width = '100%;'>","68","neg","GS","GSold","1","category1/CS2.png","","targets/20.png","indirect","0","0"
+"","html-keyboard-response","127","600685","0.0-10.0-0.1","fr2l4n7yqq","one_one","1","direct_first","1","er05im13","0","33","2","1","1","1","Kurzweilig und spannend!
+Eine Auslösung/Hypothesen wäre noch interessant. ","0","1","0","null","","","<div style=""font-size:60px;"">+</div>","null","","","","","","","","","",""
+"","html-keyboard-response","128","600777","0.0-10.0-1.1","fr2l4n7yqq","one_one","1","direct_first","1","er05im13","0","33","2","1","1","1","Kurzweilig und spannend!
+Eine Auslösung/Hypothesen wäre noch interessant. ","0","1","0","null","","","<img src = 'category3/CS2.png' width = '100%;'>","null","","","","","","","","","",""
+"","html-keyboard-response","129","601037","0.0-10.0-2.1","fr2l4n7yqq","one_one","1","direct_first","1","er05im13","0","33","2","1","1","1","Kurzweilig und spannend!
+Eine Auslösung/Hypothesen wäre noch interessant. ","0","1","0","null","","","<img src = 'targets/39.png' width = '100%;'>","null","","","","","","","","","",""
+"","html-keyboard-response","130","602815","0.0-10.0-3.1","fr2l4n7yqq","one_one","1","direct_first","1","er05im13","0","33","2","1","1","1","Kurzweilig und spannend!
+Eine Auslösung/Hypothesen wäre noch interessant. ","0","1","0","1775.795000000042","","","<img src = 'targets/mask.png' width = '100%;'>","75","pos","GS","GSold","3","category3/CS2.png","","targets/39.png","indirect","1","1"
+"","html-keyboard-response","131","604326","0.0-10.0-0.2","fr2l4n7yqq","one_one","1","direct_first","1","er05im13","0","33","2","1","1","1","Kurzweilig und spannend!
+Eine Auslösung/Hypothesen wäre noch interessant. ","0","1","0","null","","","<div style=""font-size:60px;"">+</div>","null","","","","","","","","","",""
+"","html-keyboard-response","132","604420","0.0-10.0-1.2","fr2l4n7yqq","one_one","1","direct_first","1","er05im13","0","33","2","1","1","1","Kurzweilig und spannend!
+Eine Auslösung/Hypothesen wäre noch interessant. ","0","1","0","null","","","<img src = 'category3/CS10.png' width = '100%;'>","null","","","","","","","","","",""
+"","html-keyboard-response","133","604679","0.0-10.0-2.2","fr2l4n7yqq","one_one","1","direct_first","1","er05im13","0","33","2","1","1","1","Kurzweilig und spannend!
+Eine Auslösung/Hypothesen wäre noch interessant. ","0","1","0","null","","","<img src = 'targets/44.png' width = '100%;'>","null","","","","","","","","","",""
+"","html-keyboard-response","134","605952","0.0-10.0-3.2","fr2l4n7yqq","one_one","1","direct_first","1","er05im13","0","33","2","1","1","1","Kurzweilig und spannend!
+Eine Auslösung/Hypothesen wäre noch interessant. ","0","1","0","1270.9850000001024","","","<img src = 'targets/mask.png' width = '100%;'>","75","pos","GS","GSold","3","category3/CS10.png","","targets/44.png","indirect","1","2"
+"","html-keyboard-response","135","607460","0.0-10.0-0.3","fr2l4n7yqq","one_one","1","direct_first","1","er05im13","0","33","2","1","1","1","Kurzweilig und spannend!
+Eine Auslösung/Hypothesen wäre noch interessant. ","0","1","0","null","","","<div style=""font-size:60px;"">+</div>","null","","","","","","","","","",""
+"","html-keyboard-response","136","607557","0.0-10.0-1.3","fr2l4n7yqq","one_one","1","direct_first","1","er05im13","0","33","2","1","1","1","Kurzweilig und spannend!
+Eine Auslösung/Hypothesen wäre noch interessant. ","0","1","0","null","","","<img src = 'category3/CS6.png' width = '100%;'>","null","","","","","","","","","",""
+"","html-keyboard-response","137","607815","0.0-10.0-2.3","fr2l4n7yqq","one_one","1","direct_first","1","er05im13","0","33","2","1","1","1","Kurzweilig und spannend!
+Eine Auslösung/Hypothesen wäre noch interessant. ","0","1","0","null","","","<img src = 'targets/35.png' width = '100%;'>","null","","","","","","","","","",""
+"","html-keyboard-response","138","610019","0.0-10.0-3.3","fr2l4n7yqq","one_one","1","direct_first","1","er05im13","0","33","2","1","1","1","Kurzweilig und spannend!
+Eine Auslösung/Hypothesen wäre noch interessant. ","0","1","0","2201.6250000001164","","","<img src = 'targets/mask.png' width = '100%;'>","75","pos","CS","CS","3","category3/CS6.png","","targets/35.png","indirect","1","3"
+"","html-keyboard-response","139","611530","0.0-10.0-0.4","fr2l4n7yqq","one_one","1","direct_first","1","er05im13","0","33","2","1","1","1","Kurzweilig und spannend!
+Eine Auslösung/Hypothesen wäre noch interessant. ","0","1","0","null","","","<div style=""font-size:60px;"">+</div>","null","","","","","","","","","",""
+"","html-keyboard-response","140","611626","0.0-10.0-1.4","fr2l4n7yqq","one_one","1","direct_first","1","er05im13","0","33","2","1","1","1","Kurzweilig und spannend!
+Eine Auslösung/Hypothesen wäre noch interessant. ","0","1","0","null","","","<img src = 'category4/CS5.png' width = '100%;'>","null","","","","","","","","","",""
+"","html-keyboard-response","141","611884","0.0-10.0-2.4","fr2l4n7yqq","one_one","1","direct_first","1","er05im13","0","33","2","1","1","1","Kurzweilig und spannend!
+Eine Auslösung/Hypothesen wäre noch interessant. ","0","1","0","null","","","<img src = 'targets/36.png' width = '100%;'>","null","","","","","","","","","",""
+"","html-keyboard-response","142","612598","0.0-10.0-3.4","fr2l4n7yqq","one_one","1","direct_first","1","er05im13","0","33","2","1","1","1","Kurzweilig und spannend!
+Eine Auslösung/Hypothesen wäre noch interessant. ","0","1","0","712.1950000000652","","","<img src = 'targets/mask.png' width = '100%;'>","68","pos","GS","GSold","4","category4/CS5.png","","targets/36.png","indirect","0","4"
+"","html-keyboard-response","143","614104","0.0-10.0-0.5","fr2l4n7yqq","one_one","1","direct_first","1","er05im13","0","33","2","1","1","1","Kurzweilig und spannend!
+Eine Auslösung/Hypothesen wäre noch interessant. ","0","1","0","null","","","<div style=""font-size:60px;"">+</div>","null","","","","","","","","","",""
+"","html-keyboard-response","144","614200","0.0-10.0-1.5","fr2l4n7yqq","one_one","1","direct_first","1","er05im13","0","33","2","1","1","1","Kurzweilig und spannend!
+Eine Auslösung/Hypothesen wäre noch interessant. ","0","1","0","null","","","<img src = 'category1/CS5.png' width = '100%;'>","null","","","","","","","","","",""
+"","html-keyboard-response","145","614457","0.0-10.0-2.5","fr2l4n7yqq","one_one","1","direct_first","1","er05im13","0","33","2","1","1","1","Kurzweilig und spannend!
+Eine Auslösung/Hypothesen wäre noch interessant. ","0","1","0","null","","","<img src = 'targets/11.png' width = '100%;'>","null","","","","","","","","","",""
+"","html-keyboard-response","146","615884","0.0-10.0-3.5","fr2l4n7yqq","one_one","1","direct_first","1","er05im13","0","33","2","1","1","1","Kurzweilig und spannend!
+Eine Auslösung/Hypothesen wäre noch interessant. ","0","1","0","1426.3349999998463","","","<img src = 'targets/mask.png' width = '100%;'>","75","neg","GS","GSold","1","category1/CS5.png","","targets/11.png","indirect","1","5"
+"","html-keyboard-response","147","617390","0.0-10.0-0.6","fr2l4n7yqq","one_one","1","direct_first","1","er05im13","0","33","2","1","1","1","Kurzweilig und spannend!
+Eine Auslösung/Hypothesen wäre noch interessant. ","0","1","0","null","","","<div style=""font-size:60px;"">+</div>","null","","","","","","","","","",""
+"","html-keyboard-response","148","617487","0.0-10.0-1.6","fr2l4n7yqq","one_one","1","direct_first","1","er05im13","0","33","2","1","1","1","Kurzweilig und spannend!
+Eine Auslösung/Hypothesen wäre noch interessant. ","0","1","0","null","","","<img src = 'category4/CS8.png' width = '100%;'>","null","","","","","","","","","",""
+"","html-keyboard-response","149","617748","0.0-10.0-2.6","fr2l4n7yqq","one_one","1","direct_first","1","er05im13","0","33","2","1","1","1","Kurzweilig und spannend!
+Eine Auslösung/Hypothesen wäre noch interessant. ","0","1","0","null","","","<img src = 'targets/48.png' width = '100%;'>","null","","","","","","","","","",""
+"","html-keyboard-response","150","620089","0.0-10.0-3.6","fr2l4n7yqq","one_one","1","direct_first","1","er05im13","0","33","2","1","1","1","Kurzweilig und spannend!
+Eine Auslösung/Hypothesen wäre noch interessant. ","0","1","0","2338.719999999972","","","<img src = 'targets/mask.png' width = '100%;'>","68","pos","CS","CS","4","category4/CS8.png","","targets/48.png","indirect","0","6"
+"","html-keyboard-response","151","621598","0.0-10.0-0.7","fr2l4n7yqq","one_one","1","direct_first","1","er05im13","0","33","2","1","1","1","Kurzweilig und spannend!
+Eine Auslösung/Hypothesen wäre noch interessant. ","0","1","0","null","","","<div style=""font-size:60px;"">+</div>","null","","","","","","","","","",""
+"","html-keyboard-response","152","621693","0.0-10.0-1.7","fr2l4n7yqq","one_one","1","direct_first","1","er05im13","0","33","2","1","1","1","Kurzweilig und spannend!
+Eine Auslösung/Hypothesen wäre noch interessant. ","0","1","0","null","","","<img src = 'category1/CS8.png' width = '100%;'>","null","","","","","","","","","",""
+"","html-keyboard-response","153","621954","0.0-10.0-2.7","fr2l4n7yqq","one_one","1","direct_first","1","er05im13","0","33","2","1","1","1","Kurzweilig und spannend!
+Eine Auslösung/Hypothesen wäre noch interessant. ","0","1","0","null","","","<img src = 'targets/27.png' width = '100%;'>","null","","","","","","","","","",""
+"","html-keyboard-response","154","623788","0.0-10.0-3.7","fr2l4n7yqq","one_one","1","direct_first","1","er05im13","0","33","2","1","1","1","Kurzweilig und spannend!
+Eine Auslösung/Hypothesen wäre noch interessant. ","0","1","0","1832.3350000000792","","","<img src = 'targets/mask.png' width = '100%;'>","75","neg","GS","GSold","1","category1/CS8.png","","targets/27.png","indirect","1","7"
+"","html-keyboard-response","155","625297","0.0-10.0-0.8","fr2l4n7yqq","one_one","1","direct_first","1","er05im13","0","33","2","1","1","1","Kurzweilig und spannend!
+Eine Auslösung/Hypothesen wäre noch interessant. ","0","1","0","null","","","<div style=""font-size:60px;"">+</div>","null","","","","","","","","","",""
+"","html-keyboard-response","156","625393","0.0-10.0-1.8","fr2l4n7yqq","one_one","1","direct_first","1","er05im13","0","33","2","1","1","1","Kurzweilig und spannend!
+Eine Auslösung/Hypothesen wäre noch interessant. ","0","1","0","null","","","<img src = 'category2/CS4.png' width = '100%;'>","null","","","","","","","","","",""
+"","html-keyboard-response","157","625654","0.0-10.0-2.8","fr2l4n7yqq","one_one","1","direct_first","1","er05im13","0","33","2","1","1","1","Kurzweilig und spannend!
+Eine Auslösung/Hypothesen wäre noch interessant. ","0","1","0","null","","","<img src = 'targets/7.png' width = '100%;'>","null","","","","","","","","","",""
+"","html-keyboard-response","158","626904","0.0-10.0-3.8","fr2l4n7yqq","one_one","1","direct_first","1","er05im13","0","33","2","1","1","1","Kurzweilig und spannend!
+Eine Auslösung/Hypothesen wäre noch interessant. ","0","1","0","1248.1149999998743","","","<img src = 'targets/mask.png' width = '100%;'>","68","neg","GS","GSold","2","category2/CS4.png","","targets/7.png","indirect","0","8"
+"","html-keyboard-response","159","628414","0.0-10.0-0.9","fr2l4n7yqq","one_one","1","direct_first","1","er05im13","0","33","2","1","1","1","Kurzweilig und spannend!
+Eine Auslösung/Hypothesen wäre noch interessant. ","0","1","0","null","","","<div style=""font-size:60px;"">+</div>","null","","","","","","","","","",""
+"","html-keyboard-response","160","628510","0.0-10.0-1.9","fr2l4n7yqq","one_one","1","direct_first","1","er05im13","0","33","2","1","1","1","Kurzweilig und spannend!
+Eine Auslösung/Hypothesen wäre noch interessant. ","0","1","0","null","","","<img src = 'category2/CS3.png' width = '100%;'>","null","","","","","","","","","",""
+"","html-keyboard-response","161","628767","0.0-10.0-2.9","fr2l4n7yqq","one_one","1","direct_first","1","er05im13","0","33","2","1","1","1","Kurzweilig und spannend!
+Eine Auslösung/Hypothesen wäre noch interessant. ","0","1","0","null","","","<img src = 'targets/38.png' width = '100%;'>","null","","","","","","","","","",""
+"","html-keyboard-response","162","629467","0.0-10.0-3.9","fr2l4n7yqq","one_one","1","direct_first","1","er05im13","0","33","2","1","1","1","Kurzweilig und spannend!
+Eine Auslösung/Hypothesen wäre noch interessant. ","0","1","0","697.9449999998324","","","<img src = 'targets/mask.png' width = '100%;'>","75","neg","CS","CS","2","category2/CS3.png","","targets/38.png","indirect","1","9"
+"","html-keyboard-response","163","630971","0.0-10.0-0.10","fr2l4n7yqq","one_one","1","direct_first","1","er05im13","0","33","2","1","1","1","Kurzweilig und spannend!
+Eine Auslösung/Hypothesen wäre noch interessant. ","0","1","0","null","","","<div style=""font-size:60px;"">+</div>","null","","","","","","","","","",""
+"","html-keyboard-response","164","631067","0.0-10.0-1.10","fr2l4n7yqq","one_one","1","direct_first","1","er05im13","0","33","2","1","1","1","Kurzweilig und spannend!
+Eine Auslösung/Hypothesen wäre noch interessant. ","0","1","0","null","","","<img src = 'category2/CS1.png' width = '100%;'>","null","","","","","","","","","",""
+"","html-keyboard-response","165","631328","0.0-10.0-2.10","fr2l4n7yqq","one_one","1","direct_first","1","er05im13","0","33","2","1","1","1","Kurzweilig und spannend!
+Eine Auslösung/Hypothesen wäre noch interessant. ","0","1","0","null","","","<img src = 'targets/18.png' width = '100%;'>","null","","","","","","","","","",""
+"","html-keyboard-response","166","633116","0.0-10.0-3.10","fr2l4n7yqq","one_one","1","direct_first","1","er05im13","0","33","2","1","1","1","Kurzweilig und spannend!
+Eine Auslösung/Hypothesen wäre noch interessant. ","0","1","0","1786.9050000001444","","","<img src = 'targets/mask.png' width = '100%;'>","75","neg","GS","GSold","2","category2/CS1.png","","targets/18.png","indirect","1","10"
+"","html-keyboard-response","167","634627","0.0-10.0-0.11","fr2l4n7yqq","one_one","1","direct_first","1","er05im13","0","33","2","1","1","1","Kurzweilig und spannend!
+Eine Auslösung/Hypothesen wäre noch interessant. ","0","1","0","null","","","<div style=""font-size:60px;"">+</div>","null","","","","","","","","","",""
+"","html-keyboard-response","168","634723","0.0-10.0-1.11","fr2l4n7yqq","one_one","1","direct_first","1","er05im13","0","33","2","1","1","1","Kurzweilig und spannend!
+Eine Auslösung/Hypothesen wäre noch interessant. ","0","1","0","null","","","<img src = 'category2/CS10.png' width = '100%;'>","null","","","","","","","","","",""
+"","html-keyboard-response","169","634981","0.0-10.0-2.11","fr2l4n7yqq","one_one","1","direct_first","1","er05im13","0","33","2","1","1","1","Kurzweilig und spannend!
+Eine Auslösung/Hypothesen wäre noch interessant. ","0","1","0","null","","","<img src = 'targets/8.png' width = '100%;'>","null","","","","","","","","","",""
+"","html-keyboard-response","170","635707","0.0-10.0-3.11","fr2l4n7yqq","one_one","1","direct_first","1","er05im13","0","33","2","1","1","1","Kurzweilig und spannend!
+Eine Auslösung/Hypothesen wäre noch interessant. ","0","1","0","724.550000000163","","","<img src = 'targets/mask.png' width = '100%;'>","75","neg","GS","GSold","2","category2/CS10.png","","targets/8.png","indirect","1","11"
+"","html-keyboard-response","171","637217","0.0-10.0-0.12","fr2l4n7yqq","one_one","1","direct_first","1","er05im13","0","33","2","1","1","1","Kurzweilig und spannend!
+Eine Auslösung/Hypothesen wäre noch interessant. ","0","1","0","null","","","<div style=""font-size:60px;"">+</div>","null","","","","","","","","","",""
+"","html-keyboard-response","172","637311","0.0-10.0-1.12","fr2l4n7yqq","one_one","1","direct_first","1","er05im13","0","33","2","1","1","1","Kurzweilig und spannend!
+Eine Auslösung/Hypothesen wäre noch interessant. ","0","1","0","null","","","<img src = 'category1/CS3.png' width = '100%;'>","null","","","","","","","","","",""
+"","html-keyboard-response","173","637568","0.0-10.0-2.12","fr2l4n7yqq","one_one","1","direct_first","1","er05im13","0","33","2","1","1","1","Kurzweilig und spannend!
+Eine Auslösung/Hypothesen wäre noch interessant. ","0","1","0","null","","","<img src = 'targets/33.png' width = '100%;'>","null","","","","","","","","","",""
+"","html-keyboard-response","174","638667","0.0-10.0-3.12","fr2l4n7yqq","one_one","1","direct_first","1","er05im13","0","33","2","1","1","1","Kurzweilig und spannend!
+Eine Auslösung/Hypothesen wäre noch interessant. ","0","1","0","1097.4949999999953","","","<img src = 'targets/mask.png' width = '100%;'>","68","neg","CS","CS","1","category1/CS3.png","","targets/33.png","indirect","0","12"
+"","html-keyboard-response","175","640178","0.0-10.0-0.13","fr2l4n7yqq","one_one","1","direct_first","1","er05im13","0","33","2","1","1","1","Kurzweilig und spannend!
+Eine Auslösung/Hypothesen wäre noch interessant. ","0","1","0","null","","","<div style=""font-size:60px;"">+</div>","null","","","","","","","","","",""
+"","html-keyboard-response","176","640274","0.0-10.0-1.13","fr2l4n7yqq","one_one","1","direct_first","1","er05im13","0","33","2","1","1","1","Kurzweilig und spannend!
+Eine Auslösung/Hypothesen wäre noch interessant. ","0","1","0","null","","","<img src = 'category4/CS3.png' width = '100%;'>","null","","","","","","","","","",""
+"","html-keyboard-response","177","640535","0.0-10.0-2.13","fr2l4n7yqq","one_one","1","direct_first","1","er05im13","0","33","2","1","1","1","Kurzweilig und spannend!
+Eine Auslösung/Hypothesen wäre noch interessant. ","0","1","0","null","","","<img src = 'targets/24.png' width = '100%;'>","null","","","","","","","","","",""
+"","html-keyboard-response","178","641598","0.0-10.0-3.13","fr2l4n7yqq","one_one","1","direct_first","1","er05im13","0","33","2","1","1","1","Kurzweilig und spannend!
+Eine Auslösung/Hypothesen wäre noch interessant. ","0","1","0","1061.3250000000698","","","<img src = 'targets/mask.png' width = '100%;'>","75","pos","GS","GSold","4","category4/CS3.png","","targets/24.png","indirect","1","13"
+"","html-keyboard-response","179","643106","0.0-10.0-0.14","fr2l4n7yqq","one_one","1","direct_first","1","er05im13","0","33","2","1","1","1","Kurzweilig und spannend!
+Eine Auslösung/Hypothesen wäre noch interessant. ","0","1","0","null","","","<div style=""font-size:60px;"">+</div>","null","","","","","","","","","",""
+"","html-keyboard-response","180","643198","0.0-10.0-1.14","fr2l4n7yqq","one_one","1","direct_first","1","er05im13","0","33","2","1","1","1","Kurzweilig und spannend!
+Eine Auslösung/Hypothesen wäre noch interessant. ","0","1","0","null","","","<img src = 'category3/CS7.png' width = '100%;'>","null","","","","","","","","","",""
+"","html-keyboard-response","181","643456","0.0-10.0-2.14","fr2l4n7yqq","one_one","1","direct_first","1","er05im13","0","33","2","1","1","1","Kurzweilig und spannend!
+Eine Auslösung/Hypothesen wäre noch interessant. ","0","1","0","null","","","<img src = 'targets/32.png' width = '100%;'>","null","","","","","","","","","",""
+"","html-keyboard-response","182","645082","0.0-10.0-3.14","fr2l4n7yqq","one_one","1","direct_first","1","er05im13","0","33","2","1","1","1","Kurzweilig und spannend!
+Eine Auslösung/Hypothesen wäre noch interessant. ","0","1","0","1623.875","","","<img src = 'targets/mask.png' width = '100%;'>","75","pos","GS","GSold","3","category3/CS7.png","","targets/32.png","indirect","1","14"
+"","html-keyboard-response","183","646592","0.0-10.0-0.15","fr2l4n7yqq","one_one","1","direct_first","1","er05im13","0","33","2","1","1","1","Kurzweilig und spannend!
+Eine Auslösung/Hypothesen wäre noch interessant. ","0","1","0","null","","","<div style=""font-size:60px;"">+</div>","null","","","","","","","","","",""
+"","html-keyboard-response","184","646683","0.0-10.0-1.15","fr2l4n7yqq","one_one","1","direct_first","1","er05im13","0","33","2","1","1","1","Kurzweilig und spannend!
+Eine Auslösung/Hypothesen wäre noch interessant. ","0","1","0","null","","","<img src = 'category4/CS7.png' width = '100%;'>","null","","","","","","","","","",""
+"","html-keyboard-response","185","646941","0.0-10.0-2.15","fr2l4n7yqq","one_one","1","direct_first","1","er05im13","0","33","2","1","1","1","Kurzweilig und spannend!
+Eine Auslösung/Hypothesen wäre noch interessant. ","0","1","0","null","","","<img src = 'targets/9.png' width = '100%;'>","null","","","","","","","","","",""
+"","html-keyboard-response","186","647835","0.0-10.0-3.15","fr2l4n7yqq","one_one","1","direct_first","1","er05im13","0","33","2","1","1","1","Kurzweilig und spannend!
+Eine Auslösung/Hypothesen wäre noch interessant. ","0","1","0","892.9200000000419","","","<img src = 'targets/mask.png' width = '100%;'>","75","pos","GS","GSold","4","category4/CS7.png","","targets/9.png","indirect","1","15"
+"","survey-html-form","187","652820","0.0-11.0","fr2l4n7yqq","one_one","1","direct_first","1","er05im13","0","33","2","1","1","1","Kurzweilig und spannend!
+Eine Auslösung/Hypothesen wäre noch interessant. ","0","1","0","4479.635000000126","","{}","","","","","","","","","","","",""
+"","html-keyboard-response","188","655827","0.0-12.0-0.0","fr2l4n7yqq","one_one","1","direct_first","1","er05im13","0","33","2","1","1","1","Kurzweilig und spannend!
+Eine Auslösung/Hypothesen wäre noch interessant. ","0","1","0","null","","","<div style=""font-size:60px;"">+</div>","null","","","","","","","","","",""
+"","html-keyboard-response","189","655920","0.0-12.0-1.0","fr2l4n7yqq","one_one","1","direct_first","1","er05im13","0","33","2","1","1","1","Kurzweilig und spannend!
+Eine Auslösung/Hypothesen wäre noch interessant. ","0","1","0","null","","","<img src = 'category3/wang.png' width = '100%;'>","null","","","","","","","","","",""
+"","html-keyboard-response","190","656176","0.0-12.0-2.0","fr2l4n7yqq","one_one","1","direct_first","1","er05im13","0","33","2","1","1","1","Kurzweilig und spannend!
+Eine Auslösung/Hypothesen wäre noch interessant. ","0","1","0","null","","","<img src = 'targets/47.png' width = '100%;'>","null","","","","","","","","","",""
+"","html-keyboard-response","191","657003","0.0-12.0-3.0","fr2l4n7yqq","one_one","1","direct_first","1","er05im13","0","33","2","1","1","1","Kurzweilig und spannend!
+Eine Auslösung/Hypothesen wäre noch interessant. ","0","1","0","825.125","","","<img src = 'targets/mask.png' width = '100%;'>","75","pos","GS","abstract","3","category3/wang.png","","targets/47.png","indirect","1","16"
+"","html-keyboard-response","192","658511","0.0-12.0-0.1","fr2l4n7yqq","one_one","1","direct_first","1","er05im13","0","33","2","1","1","1","Kurzweilig und spannend!
+Eine Auslösung/Hypothesen wäre noch interessant. ","0","1","0","null","","","<div style=""font-size:60px;"">+</div>","null","","","","","","","","","",""
+"","html-keyboard-response","193","658607","0.0-12.0-1.1","fr2l4n7yqq","one_one","1","direct_first","1","er05im13","0","33","2","1","1","1","Kurzweilig und spannend!
+Eine Auslösung/Hypothesen wäre noch interessant. ","0","1","0","null","","","<img src = 'category3/GS1.png' width = '100%;'>","null","","","","","","","","","",""
+"","html-keyboard-response","194","658864","0.0-12.0-2.1","fr2l4n7yqq","one_one","1","direct_first","1","er05im13","0","33","2","1","1","1","Kurzweilig und spannend!
+Eine Auslösung/Hypothesen wäre noch interessant. ","0","1","0","null","","","<img src = 'targets/22.png' width = '100%;'>","null","","","","","","","","","",""
+"","html-keyboard-response","195","659768","0.0-12.0-3.1","fr2l4n7yqq","one_one","1","direct_first","1","er05im13","0","33","2","1","1","1","Kurzweilig und spannend!
+Eine Auslösung/Hypothesen wäre noch interessant. ","0","1","0","903.5249999999069","","","<img src = 'targets/mask.png' width = '100%;'>","75","pos","GS","GSnew","3","category3/GS1.png","","targets/22.png","indirect","1","17"
+"","html-keyboard-response","196","661279","0.0-12.0-0.2","fr2l4n7yqq","one_one","1","direct_first","1","er05im13","0","33","2","1","1","1","Kurzweilig und spannend!
+Eine Auslösung/Hypothesen wäre noch interessant. ","0","1","0","null","","","<div style=""font-size:60px;"">+</div>","null","","","","","","","","","",""
+"","html-keyboard-response","197","661375","0.0-12.0-1.2","fr2l4n7yqq","one_one","1","direct_first","1","er05im13","0","33","2","1","1","1","Kurzweilig und spannend!
+Eine Auslösung/Hypothesen wäre noch interessant. ","0","1","0","null","","","<img src = 'category1/GS1.png' width = '100%;'>","null","","","","","","","","","",""
+"","html-keyboard-response","198","661636","0.0-12.0-2.2","fr2l4n7yqq","one_one","1","direct_first","1","er05im13","0","33","2","1","1","1","Kurzweilig und spannend!
+Eine Auslösung/Hypothesen wäre noch interessant. ","0","1","0","null","","","<img src = 'targets/26.png' width = '100%;'>","null","","","","","","","","","",""
+"","html-keyboard-response","199","662388","0.0-12.0-3.2","fr2l4n7yqq","one_one","1","direct_first","1","er05im13","0","33","2","1","1","1","Kurzweilig und spannend!
+Eine Auslösung/Hypothesen wäre noch interessant. ","0","1","0","750.640000000014","","","<img src = 'targets/mask.png' width = '100%;'>","75","neg","GS","GSnew","1","category1/GS1.png","","targets/26.png","indirect","1","18"
+"","html-keyboard-response","200","663899","0.0-12.0-0.3","fr2l4n7yqq","one_one","1","direct_first","1","er05im13","0","33","2","1","1","1","Kurzweilig und spannend!
+Eine Auslösung/Hypothesen wäre noch interessant. ","0","1","0","null","","","<div style=""font-size:60px;"">+</div>","null","","","","","","","","","",""
+"","html-keyboard-response","201","663991","0.0-12.0-1.3","fr2l4n7yqq","one_one","1","direct_first","1","er05im13","0","33","2","1","1","1","Kurzweilig und spannend!
+Eine Auslösung/Hypothesen wäre noch interessant. ","0","1","0","null","","","<img src = 'category4/lin.png' width = '100%;'>","null","","","","","","","","","",""
+"","html-keyboard-response","202","664249","0.0-12.0-2.3","fr2l4n7yqq","one_one","1","direct_first","1","er05im13","0","33","2","1","1","1","Kurzweilig und spannend!
+Eine Auslösung/Hypothesen wäre noch interessant. ","0","1","0","null","","","<img src = 'targets/3.png' width = '100%;'>","null","","","","","","","","","",""
+"","html-keyboard-response","203","665202","0.0-12.0-3.3","fr2l4n7yqq","one_one","1","direct_first","1","er05im13","0","33","2","1","1","1","Kurzweilig und spannend!
+Eine Auslösung/Hypothesen wäre noch interessant. ","0","1","0","951.7349999998696","","","<img src = 'targets/mask.png' width = '100%;'>","68","pos","GS","abstract","4","category4/lin.png","","targets/3.png","indirect","0","19"
+"","html-keyboard-response","204","666713","0.0-12.0-0.4","fr2l4n7yqq","one_one","1","direct_first","1","er05im13","0","33","2","1","1","1","Kurzweilig und spannend!
+Eine Auslösung/Hypothesen wäre noch interessant. ","0","1","0","null","","","<div style=""font-size:60px;"">+</div>","null","","","","","","","","","",""
+"","html-keyboard-response","205","666806","0.0-12.0-1.4","fr2l4n7yqq","one_one","1","direct_first","1","er05im13","0","33","2","1","1","1","Kurzweilig und spannend!
+Eine Auslösung/Hypothesen wäre noch interessant. ","0","1","0","null","","","<img src = 'category2/men.png' width = '100%;'>","null","","","","","","","","","",""
+"","html-keyboard-response","206","667065","0.0-12.0-2.4","fr2l4n7yqq","one_one","1","direct_first","1","er05im13","0","33","2","1","1","1","Kurzweilig und spannend!
+Eine Auslösung/Hypothesen wäre noch interessant. ","0","1","0","null","","","<img src = 'targets/15.png' width = '100%;'>","null","","","","","","","","","",""
+"","html-keyboard-response","207","668001","0.0-12.0-3.4","fr2l4n7yqq","one_one","1","direct_first","1","er05im13","0","33","2","1","1","1","Kurzweilig und spannend!
+Eine Auslösung/Hypothesen wäre noch interessant. ","0","1","0","935.229999999865","","","<img src = 'targets/mask.png' width = '100%;'>","75","neg","GS","abstract","2","category2/men.png","","targets/15.png","indirect","1","20"
+"","html-keyboard-response","208","669512","0.0-12.0-0.5","fr2l4n7yqq","one_one","1","direct_first","1","er05im13","0","33","2","1","1","1","Kurzweilig und spannend!
+Eine Auslösung/Hypothesen wäre noch interessant. ","0","1","0","null","","","<div style=""font-size:60px;"">+</div>","null","","","","","","","","","",""
+"","html-keyboard-response","209","669608","0.0-12.0-1.5","fr2l4n7yqq","one_one","1","direct_first","1","er05im13","0","33","2","1","1","1","Kurzweilig und spannend!
+Eine Auslösung/Hypothesen wäre noch interessant. ","0","1","0","null","","","<img src = 'category1/GS3.png' width = '100%;'>","null","","","","","","","","","",""
+"","html-keyboard-response","210","669869","0.0-12.0-2.5","fr2l4n7yqq","one_one","1","direct_first","1","er05im13","0","33","2","1","1","1","Kurzweilig und spannend!
+Eine Auslösung/Hypothesen wäre noch interessant. ","0","1","0","null","","","<img src = 'targets/43.png' width = '100%;'>","null","","","","","","","","","",""
+"","html-keyboard-response","211","670857","0.0-12.0-3.5","fr2l4n7yqq","one_one","1","direct_first","1","er05im13","0","33","2","1","1","1","Kurzweilig und spannend!
+Eine Auslösung/Hypothesen wäre noch interessant. ","0","1","0","986.440000000177","","","<img src = 'targets/mask.png' width = '100%;'>","68","neg","GS","GSnew","1","category1/GS3.png","","targets/43.png","indirect","0","21"
+"","html-keyboard-response","212","672367","0.0-12.0-0.6","fr2l4n7yqq","one_one","1","direct_first","1","er05im13","0","33","2","1","1","1","Kurzweilig und spannend!
+Eine Auslösung/Hypothesen wäre noch interessant. ","0","1","0","null","","","<div style=""font-size:60px;"">+</div>","null","","","","","","","","","",""
+"","html-keyboard-response","213","672459","0.0-12.0-1.6","fr2l4n7yqq","one_one","1","direct_first","1","er05im13","0","33","2","1","1","1","Kurzweilig und spannend!
+Eine Auslösung/Hypothesen wäre noch interessant. ","0","1","0","null","","","<img src = 'category1/GS2.png' width = '100%;'>","null","","","","","","","","","",""
+"","html-keyboard-response","214","672715","0.0-12.0-2.6","fr2l4n7yqq","one_one","1","direct_first","1","er05im13","0","33","2","1","1","1","Kurzweilig und spannend!
+Eine Auslösung/Hypothesen wäre noch interessant. ","0","1","0","null","","","<img src = 'targets/46.png' width = '100%;'>","null","","","","","","","","","",""
+"","html-keyboard-response","215","673719","0.0-12.0-3.6","fr2l4n7yqq","one_one","1","direct_first","1","er05im13","0","33","2","1","1","1","Kurzweilig und spannend!
+Eine Auslösung/Hypothesen wäre noch interessant. ","0","1","0","1003.0699999999488","","","<img src = 'targets/mask.png' width = '100%;'>","75","neg","GS","GSnew","1","category1/GS2.png","","targets/46.png","indirect","1","22"
+"","html-keyboard-response","216","675226","0.0-12.0-0.7","fr2l4n7yqq","one_one","1","direct_first","1","er05im13","0","33","2","1","1","1","Kurzweilig und spannend!
+Eine Auslösung/Hypothesen wäre noch interessant. ","0","1","0","null","","","<div style=""font-size:60px;"">+</div>","null","","","","","","","","","",""
+"","html-keyboard-response","217","675319","0.0-12.0-1.7","fr2l4n7yqq","one_one","1","direct_first","1","er05im13","0","33","2","1","1","1","Kurzweilig und spannend!
+Eine Auslösung/Hypothesen wäre noch interessant. ","0","1","0","null","","","<img src = 'category4/GS1.png' width = '100%;'>","null","","","","","","","","","",""
+"","html-keyboard-response","218","675580","0.0-12.0-2.7","fr2l4n7yqq","one_one","1","direct_first","1","er05im13","0","33","2","1","1","1","Kurzweilig und spannend!
+Eine Auslösung/Hypothesen wäre noch interessant. ","0","1","0","null","","","<img src = 'targets/4.png' width = '100%;'>","null","","","","","","","","","",""
+"","html-keyboard-response","219","676505","0.0-12.0-3.7","fr2l4n7yqq","one_one","1","direct_first","1","er05im13","0","33","2","1","1","1","Kurzweilig und spannend!
+Eine Auslösung/Hypothesen wäre noch interessant. ","0","1","0","923.9450000000652","","","<img src = 'targets/mask.png' width = '100%;'>","68","pos","GS","GSnew","4","category4/GS1.png","","targets/4.png","indirect","0","23"
+"","html-keyboard-response","220","678007","0.0-12.0-0.8","fr2l4n7yqq","one_one","1","direct_first","1","er05im13","0","33","2","1","1","1","Kurzweilig und spannend!
+Eine Auslösung/Hypothesen wäre noch interessant. ","0","1","0","null","","","<div style=""font-size:60px;"">+</div>","null","","","","","","","","","",""
+"","html-keyboard-response","221","678103","0.0-12.0-1.8","fr2l4n7yqq","one_one","1","direct_first","1","er05im13","0","33","2","1","1","1","Kurzweilig und spannend!
+Eine Auslösung/Hypothesen wäre noch interessant. ","0","1","0","null","","","<img src = 'category2/GS2.png' width = '100%;'>","null","","","","","","","","","",""
+"","html-keyboard-response","222","678362","0.0-12.0-2.8","fr2l4n7yqq","one_one","1","direct_first","1","er05im13","0","33","2","1","1","1","Kurzweilig und spannend!
+Eine Auslösung/Hypothesen wäre noch interessant. ","0","1","0","null","","","<img src = 'targets/6.png' width = '100%;'>","null","","","","","","","","","",""
+"","html-keyboard-response","223","679344","0.0-12.0-3.8","fr2l4n7yqq","one_one","1","direct_first","1","er05im13","0","33","2","1","1","1","Kurzweilig und spannend!
+Eine Auslösung/Hypothesen wäre noch interessant. ","0","1","0","980.0999999999767","","","<img src = 'targets/mask.png' width = '100%;'>","68","neg","GS","GSnew","2","category2/GS2.png","","targets/6.png","indirect","0","24"
+"","html-keyboard-response","224","680853","0.0-12.0-0.9","fr2l4n7yqq","one_one","1","direct_first","1","er05im13","0","33","2","1","1","1","Kurzweilig und spannend!
+Eine Auslösung/Hypothesen wäre noch interessant. ","0","1","0","null","","","<div style=""font-size:60px;"">+</div>","null","","","","","","","","","",""
+"","html-keyboard-response","225","680945","0.0-12.0-1.9","fr2l4n7yqq","one_one","1","direct_first","1","er05im13","0","33","2","1","1","1","Kurzweilig und spannend!
+Eine Auslösung/Hypothesen wäre noch interessant. ","0","1","0","null","","","<img src = 'category2/GS1.png' width = '100%;'>","null","","","","","","","","","",""
+"","html-keyboard-response","226","681206","0.0-12.0-2.9","fr2l4n7yqq","one_one","1","direct_first","1","er05im13","0","33","2","1","1","1","Kurzweilig und spannend!
+Eine Auslösung/Hypothesen wäre noch interessant. ","0","1","0","null","","","<img src = 'targets/37.png' width = '100%;'>","null","","","","","","","","","",""
+"","html-keyboard-response","227","683127","0.0-12.0-3.9","fr2l4n7yqq","one_one","1","direct_first","1","er05im13","0","33","2","1","1","1","Kurzweilig und spannend!
+Eine Auslösung/Hypothesen wäre noch interessant. ","0","1","0","1919.845000000205","","","<img src = 'targets/mask.png' width = '100%;'>","68","neg","GS","GSnew","2","category2/GS1.png","","targets/37.png","indirect","0","25"
+"","html-keyboard-response","228","684637","0.0-12.0-0.10","fr2l4n7yqq","one_one","1","direct_first","1","er05im13","0","33","2","1","1","1","Kurzweilig und spannend!
+Eine Auslösung/Hypothesen wäre noch interessant. ","0","1","0","null","","","<div style=""font-size:60px;"">+</div>","null","","","","","","","","","",""
+"","html-keyboard-response","229","684729","0.0-12.0-1.10","fr2l4n7yqq","one_one","1","direct_first","1","er05im13","0","33","2","1","1","1","Kurzweilig und spannend!
+Eine Auslösung/Hypothesen wäre noch interessant. ","0","1","0","null","","","<img src = 'category4/GS2.png' width = '100%;'>","null","","","","","","","","","",""
+"","html-keyboard-response","230","684989","0.0-12.0-2.10","fr2l4n7yqq","one_one","1","direct_first","1","er05im13","0","33","2","1","1","1","Kurzweilig und spannend!
+Eine Auslösung/Hypothesen wäre noch interessant. ","0","1","0","null","","","<img src = 'targets/41.png' width = '100%;'>","null","","","","","","","","","",""
+"","html-keyboard-response","231","686250","0.0-12.0-3.10","fr2l4n7yqq","one_one","1","direct_first","1","er05im13","0","33","2","1","1","1","Kurzweilig und spannend!
+Eine Auslösung/Hypothesen wäre noch interessant. ","0","1","0","1259.2900000000373","","","<img src = 'targets/mask.png' width = '100%;'>","68","pos","GS","GSnew","4","category4/GS2.png","","targets/41.png","indirect","0","26"
+"","html-keyboard-response","232","687756","0.0-12.0-0.11","fr2l4n7yqq","one_one","1","direct_first","1","er05im13","0","33","2","1","1","1","Kurzweilig und spannend!
+Eine Auslösung/Hypothesen wäre noch interessant. ","0","1","0","null","","","<div style=""font-size:60px;"">+</div>","null","","","","","","","","","",""
+"","html-keyboard-response","233","687847","0.0-12.0-1.11","fr2l4n7yqq","one_one","1","direct_first","1","er05im13","0","33","2","1","1","1","Kurzweilig und spannend!
+Eine Auslösung/Hypothesen wäre noch interessant. ","0","1","0","null","","","<img src = 'category2/GS3.png' width = '100%;'>","null","","","","","","","","","",""
+"","html-keyboard-response","234","688108","0.0-12.0-2.11","fr2l4n7yqq","one_one","1","direct_first","1","er05im13","0","33","2","1","1","1","Kurzweilig und spannend!
+Eine Auslösung/Hypothesen wäre noch interessant. ","0","1","0","null","","","<img src = 'targets/19.png' width = '100%;'>","null","","","","","","","","","",""
+"","html-keyboard-response","235","688888","0.0-12.0-3.11","fr2l4n7yqq","one_one","1","direct_first","1","er05im13","0","33","2","1","1","1","Kurzweilig und spannend!
+Eine Auslösung/Hypothesen wäre noch interessant. ","0","1","0","778.7600000001257","","","<img src = 'targets/mask.png' width = '100%;'>","75","neg","GS","GSnew","2","category2/GS3.png","","targets/19.png","indirect","1","27"
+"","html-keyboard-response","236","690396","0.0-12.0-0.12","fr2l4n7yqq","one_one","1","direct_first","1","er05im13","0","33","2","1","1","1","Kurzweilig und spannend!
+Eine Auslösung/Hypothesen wäre noch interessant. ","0","1","0","null","","","<div style=""font-size:60px;"">+</div>","null","","","","","","","","","",""
+"","html-keyboard-response","237","690491","0.0-12.0-1.12","fr2l4n7yqq","one_one","1","direct_first","1","er05im13","0","33","2","1","1","1","Kurzweilig und spannend!
+Eine Auslösung/Hypothesen wäre noch interessant. ","0","1","0","null","","","<img src = 'category3/GS3.png' width = '100%;'>","null","","","","","","","","","",""
+"","html-keyboard-response","238","690751","0.0-12.0-2.12","fr2l4n7yqq","one_one","1","direct_first","1","er05im13","0","33","2","1","1","1","Kurzweilig und spannend!
+Eine Auslösung/Hypothesen wäre noch interessant. ","0","1","0","null","","","<img src = 'targets/16.png' width = '100%;'>","null","","","","","","","","","",""
+"","html-keyboard-response","239","691295","0.0-12.0-3.12","fr2l4n7yqq","one_one","1","direct_first","1","er05im13","0","33","2","1","1","1","Kurzweilig und spannend!
+Eine Auslösung/Hypothesen wäre noch interessant. ","0","1","0","542.1999999999534","","","<img src = 'targets/mask.png' width = '100%;'>","75","pos","GS","GSnew","3","category3/GS3.png","","targets/16.png","indirect","1","28"
+"","html-keyboard-response","240","692805","0.0-12.0-0.13","fr2l4n7yqq","one_one","1","direct_first","1","er05im13","0","33","2","1","1","1","Kurzweilig und spannend!
+Eine Auslösung/Hypothesen wäre noch interessant. ","0","1","0","null","","","<div style=""font-size:60px;"">+</div>","null","","","","","","","","","",""
+"","html-keyboard-response","241","692898","0.0-12.0-1.13","fr2l4n7yqq","one_one","1","direct_first","1","er05im13","0","33","2","1","1","1","Kurzweilig und spannend!
+Eine Auslösung/Hypothesen wäre noch interessant. ","0","1","0","null","","","<img src = 'category1/ma.png' width = '100%;'>","null","","","","","","","","","",""
+"","html-keyboard-response","242","693157","0.0-12.0-2.13","fr2l4n7yqq","one_one","1","direct_first","1","er05im13","0","33","2","1","1","1","Kurzweilig und spannend!
+Eine Auslösung/Hypothesen wäre noch interessant. ","0","1","0","null","","","<img src = 'targets/25.png' width = '100%;'>","null","","","","","","","","","",""
+"","html-keyboard-response","243","694123","0.0-12.0-3.13","fr2l4n7yqq","one_one","1","direct_first","1","er05im13","0","33","2","1","1","1","Kurzweilig und spannend!
+Eine Auslösung/Hypothesen wäre noch interessant. ","0","1","0","965.125","","","<img src = 'targets/mask.png' width = '100%;'>","68","neg","GS","abstract","1","category1/ma.png","","targets/25.png","indirect","0","29"
+"","html-keyboard-response","244","695630","0.0-12.0-0.14","fr2l4n7yqq","one_one","1","direct_first","1","er05im13","0","33","2","1","1","1","Kurzweilig und spannend!
+Eine Auslösung/Hypothesen wäre noch interessant. ","0","1","0","null","","","<div style=""font-size:60px;"">+</div>","null","","","","","","","","","",""
+"","html-keyboard-response","245","695722","0.0-12.0-1.14","fr2l4n7yqq","one_one","1","direct_first","1","er05im13","0","33","2","1","1","1","Kurzweilig und spannend!
+Eine Auslösung/Hypothesen wäre noch interessant. ","0","1","0","null","","","<img src = 'category3/GS2.png' width = '100%;'>","null","","","","","","","","","",""
+"","html-keyboard-response","246","695983","0.0-12.0-2.14","fr2l4n7yqq","one_one","1","direct_first","1","er05im13","0","33","2","1","1","1","Kurzweilig und spannend!
+Eine Auslösung/Hypothesen wäre noch interessant. ","0","1","0","null","","","<img src = 'targets/42.png' width = '100%;'>","null","","","","","","","","","",""
+"","html-keyboard-response","247","697063","0.0-12.0-3.14","fr2l4n7yqq","one_one","1","direct_first","1","er05im13","0","33","2","1","1","1","Kurzweilig und spannend!
+Eine Auslösung/Hypothesen wäre noch interessant. ","0","1","0","1078.6499999999069","","","<img src = 'targets/mask.png' width = '100%;'>","75","pos","GS","GSnew","3","category3/GS2.png","","targets/42.png","indirect","1","30"
+"","html-keyboard-response","248","698573","0.0-12.0-0.15","fr2l4n7yqq","one_one","1","direct_first","1","er05im13","0","33","2","1","1","1","Kurzweilig und spannend!
+Eine Auslösung/Hypothesen wäre noch interessant. ","0","1","0","null","","","<div style=""font-size:60px;"">+</div>","null","","","","","","","","","",""
+"","html-keyboard-response","249","698670","0.0-12.0-1.15","fr2l4n7yqq","one_one","1","direct_first","1","er05im13","0","33","2","1","1","1","Kurzweilig und spannend!
+Eine Auslösung/Hypothesen wäre noch interessant. ","0","1","0","null","","","<img src = 'category4/GS3.png' width = '100%;'>","null","","","","","","","","","",""
+"","html-keyboard-response","250","698930","0.0-12.0-2.15","fr2l4n7yqq","one_one","1","direct_first","1","er05im13","0","33","2","1","1","1","Kurzweilig und spannend!
+Eine Auslösung/Hypothesen wäre noch interessant. ","0","1","0","null","","","<img src = 'targets/30.png' width = '100%;'>","null","","","","","","","","","",""
+"","html-keyboard-response","251","700789","0.0-12.0-3.15","fr2l4n7yqq","one_one","1","direct_first","1","er05im13","0","33","2","1","1","1","Kurzweilig und spannend!
+Eine Auslösung/Hypothesen wäre noch interessant. ","0","1","0","1857.780000000028","","","<img src = 'targets/mask.png' width = '100%;'>","68","pos","GS","GSnew","4","category4/GS3.png","","targets/30.png","indirect","0","31"
+"","survey-html-form","252","708626","0.0-13.0","fr2l4n7yqq","one_one","1","direct_first","1","er05im13","0","33","2","1","1","1","Kurzweilig und spannend!
+Eine Auslösung/Hypothesen wäre noch interessant. ","0","1","0","7332.165000000037","","{}","","","","","","","","","","","",""
+"","image-slider-response","253","713834","0.0-14.0-0.0","fr2l4n7yqq","one_one","1","direct_first","1","er05im13","0","33","2","1","1","1","Kurzweilig und spannend!
+Eine Auslösung/Hypothesen wäre noch interessant. ","0","1","0","4205.445000000065","","","","","pos","All","all","3","category3/wang_all.png","31","","all","",""
+"","image-slider-response","254","716768","0.0-14.0-0.1","fr2l4n7yqq","one_one","1","direct_first","1","er05im13","0","33","2","1","1","1","Kurzweilig und spannend!
+Eine Auslösung/Hypothesen wäre noch interessant. ","0","1","0","2931.70000000007","","","","","neg","All","all","2","category2/men_all.png","-88","","all","",""
+"","image-slider-response","255","720429","0.0-14.0-0.2","fr2l4n7yqq","one_one","1","direct_first","1","er05im13","0","33","2","1","1","1","Kurzweilig und spannend!
+Eine Auslösung/Hypothesen wäre noch interessant. ","0","1","0","3659.045000000042","","","","","pos","All","all","4","category4/lin_all.png","49","","all","",""
+"","image-slider-response","256","723625","0.0-14.0-0.3","fr2l4n7yqq","one_one","1","direct_first","1","er05im13","0","33","2","1","1","1","Kurzweilig und spannend!
+Eine Auslösung/Hypothesen wäre noch interessant. ","0","1","0","3194.315000000177","","","","","neg","All","all","1","category1/ma_all.png","-80","","all","",""
+"","survey-text","257","772919","0.0-15.0","fr2l4n7yqq","one_one","1","direct_first","1","er05im13","0","33","2","1","1","1","Kurzweilig und spannend!
+Eine Auslösung/Hypothesen wäre noch interessant. ","0","1","0","49286.28000000003","","{""comment"":""Kurzweilig und spannend!\nEine Auslösung/Hypothesen wäre noch interessant. ""}","","","","","","","","","","","",""
+"","survey-html-form","258","788643","0.0-16.0","fr2l4n7yqq","one_one","1","direct_first","1","er05im13","0","33","2","1","1","1","Kurzweilig und spannend!
+Eine Auslösung/Hypothesen wäre noch interessant. ","0","1","0","15720.955000000075","","{""hinschauen"":""0"",""ablenkung"":""1"",""gewissenhaft"":""0""}","","","","","","","","","","","",""
