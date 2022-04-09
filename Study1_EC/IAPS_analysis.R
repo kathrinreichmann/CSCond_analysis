@@ -1,6 +1,6 @@
 ## IAPS analysis
 
-setwd()
+setwd("C:/Users/siskr01/GitHub/CScond_Exp1/data_analysis/scripts")
 
 dat <- read.csv2('IAPS_US.csv', header = TRUE, sep = ';')
 

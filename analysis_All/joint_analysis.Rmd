@@ -1,0 +1,410 @@
+---
+title: "paper1_joint analysis"
+author: "Kathrin Reichmann"
+date: "3 3 2022"
+output: html_document
+---
+
+### import data from different experiments
+
+```{r}
+knitr::opts_knit$set(root.dir = 'C:/Users/siskr01/GitHub/CScond_analysis/analysis_All')
+
+
+### load packages
+packages <- c("tidyverse", "ggplot2", "ggsci", "lme4", "sjstats", "lmerTest",
+              "sjPlot", "broom", "broom.mixed", "glmmTMB")
+
+lapply (packages, require, character.only = TRUE)
+
+### functions
+CI <- function(x) qnorm(0.975)*sd(x)/sqrt(length(x))
+se <- function(x) sd(x)/sqrt(length(x))
+```
+
+```{r}
+### import data from experiment 1
+setwd("C:/Users/siskr01/GitHub/CScond_Exp1/data_files/data")
+filenames <- dir()
+temp <- data.frame()
+
+for (i in filenames){
+  temp <- rbind(temp, read.csv2(i, header = TRUE, sep = ",", encoding = "UTF-8"))
+}
+dat <- tibble(temp)
+
+## delete from data frame what we don't need for analysis
+dat <- dat[!dat$type == "All",]
+dat <- dat[!dat$type_specific == "GSnew",]
+dat <- dat[!dat$type_specific == "abstract",]
+
+## rename factors
+dat$type_specific <- factor(dat$type_specific, labels = c("CS", "GS"), levels = c("CS", "GSold"))
+dat$condition <- factor(dat$condition, labels = c("one", "many"), levels = c("one_one", "many_one"))
+
+## omit empty rows
+dat <- dat[!is.na(dat$type_specific),]
+
+dat %>% count(chinese) 
+dat <- dat[!dat$chinese == "0",]
+length(unique(dat$subject))
+#N = 214
+
+#who didn't pay attention
+dat %>% count(hinschauen)
+dat %>% count(ablenkung)
+dat %>% count(gewissenhaft)
+dat <- dat[!dat$ablenkung == "0",]
+
+#exclude NA condition 
+dat <- dat[!is.na(dat$condition),]
+
+#filter data framee
+direct1 <- dat %>% 
+  filter(task %in% c("direct")) %>% 
+  select (subject, condition, val, type_specific, category, cs_selected, response )
+direct1
+
+#rename factor type
+direct1 <- direct1 %>% 
+  rename(type = type_specific)
+
+
+## effect code variables
+direct1 <- direct1 %>% 
+  mutate(val_effect = ifelse(factor(val) == "neg", -0.5, 0.5),
+         condition_effect = ifelse(factor(condition) == "one", -0.5, 0.5),
+         type_effect = ifelse(type_specific == "CS", -0.5, 0.5))
+direct1$study <- "study1"
+
+
+```
+
+
+
+```{r}
+### import data from experiment 2
+
+## read in data files
+setwd("C:/Users/siskr01/GitHub/CScond_Exp2/data_files/data")
+filenames <- dir()
+temp <- data.frame()
+
+for (i in filenames){
+  temp <- rbind(temp, read.csv2(i, header = TRUE, sep = ",", encoding = "UTF-8"))
+}
+dat2 <- tibble(temp)
+
+## delete from data frame what we don't need for analysis
+dat2 <- dat2[!dat2$type_specific == "practise",]
+dat2 <- dat2
+
+## look at three main conditions
+dat2 <- dat2 %>% 
+  filter(condition %in% c("one_rep", "many"))
+dat2$condition <- factor(dat2$condition, labels = c("one", "many"), levels = c("one_rep", "many"))
+
+## omit empty rows
+dat2 <- dat2[!is.na(dat2$subject),]
+
+## code which study
+dat2$study <- "study2"
+
+##exclude participants
+dat2 <- dat2[!dat2$ablenkung == "0",]
+dat2 <- dat2[!dat2$chinese == "0",]
+
+#exclude NA condition 
+dat2 <- dat2[!is.na(dat2$condition),]
+
+##type_specific to type
+dat2$type <- dat2$type_specific
+dat2$type_specific <- NULL
+
+#direct evaluative ratings
+direct2 <- dat2 %>% 
+  filter(task %in% c("direct")) %>% 
+  select (subject, condition, val, type, category, cs_selected, response, study )
+direct2
+
+## analysis of CSs vs. GSs
+direct2Type <- direct2 %>% 
+  filter(type %in% c("CS", "GSold"))
+direct2Type$type <- factor(direct2Type$type, labels = c("CS", "GS"), levels = c("CS", "GSold"))
+direct2Type$study <- "study2"
+
+direct2Type <- direct2Type %>% 
+  mutate(val_effect = ifelse(factor(val) == "neg", -0.5, 0.5),
+         condition_effect = ifelse(factor(condition) == "one", -0.5, 0.5),
+         type_effect = ifelse(type == "CS", -0.5, 0.5))
+direct2Type
+
+## analysis of components
+direct2Component <- direct2 %>% 
+  filter(type %in% c("pred_comp", "unpred_comp"))
+direct2Component$type <- factor(direct2Component$type, labels = c("same", "varying"), levels = c("pred_comp", "unpred_comp"))
+direct2Component
+
+
+```
+
+```{r}
+### compare generalization effects between study 1 and study 2 
+
+#merge study 1 and study 2 data
+datCompare <- rbind(direct1, direct2Type)
+datCompare$study <- as.factor(datCompare$study)
+
+datCompare <- datCompare %>% 
+  mutate(study_effect = ifelse(factor(study) == "study1", -0.5, 0.5))
+         
+#compare EC effects
+datCompareMany <- datCompare %>% 
+  filter(type %in% c("GS")) %>% 
+  filter(condition %in% c("many"))
+lmerCompareMany <- lmer(response ~ val_effect*study_effect + (val_effect |subject), data = datCompareMany)
+summary(lmerCompareMany)
+
+datCompareOne <- datCompare %>% 
+  filter(type %in% c("GS")) %>% 
+  filter(condition %in% c("one"))
+lmerCompareOne <- lmer(response ~ val_effect*study_effect + (val_effect |subject), data = datCompareOne)
+summary(lmerCompareOne)
+
+
+```
+
+
+
+#### plot experiment 2
+
+```{r}
+directStudy2agg <- direct2Type %>% 
+  group_by(val, type, condition) %>% 
+  summarise(mean = mean(response),
+            se = se(response))
+directStudy2agg
+
+direct_plot_study2 <-   ggplot(direct2Type, aes (y = response, x = condition, color = val)) +
+  facet_grid(.~type, switch = "both") +
+  geom_violin(aes(color = val, x = condition), trim = FALSE, position = position_dodge(0.9), adjust = 1) +
+  stat_summary( aes(group = val, color = val), fun.data = "mean_sdl", fun.args = list(mult = 1),
+      geom = "pointrange", position = position_dodge(0.9))+
+    geom_hline(yintercept = 0, col = "darkgrey") +
+    ggtitle("Experiment 1, direct evaluations\n") + 
+    scale_y_continuous (name = "Ratings (-100 to 100)", limits = c(-50, 50)) + 
+    scale_x_discrete(element_blank()) +
+    scale_color_brewer(palette = "Paired") +
+    theme_bw() +
+    labs(fill = "Valence") +
+    theme(plot.title = element_text (hjust = 0.5, face = "bold", size = 12),
+          text = element_text(size = 12),
+          axis.text = element_text(size = 12),
+          strip.text.x = element_text(size = 12),
+          legend.text = element_text(size = 12),
+          aspect.ratio = 1, strip.background = element_blank(),strip.placement ="outside")
+direct_plot_study2
+
+ggsave('../../data_analysis/figures/direct_study2.jpg', width = 2100, height = 1499, units= "px")
+
+
+```
+
+
+```{r}
+### import data from experiment 3
+
+setwd("C:/Users/siskr01/GitHub/CScond_Exp3/data_files")
+filenames <- dir()
+temp <- data.frame()
+
+for (i in filenames){
+  temp <- rbind(temp, read.csv2(i, header = TRUE, sep = ",", encoding = "UTF-8"))
+}
+dat3 <- tibble(temp)
+
+## delete from dat3a frame what we don't need for analysis
+dat3 <- dat3[!dat3$type == "practise",]
+dat3 <- dat3[!dat3$cs_selected == "practise",]
+
+## code which study
+dat3$study <- "study3"
+
+##exclude participants
+
+dat3 <- dat3[!dat3$ablenkung == "0",]
+dat3 <- dat3[!dat3$hinschauen == "1",]
+
+## analysis of CSs vs. GSs
+direct3Type <- dat3 %>% 
+  filter(task %in% c("directCSGS")) %>% 
+  select (subject, condition, val, type, category, cs_selected, response, study ) 
+direct3Type$response <- as.numeric(direct3Type$response)
+direct3Type
+
+## analysis of stimulus components
+direct3Component <- dat3 %>% 
+  filter(task %in% c("directComponents")) %>% 
+  select (subject, condition, val, type, category, cs_selected, response, study )
+direct3Component$type <- factor(direct3Component$type, labels = c("same", "varying"), levels = c("pred_comp", "unpred_comp"))
+direct3Component$response <- as.numeric(direct3Component$response)
+direct3Component
+
+
+
+```
+
+#### plot experiment 3
+
+```{r}
+
+direct_plot_study3 <-   ggplot(direct3Type, aes (y = response, x = condition, color = val)) +
+  facet_grid(.~type, switch = "both") +
+  geom_boxplot(aes (fill = val, x = condition), size = .3, position = position_dodge(0.7), width = .5, alpha = 0.3, color = "grey", show.legend = FALSE) +
+  #geom_violin(aes(color = val, x = condition), trim = FALSE, position = position_dodge(0.9), adjust = 1) +
+    geom_hline(yintercept = 0, col = "darkgrey", alpha = 0.3) +
+  stat_summary( aes(group = val, color = val), fun.data = "mean_se", fun.args = list(mult = 1),
+      geom = "point", position = position_dodge(0.7))+
+    stat_summary( aes(group = val, color = val), fun.data = "mean_se", fun.args = list(mult = 1),
+      geom = "errorbar", position = position_dodge(0.7), width=.3) +
+    ggtitle("Experiment 1, direct evaluations\n") + 
+    scale_y_continuous (name = "Ratings (-100 to 100)", limits = c(-50, 50)) + 
+    scale_x_discrete(element_blank()) +
+    scale_color_brewer(palette = "Set2") +
+    scale_fill_brewer(palette = "Greys") +
+    theme_bw() +
+    labs(color = "Valence") +
+    theme(plot.title = element_text (hjust = 0.5, face = "bold", size = 11),
+          text = element_text(size = 11),
+          axis.text = element_text(size = 11),
+          strip.text.x = element_text(size = 11),
+          legend.text = element_text(size = 11),
+          aspect.ratio = 1, strip.background = element_blank(),strip.placement ="outside")
+direct_plot_study3
+
+
+setwd("C:/Users/siskr01/GitHub/CSCond_analysis/analysis_All")
+ggsave('figures/study3.jpg', width = 1900, height = 1200, units= "px")
+```
+
+
+
+
+```{r}
+### import data from experiemnt 4
+
+## read in data files
+setwd("C:/Users/siskr01/GitHub/CScond_Exp4/data_files")
+filenames <- dir()
+temp <- data.frame()
+
+for (i in filenames){
+  temp <- rbind(temp, read.csv2(i, header = TRUE, sep = ",", encoding = "UTF-8"))
+}
+dat4 <- tibble(temp)
+
+## delete from dat4a frame what we don't need for analysis
+dat4 <- dat4[!dat4$type == "practise",]
+dat4 <- dat4[!dat4$cs_selected == "practise",]
+
+## data exclusions
+dat4 <- dat4[!dat4$chinese == "0",]
+dat4 <- dat4[!dat4$subject == "0lb5x3zabo",]
+dat4 <- dat4[!dat4$ablenkung == "0",]
+dat4 <- dat4[!dat4$hinschauen == "1",]
+
+## study name
+dat4$study <- "study4"
+
+## analysis of CSs vs. GSs
+direct4Type <- dat4 %>% 
+  filter(task %in% c("directCSGS")) %>% 
+  select (subject, condition, val, type, category, cs_selected, response, study )
+direct4Type$response <- as.numeric(direct4Type$response)
+direct4Type
+
+## analysis of stimulus components
+direct4Component <- dat4 %>% 
+  filter(task %in% c("directComponents")) %>% 
+  select (subject, condition, val, type, category, cs_selected, response, study )
+direct4Component$type <- factor(direct4Component$type, labels = c("same", "varying"), levels = c("pred_comp", "unpred_comp"))
+direct4Component$response <- as.numeric(direct4Component$response)
+direct4Component
+
+
+```
+
+### bind data frames from different studies
+
+```{r}
+### bind data frames for components
+
+datType <- rbind(direct2Type, direct3Type, direct4Type)
+datType$study <- as.factor(datType$study)
+datType
+
+datComponent <- rbind(direct2Component, direct3Component, direct4Component)
+datComponent$study <- as.factor(datComponent$study)
+datComponent
+
+```
+
+### import RW cue weights
+
+```{r}
+#with RW cue weights
+
+RW <- read_csv("../../CSCond_analysis/analysis_All/associativeStrength.csv")
+names(RW) <- c("condition", "type", "val", "response")
+RW$study <- "RW"
+RW
+
+#center evaluative responses from studies
+datComponent <- datComponent %>% 
+  mutate(responseZ = as.numeric(scale(response, center = TRUE, scale = TRUE)))
+datComponent
+
+datRWPlot <- datComponent %>% 
+  group_by(condition, val, type, study) %>% 
+  summarize(response = mean(responseZ))
+datRWPlot
+
+datRWPlot <- merge(datRWPlot, RW, all = TRUE, by = c("condition", "val", "type", "study"))
+datRWPlot$val <- factor(datRWPlot$val, levels = c("pos", "neg"))
+datRWPlot$study <- factor(datRWPlot$study, levels = c("RW", "study2", "study3", "study4"))
+datRWPlot
+```
+
+#### plot results of expeirments and RW cue weights
+
+```{r}
+
+
+plotRW <- datRWPlot %>% 
+  ggplot(aes (x = type, y = response.x, col = study, shape = study)) +
+  facet_grid(. ~ condition + val, switch = "x") +
+  geom_point() +
+  geom_line(aes(x = type, y = response.x, group = study, linetype = study))+
+  geom_point(aes(y = response.y, group = study, color = "RW"), shape = 10) +
+  geom_line(aes(x = type, y = response.y, group = study, color = "RW")) +    ggtitle("Rating of Stimulus Components & \nRescorla-Wagner Predictions\n") + 
+  scale_y_continuous (name = "Associative Strength") + 
+  scale_x_discrete(labels = c("category", "unique"), element_blank()) +
+  scale_linetype_discrete(guide = "none") +
+  scale_shape_discrete(guide = "none") +
+    scale_color_brewer(palette = "Set1") +
+    theme_bw() +
+    labs(color = "Data") +
+    theme(plot.title = element_text (hjust = 0.5, face = "bold", size = 10),
+          text = element_text(size = 10),
+          axis.text = element_text(size = 10),
+          strip.text.x = element_text(size = 10),
+          legend.text = element_text(size = 10),
+          aspect.ratio = 1, strip.background = element_blank(),strip.placement ="outside")
+plotRW
+
+setwd("C:/Users/siskr01/GitHub/CSCond_analysis/analysis_All")
+ggsave('figures/RW_with_observed.jpg', width = 2100, height = 1000, units= "px")
+
+```
+
+

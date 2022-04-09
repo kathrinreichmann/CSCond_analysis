@@ -151,6 +151,7 @@ unique(direct$subject)
 #setwd("\\\\sn00.zdv.uni-tuebingen.de/siskr01/Documents/Github/CSCond_analysis/CSCond_analysis/data")
 setwd("C:/Users/reich/Documents/GitHub/CSCond_analysis/data")
 write.csv2(direct, file = 'direct.csv')
+write_csv(direct, "direct_Study1.csv")
 
 
 # export for indirect measure analysis ------------------------------------
@@ -177,3 +178,4 @@ indirect$type_specific <- factor(indirect$type_specific, levels = c('CS', 'GSold
 #setwd("\\\\sn00.zdv.uni-tuebingen.de/siskr01/Documents/Github/CSCond_analysis/CSCond_analysis/data")
 setwd("C:/Users/reich/Documents/GitHub/CSCond_analysis/data")
 write.csv2(indirect, file = 'indirect.csv')
+write_csv(indirect, "indirect_Study1.csv")

@@ -1,0 +1,9 @@
+condition,cue,val,strength
+many,same,pos,0.48848051139138343
+many,varying,pos,0.037952757430707834
+one,same,pos,0.4884805113913834
+one,varying,pos,0.4884805113913834
+many,same,neg,-0.48848051139138343
+many,varying,neg,-0.03295349255341346
+one,same,neg,-0.4884805113913834
+one,varying,neg,-0.4884805113913834
